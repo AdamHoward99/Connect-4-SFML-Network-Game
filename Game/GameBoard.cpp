@@ -22,6 +22,8 @@ void GameBoard::Initialize()
 			sf::CircleShape pieceSlot = sf::CircleShape(30.f);
 			pieceSlot.setFillColor(sf::Color::White);
 			pieceSlot.setPosition(xPosition, yPosition);
+			pieceSlot.setOutlineThickness(5);
+			pieceSlot.setOutlineColor(sf::Color::Color(70, 96, 239));
 			xPosition += piece_Offset;
 			pieces[x][y] = pieceSlot;
 		}
