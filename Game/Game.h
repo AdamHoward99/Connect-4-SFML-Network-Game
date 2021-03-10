@@ -1,6 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include "GameBoard.h"
+#include "PlayState.h"
 #include <cassert>
 
 class Game
@@ -16,8 +16,6 @@ public:
 private:
 	sf::RenderWindow& window;
 
-	GameBoard board;		//put into the playstate class
-
 	enum States
 	{
 		Start_Menu,
@@ -27,12 +25,7 @@ private:
 		Leaderboard
 	};
 
-	enum Turn		//Put into the playstate class
-	{
-		Player_1_Turn,
-		Player_2_Turn
-	};
+	PlayState mPlayState;
 
 	States mStates = States::Start_Menu;
-	Turn mGameTurn = Turn::Player_1_Turn;
 };

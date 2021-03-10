@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), board(w)
+	:window(w), mPlayState(w)
 {
 	//Setup elements of game
 	Initialize();
@@ -10,13 +10,12 @@ Game::Game(sf::RenderWindow& w)
 Game::~Game()
 {
 	//Remove all pointers
-	board.~GameBoard();
 }
 
 void Game::Initialize()
 {
 	//Setup all elements of the game
-	board.Initialize();		//Sets up the game board
+	mPlayState.Initialize();
 }
 
 void Game::Update()
@@ -25,7 +24,7 @@ void Game::Update()
 	switch (mStates)
 	{
 	case States::Play:
-		board.Update();
+		mPlayState.Update();
 		break;
 
 	case States::Pause_Menu:
@@ -54,6 +53,5 @@ void Game::Update()
 void Game::Draw()
 {
 	//Draw elements of the game based on which state is active
-	board.Draw();
-
+	mPlayState.Draw();
 }
