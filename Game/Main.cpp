@@ -1,13 +1,23 @@
 #include <SFML/Graphics.hpp>
+#include "GameBoard.h"
+
+#define GAME_WIDTH 900
+#define GAME_HEIGHT 800
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	sf::RenderWindow window(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Connect 4");
+
+	//FPS
+	window.setFramerateLimit(60);
+
+	//Instantiate things here
+	GameBoard game(window);
 
 	while (window.isOpen())
 	{
+		//Update stuff here
+		game.Update();
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -16,7 +26,10 @@ int main()
 		}
 
 		window.clear();
-		window.draw(shape);
+
+		//Draw stuff to the screen here, after .clear
+		game.Draw();
+
 		window.display();
 	}
 
