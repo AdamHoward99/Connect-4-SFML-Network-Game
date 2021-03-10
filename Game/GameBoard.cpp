@@ -4,7 +4,6 @@ GameBoard::GameBoard(sf::RenderWindow& mApp)
 	:window(mApp)
 {
 	//Set up the colours
-	Initialize();
 }
 
 GameBoard::~GameBoard()

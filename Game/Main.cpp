@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "Game.h"
 #include "GameBoard.h"
 
 #define GAME_WIDTH 900
@@ -12,12 +13,12 @@ int main()
 	window.setFramerateLimit(60);
 
 	//Instantiate things here
-	GameBoard game(window);
+	Game mGame(window);
 
 	while (window.isOpen())
 	{
 		//Update stuff here
-		game.Update();
+		mGame.Update();
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -28,7 +29,7 @@ int main()
 		window.clear();
 
 		//Draw stuff to the screen here, after .clear
-		game.Draw();
+		mGame.Draw();
 
 		window.display();
 	}
