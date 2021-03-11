@@ -20,6 +20,8 @@ private:
 
 	void UpdateMousePosition();
 	void SwitchTurns();
+	bool IsBoardFull();
+	bool HasConnected4();
 
 	enum Turn
 	{
@@ -35,5 +37,6 @@ private:
 	sf::Vector2i mousePos;
 
 	bool turnEnd = false;
+	sf::Vector2i lastMove;		//Stores position of last move on board to easier check for a win
 
 };

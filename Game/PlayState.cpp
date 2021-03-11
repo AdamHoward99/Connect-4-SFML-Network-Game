@@ -33,7 +33,17 @@ void PlayState::Update()
 
 	//Switch turns, put into its own function
 	if (turnEnd)
+	{
+		//Function to check if 4 are connected
+		if (HasConnected4())
+			float t = 10.f;		//Transition to another state
+
+		//Function to see if there is a winner
+		if (IsBoardFull())
+			float t = 1.f;		//Transition to another state
+
 		SwitchTurns();		//Changes piece colour and turn variable, sets turnEnd to false
+	}
 
 }
 
@@ -61,6 +71,120 @@ void PlayState::UpdateMousePosition()
 		mousePos.x = 650;
 
 	pieceToAdd.setPosition(static_cast<float>(mousePos.x), 20.f);
+}
+
+bool PlayState::IsBoardFull()
+{
+	//See if all slots are filled, tie in this case
+	bool boardIsFull;
+	for (int y = 0; y < BOARD_WIDTH; y++)
+	{
+		if (board.pieces[0][y].getFillColor() == sf::Color::White)		//Checks if all top slots are filled
+		{
+			boardIsFull = false;
+			break;
+		}
+		else
+			boardIsFull = true;
+	}
+
+	return boardIsFull;
+}
+
+bool PlayState::HasConnected4()
+{
+	bool foundaWinner = false;
+	int connected = 0;		//Amount of pieces of the same colour connected together
+
+	sf::Color c;
+
+	if (mGameTurn == Turn::Player_1_Turn)
+		c = sf::Color::Red;
+	else
+		c = sf::Color::Yellow;
+	
+	//Could separate into different functions
+	//Horizontal checks
+	int y = lastMove.y;
+	while (y >= 0 && board.pieces[lastMove.x][y].getFillColor() == c)		//Horizontal Left searching
+	{
+		y--;
+		connected++;
+		if (connected >= 4)
+			return true;
+	}
+
+	connected--;		//Remove as the next will readd the most recent piece added
+	y = lastMove.y;
+	while (y < BOARD_WIDTH && board.pieces[lastMove.x][y].getFillColor() == c)	//Horizontal Right searching
+	{
+		y++;
+		connected++;
+		if (connected >= 4)
+			return true;
+	}
+
+	//Vertical checks
+	connected = 0;
+	int x = lastMove.x;
+	while (x >= 0 && board.pieces[x][lastMove.y].getFillColor() == c)			//Vertical searching
+	{
+		x++;
+		connected++;
+		if (connected >= 4)
+			return true;
+	}
+
+	//Diagonal checks
+	connected = 0;
+	x = lastMove.x;
+	y = lastMove.y;
+	while (x >= 0 && y < BOARD_WIDTH && board.pieces[x][y].getFillColor() == c)		//North-east movement
+	{
+		x--;
+		y++;
+		connected++;
+		if (connected >= 4)
+			return true;
+	}
+
+	connected--;
+	x = lastMove.x;
+	y = lastMove.y;
+	while (x < BOARD_HEIGHT && y >= 0 && board.pieces[x][y].getFillColor() == c)	//South-west movement
+	{
+		x++;
+		y--;
+		connected++;
+		if (connected >= 4)
+			return true;
+	}
+
+	connected = 0;
+	x = lastMove.x;
+	y = lastMove.y;
+	while (x < BOARD_HEIGHT && y < BOARD_WIDTH && board.pieces[x][y].getFillColor() == c)		//South-east movement
+	{
+		x++;
+		y++;
+		connected++;
+		if (connected >= 4)
+			return true;
+	}
+
+	connected--;
+	x = lastMove.x;
+	y = lastMove.y;
+	while (x >= 0 && y >= 0 && board.pieces[x][y].getFillColor() == c)		//North-west searching
+	{
+		x--;
+		y--;
+		connected++;
+		if (connected >= 4)
+			return true;
+	}
+
+	return false;
 }
 
 void PlayState::SwitchTurns()
@@ -94,7 +218,7 @@ void PlayState::PlacePiece()
 		col = 4;
 	else if (mousePos.x == 550.f)
 		col = 5;
-	else if (mousePos.x == 650.f)
+	else
 		col = 6;
 
 	for (int i = BOARD_HEIGHT; i >= 0; i--)
@@ -105,6 +229,7 @@ void PlayState::PlacePiece()
 			pieceToAdd.setPosition(board.pieces[i][col].getPosition());
 			board.pieces[i][col] = pieceToAdd;
 			turnEnd = true;
+			lastMove = sf::Vector2i(i, col);
 			break;
 		}
 	}
