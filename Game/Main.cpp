@@ -19,11 +19,15 @@ int main()
 	{
 		//Update stuff here
 		mGame.Update();
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
+			else if (event.type == sf::Event::MouseButtonReleased)
+				mGame.MouseReleased(event);
+
 		}
 
 		window.clear();

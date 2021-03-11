@@ -13,6 +13,8 @@ public:
 	void Update();
 	void Draw();
 
+	void MouseReleased(sf::Event ev);
+
 private:
 	sf::RenderWindow& window;
 
@@ -27,5 +29,5 @@ private:
 
 	PlayState mPlayState;
 
-	States mStates = States::Start_Menu;
+	States mStates = States::Play;
 };

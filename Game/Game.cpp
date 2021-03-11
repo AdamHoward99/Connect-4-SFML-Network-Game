@@ -53,5 +53,15 @@ void Game::Update()
 void Game::Draw()
 {
 	//Draw elements of the game based on which state is active
+	//Include switch like in update for each state
 	mPlayState.Draw();
+}
+
+void Game::MouseReleased(sf::Event ev)
+{
+	if (ev.mouseButton.button == sf::Mouse::Left)
+	{
+		//Put a switch for each state
+		mPlayState.PlacePiece();
+	}
 }

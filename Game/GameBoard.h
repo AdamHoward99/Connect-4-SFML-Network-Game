@@ -15,6 +15,7 @@ public:
 	void Update();
 	void Draw();
 
+	sf::CircleShape pieces[BOARD_HEIGHT][BOARD_WIDTH];		//make function to get this instead of it being public
 private:
 
 	sf::RenderWindow &window;
@@ -26,7 +27,6 @@ private:
 
 	sf::RectangleShape board_Background;
 	sf::RectangleShape background;
-	sf::CircleShape pieces[BOARD_HEIGHT][BOARD_WIDTH];
 
 	const float piece_Offset = 100.f;
 
