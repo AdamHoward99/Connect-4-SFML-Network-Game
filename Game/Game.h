@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "PlayState.h"
+#include "Menu.h"
 #include <cassert>
 
 class Game
@@ -28,6 +29,7 @@ private:
 	};
 
 	PlayState mPlayState;
+	Menu m;
 
 	States mStates = States::Play;
 };

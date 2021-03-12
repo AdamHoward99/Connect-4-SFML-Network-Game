@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w)
+	:window(w), mPlayState(w), m(w)
 {
 	//Setup elements of game
 	Initialize();
@@ -16,6 +16,7 @@ void Game::Initialize()
 {
 	//Setup all elements of the game
 	mPlayState.Initialize();
+	m.Initialize();
 }
 
 void Game::Update()
@@ -33,6 +34,7 @@ void Game::Update()
 
 	case States::Start_Menu:
 		//Start functionality here
+		m.Update();
 		break;
 
 	case States::Leaderboard:
