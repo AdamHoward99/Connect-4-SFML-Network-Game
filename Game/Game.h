@@ -1,7 +1,9 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "States.h"
 #include "PlayState.h"
 #include "Menu.h"
+#include "StartMenu.h"
 #include <cassert>
 
 class Game
@@ -19,17 +21,10 @@ public:
 private:
 	sf::RenderWindow& window;
 
-	enum States
-	{
-		Start_Menu,
-		Pause_Menu,
-		Win_Menu,
-		Play,
-		Leaderboard
-	};
+	void ChangeState(States newState);
 
 	PlayState mPlayState;
-	Menu m;
+	StartMenu mStart;
 
-	States mStates = States::Play;
+	States mStates = States::Start_Menu;
 };
