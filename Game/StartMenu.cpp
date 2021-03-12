@@ -17,6 +17,21 @@ void StartMenu::Initialize()
 	SetupSprites();
 	SetupFonts();
 	SetupText();
+
+	//Setup Audio
+	if (!mButtonSFXBuffer.loadFromFile("ButtonClickSound.wav"))
+		assert(!mButtonSFXBuffer.loadFromFile("ButtonClickSound.wav"));
+
+	mButtonSFX.setBuffer(mButtonSFXBuffer);
+	mButtonSFX.setVolume(30.f);
+
+	//Setup Music
+	if (!mBackgroundMusic.openFromFile("BackgroundMusic.ogg"))
+		assert(!mBackgroundMusic.openFromFile("BackgroundMusic.ogg"));
+
+	mBackgroundMusic.setVolume(50.f);
+	mBackgroundMusic.play();
+	mBackgroundMusic.setLoop(true);
 }
 
 void StartMenu::SetupTextures()
@@ -122,6 +137,7 @@ States StartMenu::DetectButtonPress()
 
 	if (btn1Bounds.contains(mouse))
 	{
+		mButtonSFX.play();
 		return States::Play;
 	}
 	else if (btn2Bounds.contains(mouse))
@@ -142,7 +158,6 @@ void StartMenu::HoverOnButton()
 	if (mPlayBtnSpr.getGlobalBounds().contains(mousePos))
 	{
 		mPlayBtnTxt.setFillColor(sf::Color::Black);
-		//Add sound here?
 	}
 	else mPlayBtnTxt.setFillColor(sf::Color::White);
 

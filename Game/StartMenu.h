@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include "States.h"
 #include <cassert>
 
@@ -43,6 +44,12 @@ private:
 	sf::Text mPlayBtnTxt;
 	sf::Text mControlBtnTxt;
 	sf::Text mQuitBtnTxt;
+
+	//Sound Variables
+	sf::SoundBuffer mButtonSFXBuffer;
+	sf::Sound mButtonSFX;
+
+	sf::Music mBackgroundMusic;
 
 	sf::Vector2f mousePos;
 };
