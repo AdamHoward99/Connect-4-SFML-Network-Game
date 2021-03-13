@@ -23,27 +23,27 @@ void Menu::Draw()
 void Menu::SetupTextures()
 {
 	//Background Texture
-	if (!mBackgroundTex.loadFromFile("menuBackground.png"))
+	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
 	{
 		assert(!mBackgroundTex.loadFromFile("menuBackground.png"));
 	}
 	mBackgroundTex.setSmooth(true);
 
 	//Button Texture
-	if (!mButtonTex.loadFromFile("MenuButton.png"))
+	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
 	{
 		assert(!mButtonTex.loadFromFile("MenuButton.png"));
 	}
 	mButtonTex.setSmooth(true);
 
 	//Play Sound Texture
-	if (!mMuteButtonPlay.loadFromFile("MusicPlay.png"))
+	if (!mMuteButtonPlay.loadFromFile("bin/Textures/MusicPlay.png"))
 		assert(!mMuteButtonPlay.loadFromFile("MusicPlay.png"));
 
 	mMuteButtonPlay.setSmooth(true);
 
 	//Mute Sound Texture
-	if (!mMuteButtonMuted.loadFromFile("MusicMute.png"))
+	if (!mMuteButtonMuted.loadFromFile("bin/Textures/MusicMute.png"))
 		assert(!mMuteButtonMuted.loadFromFile("MusicMute.png"));
 
 	mMuteButtonMuted.setSmooth(true);

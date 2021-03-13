@@ -20,6 +20,12 @@ void PlayState::Initialize()
 
 	DecideTurnOrder();
 
+	//Audio
+	if (!mPieceSfx.first.loadFromFile("bin/Music/PieceSfx.wav"))
+		assert(!mPieceSfx.first.loadFromFile("bin/Music/PieceSfx.wav"));
+
+	mPieceSfx.second.setBuffer(mPieceSfx.first);
+	mPieceSfx.second.setVolume(40.f);
 }
 
 void PlayState::Update()
@@ -236,7 +242,7 @@ void PlayState::PlacePiece()
 	else
 		col = 6;
 
-	for (int i = BOARD_HEIGHT; i >= 0; i--)
+	for (int i = BOARD_HEIGHT - 1; i >= 0; i--)
 	{
 		if (board.pieces[i][col].getFillColor() == sf::Color::White)		//Finds an empty piece
 		{
@@ -245,6 +251,7 @@ void PlayState::PlacePiece()
 			board.pieces[i][col] = pieceToAdd;
 			turnEnd = true;
 			lastMove = sf::Vector2i(i, col);
+			mPieceSfx.second.play();
 			break;
 		}
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include "GameBoard.h"
 
 class PlayState
@@ -46,4 +47,6 @@ private:
 	sf::Vector2i lastMove;		//Stores position of last move on board to easier check for a win
 
 	bool gameWon = false;
+
+	std::pair<sf::SoundBuffer, sf::Sound> mPieceSfx;
 };

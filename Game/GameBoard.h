@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include <cassert>
 
 #define BOARD_HEIGHT 6
 #define BOARD_WIDTH 7
@@ -28,7 +29,9 @@ private:
 	const sf::Color background_Colour = sf::Color::Color(170, 196, 239);
 
 	sf::RectangleShape board_Background;
-	sf::RectangleShape background;
+	
+	sf::Texture backgroundTex;
+	sf::Sprite backgroundSpr;
 
 	const float piece_Offset = 100.f;
 

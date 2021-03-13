@@ -14,7 +14,7 @@ GameBoard::~GameBoard()
 void GameBoard::Initialize()
 {
 	float xPosition = 50.f;
-	float yPosition = 50.f;
+	float yPosition = 150.f;
 	for (int x = 0; x < BOARD_HEIGHT; x++)
 	{
 		for (int y = 0; y < BOARD_WIDTH; y++)
@@ -32,12 +32,16 @@ void GameBoard::Initialize()
 	}
 
 	board_Background.setSize(sf::Vector2f(700.f, 600.f));
-	board_Background.setPosition(30.f, 30.f);
+	board_Background.setPosition(30.f, 130.f);
 	board_Background.setFillColor(boardColour);
 
-	background.setSize(sf::Vector2f(900, 800));
-	background.setPosition(0.f, 0.f);
-	background.setFillColor(background_Colour);
+	if (!backgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
+		assert(!backgroundTex.loadFromFile("bin/Textures/menuBackground.png"));
+
+	backgroundTex.setSmooth(true);
+
+	backgroundSpr.setTexture(backgroundTex);
+	backgroundSpr.setPosition(0.f, 0.f);
 }
 
 void GameBoard::Update()
@@ -47,7 +51,7 @@ void GameBoard::Update()
 
 void GameBoard::Draw()
 {
-	window.draw(background);
+	window.draw(backgroundSpr);
 	window.draw(board_Background);
 
 	for (int x = 0; x < BOARD_HEIGHT; x++)

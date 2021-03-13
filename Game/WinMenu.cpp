@@ -45,9 +45,9 @@ void WinMenu::SetupSprites()
 void WinMenu::SetupFonts()
 {
 	//Font for button text
-	if (!mFont.loadFromFile("OpenSans-Regular.ttf"))
+	if (!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"))
 	{
-		assert(!mFont.loadFromFile("OpenSans-Regular.ttf"));
+		assert(!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"));
 	}
 }
 
@@ -78,8 +78,8 @@ void WinMenu::SetupAudio()
 {
 	//Setup Audio
 	//Buffer
-	if (!mButtonClickSfx.first.loadFromFile("ButtonClickSound.wav"))
-		assert(!mButtonClickSfx.first.loadFromFile("ButtonClickSound.wav"));
+	if (!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"))
+		assert(!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"));
 
 	//Sound
 	mButtonClickSfx.second.setBuffer(mButtonClickSfx.first);
