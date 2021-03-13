@@ -53,6 +53,11 @@ void GameBoard::Draw()
 	for (int x = 0; x < BOARD_HEIGHT; x++)
 		for (int y = 0; y < BOARD_WIDTH; y++)
 			window.draw(pieces[x][y]);
+}
 
-
+void GameBoard::ResetBoard()
+{
+	for (int x = 0; x < BOARD_HEIGHT; x++)
+		for (int y = 0; y < BOARD_WIDTH; y++)
+			pieces[x][y].setFillColor(sf::Color::White);
 }

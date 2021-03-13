@@ -18,7 +18,7 @@ public:
 	virtual void HoverOnButton() = 0;
 
 	//Setup functions
-	virtual void SetupTextures() = 0;
+	virtual void SetupTextures();
 	virtual void SetupSprites() = 0;
 	virtual void SetupFonts() = 0;
 	virtual void SetupText() = 0;

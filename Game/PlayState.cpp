@@ -36,7 +36,9 @@ void PlayState::Update()
 	{
 		//Function to check if 4 are connected
 		if (HasConnected4())
-			float t = 10.f;		//Transition to another state
+		{
+			gameWon = true;
+		}
 
 		//Function to see if there is a winner
 		if (IsBoardFull())
@@ -239,4 +241,11 @@ void PlayState::Draw()
 {
 	board.Draw();
 	window.draw(pieceToAdd);
+}
+
+void PlayState::Reset()
+{
+	board.ResetBoard();
+	gameWon = false;
+	SwitchTurns();
 }

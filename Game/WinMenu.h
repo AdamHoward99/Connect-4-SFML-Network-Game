@@ -2,18 +2,17 @@
 #include "Menu.h"
 #include <cassert>
 
-class ControlMenu : public Menu
+class WinMenu : public Menu
 {
 public:
-	ControlMenu(sf::RenderWindow& mApp);		//Default Constructor
-	~ControlMenu();		//Default Destructor
+	WinMenu(sf::RenderWindow& mApp);		//Default Constructor
+	~WinMenu();		//Default destructor
 
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 
 	States DetectButtonPress() override;
-
 
 private:
 	sf::RenderWindow& window;

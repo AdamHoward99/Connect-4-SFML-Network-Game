@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w), mStart(w), mControls(w)
+	:window(w), mPlayState(w), mStart(w), mControls(w), mWin(w)
 {
 	//Setup elements of game
 	Initialize();
@@ -18,6 +18,7 @@ void Game::Initialize()
 	mPlayState.Initialize();
 	mStart.Initialize();
 	mControls.Initialize();
+	mWin.Initialize();
 }
 
 void Game::Update()
@@ -27,6 +28,12 @@ void Game::Update()
 	{
 	case States::Play:
 		mPlayState.Update();
+
+		if (mPlayState.GetIfGameWon())
+		{
+			mStates = States::Win_Menu;
+			mPlayState.Reset();
+		}
 		break;
 
 	case States::Pause_Menu:
@@ -38,7 +45,6 @@ void Game::Update()
 		break;
 
 	case States::Start_Menu:
-		//Start functionality here
 		mStart.Update();
 		break;
 
@@ -47,7 +53,7 @@ void Game::Update()
 		break;
 
 	case States::Win_Menu:
-		//Win menu functionality here
+		mWin.Update();
 		break;
 
 	case States::Quit:
@@ -89,7 +95,7 @@ void Game::Draw()
 		break;
 
 	case States::Win_Menu:
-		//Win menu functionality here
+		mWin.Draw();
 		break;
 
 	default:
@@ -125,7 +131,7 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		case States::Win_Menu:
-			//Win menu functionality here
+			ChangeState(mWin.DetectButtonPress());
 			break;
 
 		default:

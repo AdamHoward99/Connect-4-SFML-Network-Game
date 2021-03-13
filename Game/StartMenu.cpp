@@ -26,23 +26,6 @@ void StartMenu::Initialize()
 	SetupAudio();
 }
 
-void StartMenu::SetupTextures()
-{
-	//Background Texture
-	if (!mBackgroundTex.loadFromFile("menuBackground.png"))
-	{
-		assert(!mBackgroundTex.loadFromFile("menuBackground.png"));
-	}
-	mBackgroundTex.setSmooth(true);
-
-	//Button Texture
-	if (!mButtonTex.loadFromFile("MenuButton.png"))
-	{
-		assert(!mButtonTex.loadFromFile("MenuButton.png"));
-	}
-	mButtonTex.setSmooth(true);
-}
-
 void StartMenu::SetupSprites()
 {
 	//Background Sprite
@@ -131,19 +114,17 @@ void StartMenu::Draw()
 
 States StartMenu::DetectButtonPress()
 {
-	sf::Vector2f mouse = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
-	if (mButtons.at(0).getGlobalBounds().contains(mouse))
+	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Play;
 	}
-	else if (mButtons.at(1).getGlobalBounds().contains(mouse))
+	else if (mButtons.at(1).getGlobalBounds().contains(mousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Control_Menu;
 	}
-	else if (mButtons.at(2).getGlobalBounds().contains(mouse))
+	else if (mButtons.at(2).getGlobalBounds().contains(mousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Quit;		//Maybe just close the window instead?

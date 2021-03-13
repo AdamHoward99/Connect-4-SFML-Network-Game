@@ -15,6 +15,10 @@ public:
 
 	void PlacePiece();
 
+	void SetIfGameWon(bool foo) { gameWon = foo; }
+	bool GetIfGameWon() { return gameWon; }
+
+	void Reset();
 private:
 	sf::RenderWindow& window;
 
@@ -22,6 +26,7 @@ private:
 	void SwitchTurns();
 	bool IsBoardFull();
 	bool HasConnected4();
+
 
 	enum Turn
 	{
@@ -39,4 +44,5 @@ private:
 	bool turnEnd = false;
 	sf::Vector2i lastMove;		//Stores position of last move on board to easier check for a win
 
+	bool gameWon = false;
 };

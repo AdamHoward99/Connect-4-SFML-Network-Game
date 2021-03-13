@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include "StartMenu.h"
 #include "ControlMenu.h"
+#include "WinMenu.h"
 #include <cassert>
 
 class Game
@@ -28,6 +29,7 @@ private:
 	//Could put all menus into a vector of menus?
 	StartMenu mStart;
 	ControlMenu mControls;
+	WinMenu mWin;
 
 	States mStates = States::Start_Menu;
 };
