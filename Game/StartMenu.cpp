@@ -3,6 +3,12 @@
 StartMenu::StartMenu(sf::RenderWindow& w)
 	:window(w)
 {
+	buttonAmount = 3;
+	textAmount = 3;
+
+	mButtons = std::vector<sf::Sprite>(buttonAmount);
+	mText = std::vector<sf::Text>(textAmount);
+
 	Initialize();
 }
 
@@ -17,21 +23,7 @@ void StartMenu::Initialize()
 	SetupSprites();
 	SetupFonts();
 	SetupText();
-
-	//Setup Audio
-	if (!mButtonSFXBuffer.loadFromFile("ButtonClickSound.wav"))
-		assert(!mButtonSFXBuffer.loadFromFile("ButtonClickSound.wav"));
-
-	mButtonSFX.setBuffer(mButtonSFXBuffer);
-	mButtonSFX.setVolume(30.f);
-
-	//Setup Music
-	if (!mBackgroundMusic.openFromFile("BackgroundMusic.ogg"))
-		assert(!mBackgroundMusic.openFromFile("BackgroundMusic.ogg"));
-
-	mBackgroundMusic.setVolume(50.f);
-	mBackgroundMusic.play();
-	mBackgroundMusic.setLoop(true);
+	SetupAudio();
 }
 
 void StartMenu::SetupTextures()
@@ -44,11 +36,11 @@ void StartMenu::SetupTextures()
 	mBackgroundTex.setSmooth(true);
 
 	//Button Texture
-	if (!mBtnTex.loadFromFile("MenuButton.png"))
+	if (!mButtonTex.loadFromFile("MenuButton.png"))
 	{
-		assert(!mBtnTex.loadFromFile("MenuButton.png"));
+		assert(!mButtonTex.loadFromFile("MenuButton.png"));
 	}
-	mBtnTex.setSmooth(true);
+	mButtonTex.setSmooth(true);
 }
 
 void StartMenu::SetupSprites()
@@ -56,53 +48,67 @@ void StartMenu::SetupSprites()
 	//Background Sprite
 	mBackgroundSpr.setTexture(mBackgroundTex);
 
-	//Play Button Sprite
-	mPlayBtnSpr.setTexture(mBtnTex);
-	mPlayBtnSpr.setPosition(sf::Vector2f(300.f, 300.f));
-	mPlayBtnSpr.setScale(sf::Vector2f(0.75f, 0.75f));
+	//Button Sprites
+	float yOffset = 300.f;
+	for (int i = 0; i < buttonAmount; i++)
+	{
+		mButtons.at(i).setTexture(mButtonTex);
+		mButtons.at(i).setPosition(300.f, yOffset);
+		mButtons.at(i).setScale(sf::Vector2f(0.75f, 0.75f));
 
-	//Control Button Sprite
-	mControlBtnSpr.setTexture(mBtnTex);
-	mControlBtnSpr.setPosition(sf::Vector2f(300.f, 440.f));
-	mControlBtnSpr.setScale(sf::Vector2f(0.75f, 0.75f));
-
-	//Quit Button Sprite
-	mQuitBtnSpr.setTexture(mBtnTex);
-	mQuitBtnSpr.setPosition(sf::Vector2f(300.f, 580.f));
-	mQuitBtnSpr.setScale(sf::Vector2f(0.75f, 0.75f));
+		yOffset += 140.f;
+	}
 }
 
 void StartMenu::SetupFonts()
 {
 	//Font for button text
-	if (!mTxtFont.loadFromFile("OpenSans-Regular.ttf"))
+	if (!mFont.loadFromFile("OpenSans-Regular.ttf"))
 	{
-		assert(!mTxtFont.loadFromFile("OpenSans-Regular.ttf"));
+		assert(!mFont.loadFromFile("OpenSans-Regular.ttf"));
 	}
 }
 
 void StartMenu::SetupText()
 {
-	//Play Button text
-	mPlayBtnTxt.setString("Play Game");
-	mPlayBtnTxt.setFillColor(sf::Color::White);
-	mPlayBtnTxt.setPosition(sf::Vector2f(350.f, 310.f));
-	mPlayBtnTxt.setFont(mTxtFont);
-	mPlayBtnTxt.setCharacterSize(25);
+	float yOffset = 310.f;
+	for (int i = 0; i < textAmount; i++)
+	{
+		mText.at(i).setFillColor(sf::Color::White);
+		mText.at(i).setPosition(sf::Vector2f(350.f, yOffset));
+		mText.at(i).setFont(mFont);
+		mText.at(i).setCharacterSize(25);
 
-	//Control Button Text
-	mControlBtnTxt.setString("Control Menu");
-	mControlBtnTxt.setFillColor(sf::Color::White);
-	mControlBtnTxt.setPosition(sf::Vector2f(330.f, 450.f));
-	mControlBtnTxt.setFont(mTxtFont);
-	mControlBtnTxt.setCharacterSize(25);
+		yOffset += 140.f;
+	}
 
-	//Quit Button Text
-	mQuitBtnTxt.setString("Quit Game");
-	mQuitBtnTxt.setFillColor(sf::Color::White);
-	mQuitBtnTxt.setPosition(sf::Vector2f(350.f, 590.f));
-	mQuitBtnTxt.setFont(mTxtFont);
-	mQuitBtnTxt.setCharacterSize(25);
+	mText.at(0).setString("Play Game");
+	mText.at(1).setString("Controls");
+	mText.at(2).setString("Quit Game");
+
+	//Reposition one of the text, could remove in future
+	mText.at(1).setPosition(sf::Vector2f(360.f, 450.f));
+
+}
+
+void StartMenu::SetupAudio()
+{
+	//Setup Audio
+	//Buffer
+	if(!mButtonClickSfx.first.loadFromFile("ButtonClickSound.wav"))
+		assert(!mButtonClickSfx.first.loadFromFile("ButtonClickSound.wav"));
+
+	//Sound
+	mButtonClickSfx.second.setBuffer(mButtonClickSfx.first);
+	mButtonClickSfx.second.setVolume(30.f);
+
+	//Setup Music
+	if (!mBackgroundMusic.openFromFile("BackgroundMusic.ogg"))
+		assert(!mBackgroundMusic.openFromFile("BackgroundMusic.ogg"));
+
+	mBackgroundMusic.setVolume(50.f);
+	mBackgroundMusic.play();
+	mBackgroundMusic.setLoop(true);
 }
 
 void StartMenu::Update()
@@ -116,36 +122,30 @@ void StartMenu::Draw()
 {
 	window.draw(mBackgroundSpr);
 
-	window.draw(mPlayBtnSpr);
-	window.draw(mPlayBtnTxt);
+	for (auto b : mButtons)
+		window.draw(b);
 
-
-	window.draw(mControlBtnSpr);
-	window.draw(mControlBtnTxt);
-
-	window.draw(mQuitBtnSpr);
-	window.draw(mQuitBtnTxt);
+	for (auto t : mText)
+		window.draw(t);
 }
 
 States StartMenu::DetectButtonPress()
 {
 	sf::Vector2f mouse = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-	sf::FloatRect btn1Bounds = mPlayBtnSpr.getGlobalBounds();
-	sf::FloatRect btn2Bounds = mControlBtnSpr.getGlobalBounds();
-	sf::FloatRect btn3Bounds = mQuitBtnSpr.getGlobalBounds();
-
-	if (btn1Bounds.contains(mouse))
+	if (mButtons.at(0).getGlobalBounds().contains(mouse))
 	{
-		mButtonSFX.play();
+		mButtonClickSfx.second.play();
 		return States::Play;
 	}
-	else if (btn2Bounds.contains(mouse))
+	else if (mButtons.at(1).getGlobalBounds().contains(mouse))
 	{
+		mButtonClickSfx.second.play();
 		return States::Control_Menu;
 	}
-	else if (btn3Bounds.contains(mouse))
+	else if (mButtons.at(2).getGlobalBounds().contains(mouse))
 	{
+		mButtonClickSfx.second.play();
 		return States::Quit;		//Maybe just close the window instead?
 	}
 
@@ -154,27 +154,11 @@ States StartMenu::DetectButtonPress()
 
 void StartMenu::HoverOnButton()
 {
-	//Play Button
-	if (mPlayBtnSpr.getGlobalBounds().contains(mousePos))
+	for (int i = 0; i < buttonAmount; i++)
 	{
-		mPlayBtnTxt.setFillColor(sf::Color::Black);
+		if (mButtons.at(i).getGlobalBounds().contains(mousePos))
+			mText.at(i).setFillColor(sf::Color::Black);
+		else
+			mText.at(i).setFillColor(sf::Color::White);
 	}
-	else mPlayBtnTxt.setFillColor(sf::Color::White);
-
-	//Control Button
-	if (mControlBtnSpr.getGlobalBounds().contains(mousePos))
-	{
-		mControlBtnTxt.setFillColor(sf::Color::Black);
-		//Add sound here?
-	}
-	else mControlBtnTxt.setFillColor(sf::Color::White);
-
-	//Quit Button
-	if (mQuitBtnSpr.getGlobalBounds().contains(mousePos))
-	{
-		mQuitBtnTxt.setFillColor(sf::Color::Black);
-		//Add sound here?
-	}
-	else mQuitBtnTxt.setFillColor(sf::Color::White);
-
 }

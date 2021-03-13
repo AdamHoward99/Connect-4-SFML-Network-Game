@@ -3,53 +3,29 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
 #include "States.h"
+#include "Menu.h"
 #include <cassert>
 
-class StartMenu
+class StartMenu : public Menu
 {
 public:
 	StartMenu(sf::RenderWindow& mApp);
 	~StartMenu();
 
-	void Initialize();
-	void Update();
-	void Draw();
+	void Initialize() override;
+	void Update() override;
+	void Draw() override;
 
-	States DetectButtonPress();
+	States DetectButtonPress() override;
 
 private:
 	sf::RenderWindow& window;
 
-	void SetupTextures();
-	void SetupSprites();
-	void SetupFonts();
-	void SetupText();
+	void SetupTextures() override;
+	void SetupSprites() override;
+	void SetupFonts() override;
+	void SetupText() override;
+	void SetupAudio() override;
 
 	void HoverOnButton();
-
-	//Texture Variables
-	sf::Texture mBackgroundTex;
-	sf::Texture mBtnTex;
-
-	//Sprite Variables
-	sf::Sprite mBackgroundSpr;
-	sf::Sprite mPlayBtnSpr;
-	sf::Sprite mControlBtnSpr;		//Could create a vector for buttons and text?
-	sf::Sprite mQuitBtnSpr;
-
-	//Font Variables
-	sf::Font mTxtFont;
-
-	//Text Variables
-	sf::Text mPlayBtnTxt;
-	sf::Text mControlBtnTxt;
-	sf::Text mQuitBtnTxt;
-
-	//Sound Variables
-	sf::SoundBuffer mButtonSFXBuffer;
-	sf::Sound mButtonSFX;
-
-	sf::Music mBackgroundMusic;
-
-	sf::Vector2f mousePos;
 };

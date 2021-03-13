@@ -1,11 +1,5 @@
 #include "Menu.h"
 
-Menu::Menu(sf::RenderWindow& w)
-	:window(w)
-{
-	Initialize();
-}
-
 Menu::~Menu()
 {
 	//Delete anything here
@@ -24,4 +18,9 @@ void Menu::Update()
 void Menu::Draw()
 {
 
+}
+
+States Menu::DetectButtonPress()
+{
+	return States::Start_Menu;
 }
