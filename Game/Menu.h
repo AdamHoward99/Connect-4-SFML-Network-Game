@@ -15,6 +15,7 @@ public:
 	virtual void Draw() = 0;
 
 	virtual States DetectButtonPress();
+	virtual void HoverOnButton() = 0;
 
 	//Setup functions
 	virtual void SetupTextures() = 0;

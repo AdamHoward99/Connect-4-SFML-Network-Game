@@ -4,6 +4,7 @@
 #include "PlayState.h"
 #include "Menu.h"
 #include "StartMenu.h"
+#include "ControlMenu.h"
 #include <cassert>
 
 class Game
@@ -24,7 +25,9 @@ private:
 	void ChangeState(States newState);
 
 	PlayState mPlayState;
+	//Could put all menus into a vector of menus?
 	StartMenu mStart;
+	ControlMenu mControls;
 
 	States mStates = States::Start_Menu;
 };

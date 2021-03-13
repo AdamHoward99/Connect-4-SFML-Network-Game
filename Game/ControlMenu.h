@@ -1,22 +1,19 @@
 #pragma once
-
-#include "SFML/Graphics.hpp"
-#include "SFML/Audio.hpp"
-#include "States.h"
 #include "Menu.h"
 #include <cassert>
 
-class StartMenu : public Menu
+class ControlMenu : public Menu
 {
 public:
-	StartMenu(sf::RenderWindow& mApp);
-	~StartMenu();
+	ControlMenu(sf::RenderWindow& mApp);		//Default Constructor
+	~ControlMenu();		//Default Destructor
 
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 
 	States DetectButtonPress() override;
+
 
 private:
 	sf::RenderWindow& window;

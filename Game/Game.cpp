@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w), mStart(w)
+	:window(w), mPlayState(w), mStart(w), mControls(w)
 {
 	//Setup elements of game
 	Initialize();
@@ -17,6 +17,7 @@ void Game::Initialize()
 	//Setup all elements of the game
 	mPlayState.Initialize();
 	mStart.Initialize();
+	mControls.Initialize();
 }
 
 void Game::Update()
@@ -33,7 +34,7 @@ void Game::Update()
 		break;
 
 	case States::Control_Menu:
-		//Control functionality here
+		mControls.Update();
 		break;
 
 	case States::Start_Menu:
@@ -75,7 +76,7 @@ void Game::Draw()
 		break;
 
 	case States::Control_Menu:
-		//Control functionality
+		mControls.Draw();
 		break;
 
 	case States::Start_Menu:
@@ -112,7 +113,7 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		case States::Control_Menu:
-			//Control functionality
+			ChangeState(mControls.DetectButtonPress());
 			break;
 
 		case States::Start_Menu:
