@@ -30,6 +30,9 @@ protected:
 	sf::Texture mBackgroundTex;
 	sf::Texture mButtonTex;
 
+	sf::Texture mMuteButtonPlay;
+	sf::Texture mMuteButtonMuted;
+
 	//Sprite Variables
 	sf::Sprite mBackgroundSpr;
 	std::vector<sf::Sprite> mButtons;

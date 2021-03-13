@@ -27,4 +27,6 @@ private:
 	void SetupAudio() override;
 
 	void HoverOnButton() override;
+
+	sf::Sprite mMuteButtonSpr;
 };

@@ -35,6 +35,18 @@ void Menu::SetupTextures()
 		assert(!mButtonTex.loadFromFile("MenuButton.png"));
 	}
 	mButtonTex.setSmooth(true);
+
+	//Play Sound Texture
+	if (!mMuteButtonPlay.loadFromFile("MusicPlay.png"))
+		assert(!mMuteButtonPlay.loadFromFile("MusicPlay.png"));
+
+	mMuteButtonPlay.setSmooth(true);
+
+	//Mute Sound Texture
+	if (!mMuteButtonMuted.loadFromFile("MusicMute.png"))
+		assert(!mMuteButtonMuted.loadFromFile("MusicMute.png"));
+
+	mMuteButtonMuted.setSmooth(true);
 }
 
 States Menu::DetectButtonPress()

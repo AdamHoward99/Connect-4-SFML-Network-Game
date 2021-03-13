@@ -41,6 +41,11 @@ void StartMenu::SetupSprites()
 
 		yOffset += 140.f;
 	}
+
+	//Mute Sprite
+	mMuteButtonSpr.setTexture(mMuteButtonPlay);
+	mMuteButtonSpr.setPosition(sf::Vector2f(750.f, 50.f));
+	mMuteButtonSpr.setScale(sf::Vector2f(0.1f, 0.1f));
 }
 
 void StartMenu::SetupFonts()
@@ -104,6 +109,7 @@ void StartMenu::Update()
 void StartMenu::Draw()
 {
 	window.draw(mBackgroundSpr);
+	window.draw(mMuteButtonSpr);
 
 	for (auto b : mButtons)
 		window.draw(b);
@@ -129,6 +135,20 @@ States StartMenu::DetectButtonPress()
 		mButtonClickSfx.second.play();
 		return States::Quit;		//Maybe just close the window instead?
 	}
+	else if (mMuteButtonSpr.getGlobalBounds().contains(mousePos))
+	{
+		if (mBackgroundMusic.getVolume() > 0)
+		{
+			mBackgroundMusic.setVolume(0);
+			mMuteButtonSpr.setTexture(mMuteButtonMuted);
+		}
+		else
+		{
+			mBackgroundMusic.setVolume(50);
+			mMuteButtonSpr.setTexture(mMuteButtonPlay);
+		}
+	}
+
 
 	return States::Start_Menu;
 }
