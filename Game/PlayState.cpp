@@ -18,10 +18,7 @@ void PlayState::Initialize()
 
 	pieceToAdd = sf::CircleShape(30.f);
 
-	if (mGameTurn == Turn::Player_1_Turn)
-		pieceToAdd.setFillColor(sf::Color::Red);
-	else
-		pieceToAdd.setFillColor(sf::Color::Yellow);
+	DecideTurnOrder();
 
 }
 
@@ -189,6 +186,22 @@ bool PlayState::HasConnected4()
 	return false;
 }
 
+void PlayState::DecideTurnOrder()
+{
+	int random = std::rand() % 100 + 1;
+
+	if (random < 49)
+	{
+		mGameTurn = Turn::Player_1_Turn;
+		pieceToAdd.setFillColor(sf::Color::Red);
+	}
+	else
+	{
+		mGameTurn = Turn::Player_2_Turn;
+		pieceToAdd.setFillColor(sf::Color::Yellow);
+	}
+}
+
 void PlayState::SwitchTurns()
 {
 	if (mGameTurn == Turn::Player_1_Turn)
@@ -247,5 +260,5 @@ void PlayState::Reset()
 {
 	board.ResetBoard();
 	gameWon = false;
-	SwitchTurns();
+	DecideTurnOrder();
 }

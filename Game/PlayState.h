@@ -23,6 +23,7 @@ private:
 	sf::RenderWindow& window;
 
 	void UpdateMousePosition();
+	void DecideTurnOrder();
 	void SwitchTurns();
 	bool IsBoardFull();
 	bool HasConnected4();
