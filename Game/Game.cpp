@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w), mStart(w), mControls(w), mWin(w)
+	:window(w), mPlayState(w), mStart(w), mControls(w), mWin(w), mLeaderboard(w)
 {
 	//Setup elements of game
 	Initialize();
@@ -19,6 +19,7 @@ void Game::Initialize()
 	mStart.Initialize();
 	mControls.Initialize();
 	mWin.Initialize();
+	//mLeaderboard.Initialize();
 }
 
 void Game::Update()
@@ -49,7 +50,7 @@ void Game::Update()
 		break;
 
 	case States::Leaderboard:
-		//Leaderboard functionality here
+		mLeaderboard.Update();
 		break;
 
 	case States::Win_Menu:
@@ -91,7 +92,7 @@ void Game::Draw()
 		break;
 
 	case States::Leaderboard:
-		//Leaderboard functionality here
+		mLeaderboard.Draw();
 		break;
 
 	case States::Win_Menu:
@@ -127,7 +128,7 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		case States::Leaderboard:
-			//Leaderboard functionality here
+			ChangeState(mLeaderboard.DetectButtonPress());
 			break;
 
 		case States::Win_Menu:

@@ -6,6 +6,7 @@
 #include "StartMenu.h"
 #include "ControlMenu.h"
 #include "WinMenu.h"
+#include "LeaderboardMenu.h"
 #include <cassert>
 
 class Game
@@ -30,6 +31,7 @@ private:
 	StartMenu mStart;
 	ControlMenu mControls;
 	WinMenu mWin;
+	LeaderboardMenu mLeaderboard;
 
 	States mStates = States::Start_Menu;
 };
