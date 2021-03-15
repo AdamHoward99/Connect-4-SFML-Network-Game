@@ -1,8 +1,13 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w), mStart(w), mControls(w), mWin(w), mLeaderboard(w), mPause(w)
+	:window(w), mPlayState(w), mWin(w), mPause(w)
 {
+	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
+	mMenus["ControlMenu"] = std::make_unique<ControlMenu>(w);
+	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w);
+
+
 	//Setup elements of game
 	Initialize();
 }
@@ -10,16 +15,16 @@ Game::Game(sf::RenderWindow& w)
 Game::~Game()
 {
 	//Remove all pointers
+	mMenus["StartMenu"].reset();
+	mMenus["ControlMenu"].reset();
+	mMenus["LeaderboardMenu"].reset();
+
 }
 
 void Game::Initialize()
 {
 	//Setup all elements of the game, not needed as constructors of each call initialize
 	mPlayState.Initialize();
-	mStart.Initialize();
-	mControls.Initialize();
-	mWin.Initialize();
-	//mLeaderboard.Initialize();
 }
 
 void Game::Update()
@@ -44,15 +49,15 @@ void Game::Update()
 		break;
 
 	case States::Control_Menu:
-		mControls.Update();
+		mMenus["ControlMenu"].get()->Update();
 		break;
 
 	case States::Start_Menu:
-		mStart.Update();
+		mMenus["StartMenu"].get()->Update();
 		break;
 
 	case States::Leaderboard:
-		mLeaderboard.Update();
+		mMenus["LeaderboardMenu"].get()->Update();
 		break;
 
 	case States::Win_Menu:
@@ -98,16 +103,15 @@ void Game::Draw()
 		break;
 
 	case States::Control_Menu:
-		mControls.Draw();
+		mMenus["ControlMenu"].get()->Draw();
 		break;
 
 	case States::Start_Menu:
-		//Start functionality here
-		mStart.Draw();
+		mMenus["StartMenu"].get()->Draw();
 		break;
 
 	case States::Leaderboard:
-		mLeaderboard.Draw();
+		mMenus["LeaderboardMenu"].get()->Draw();
 		break;
 
 	case States::Win_Menu:
@@ -137,15 +141,15 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		case States::Control_Menu:
-			ChangeState(mControls.DetectButtonPress());
+			ChangeState(mMenus["ControlMenu"].get()->DetectButtonPress());
 			break;
 
 		case States::Start_Menu:
-			ChangeState(mStart.DetectButtonPress());
+			ChangeState(mMenus["StartMenu"].get()->DetectButtonPress());
 			break;
 
 		case States::Leaderboard:
-			ChangeState(mLeaderboard.DetectButtonPress());
+			ChangeState(mMenus["LeaderboardMenu"].get()->DetectButtonPress());
 			break;
 
 		case States::Win_Menu:

@@ -10,6 +10,7 @@
 #include "PauseMenu.h"
 #include <cassert>
 #include <chrono>
+#include <unordered_map>
 
 class Game
 {
@@ -33,11 +34,10 @@ private:
 	void UpdatePauseTimer();
 
 	PlayState mPlayState;
-	//Could put all menus into a vector of menus?
-	StartMenu mStart;
-	ControlMenu mControls;
+
+	std::unordered_map<std::string, std::unique_ptr<Menu>> mMenus;
+
 	WinMenu mWin;
-	LeaderboardMenu mLeaderboard;
 	PauseMenu mPause;
 
 	States mStates = States::Start_Menu;
