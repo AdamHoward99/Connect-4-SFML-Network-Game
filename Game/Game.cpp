@@ -40,6 +40,7 @@ void Game::Update()
 
 	case States::Pause_Menu:
 		mPause.Update();
+		UpdatePauseTimer();
 		break;
 
 	case States::Control_Menu:
@@ -67,6 +68,18 @@ void Game::Update()
 		break;
 	}
 
+}
+
+void Game::UpdatePauseTimer()
+{
+	mPauseTimer.second = std::chrono::steady_clock::now();
+
+	if (std::chrono::duration_cast<std::chrono::microseconds>(mPauseTimer.second - mPauseTimer.first).count() / 1000000.f > pauseTimerAllowance)
+	{
+		mStates = States::Play;
+		if(pauseTimerAllowance > 10)	
+			pauseTimerAllowance *= 0.5f;
+	}
 }
 
 void Game::Draw()
@@ -155,6 +168,7 @@ void Game::KeyPressed(sf::Event ev)
 		{
 		case States::Play:
 			mStates = States::Pause_Menu;
+			StartPauseTimer();
 			break;
 
 		default:

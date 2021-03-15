@@ -9,6 +9,7 @@
 #include "LeaderboardMenu.h"
 #include "PauseMenu.h"
 #include <cassert>
+#include <chrono>
 
 class Game
 {
@@ -28,6 +29,9 @@ private:
 
 	void ChangeState(States newState);
 
+	void StartPauseTimer() {mPauseTimer.first = std::chrono::steady_clock::now();}
+	void UpdatePauseTimer();
+
 	PlayState mPlayState;
 	//Could put all menus into a vector of menus?
 	StartMenu mStart;
@@ -39,4 +43,7 @@ private:
 	States mStates = States::Start_Menu;
 
 	std::string winMessage;		//Changes based on if you won, lost or tied
+
+	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mPauseTimer;		//Would there need to be a timer for turns too?
+	float pauseTimerAllowance = 30.f;	//How many secs can they pause for, is reduced every time they hit the limit
 };

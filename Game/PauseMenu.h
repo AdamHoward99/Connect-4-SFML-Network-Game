@@ -25,6 +25,4 @@ private:
 	void HoverOnButton() override;
 
 	bool leftGame = false;
-	//Incorporate a timer when doing p v p
-
 };
