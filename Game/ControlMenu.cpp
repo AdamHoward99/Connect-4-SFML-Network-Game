@@ -37,15 +37,6 @@ void ControlMenu::SetupSprites()
 	mButtons.at(0).setPosition(300.f, 600.f);
 }
 
-void ControlMenu::SetupFonts()
-{
-	//Font for button text
-	if (!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"))
-	{
-		assert(!mFont.loadFromFile("OpenSans-Regular.ttf"));
-	}
-}
-
 void ControlMenu::SetupText()
 {
 	for (int i = 0; i < textAmount; i++)
@@ -56,7 +47,7 @@ void ControlMenu::SetupText()
 
 	mText.at(0).setString("Controls");
 	mText.at(0).setPosition(sf::Vector2f(350.f, 100.f));
-	mText.at(0).setCharacterSize(35);
+	mText.at(0).setCharacterSize(TitleFontSize);
 
 	mText.at(1).setString("Mouse the mouse horizontally to select which column to put a piece in."
 		"\nLeft Click to place the piece. Aim of the game is to get 4 in a row,"
@@ -66,20 +57,8 @@ void ControlMenu::SetupText()
 
 	mText.at(2).setString("Back");
 	mText.at(2).setPosition(sf::Vector2f(390.f, 610.f));
-	mText.at(2).setCharacterSize(25);
+	mText.at(2).setCharacterSize(BodyFontSize);
 
-}
-
-void ControlMenu::SetupAudio()
-{
-	//Setup Audio
-	//Buffer
-	if (!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"))
-		assert(!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"));
-
-	//Sound
-	mButtonClickSfx.second.setBuffer(mButtonClickSfx.first);
-	mButtonClickSfx.second.setVolume(30.f);
 }
 
 void ControlMenu::Update()

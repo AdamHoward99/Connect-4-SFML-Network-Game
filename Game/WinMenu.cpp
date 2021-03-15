@@ -42,15 +42,6 @@ void WinMenu::SetupSprites()
 	}
 }
 
-void WinMenu::SetupFonts()
-{
-	//Font for button text
-	if (!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"))
-	{
-		assert(!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"));
-	}
-}
-
 void WinMenu::SetupText()
 {
 	float xOffset = 90.f;
@@ -58,32 +49,20 @@ void WinMenu::SetupText()
 	{
 		mText.at(i).setFillColor(sf::Color::White);
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(25);
+		mText.at(i).setCharacterSize(BodyFontSize);
 		mText.at(i).setPosition(xOffset, 610.f);
 		xOffset += 290.f;
 	}
 
 	mText.at(0).setString("You Win");			//Have win/lose options
 	mText.at(0).setPosition(350.f, 200.f);
-	mText.at(0).setCharacterSize(35);
+	mText.at(0).setCharacterSize(TitleFontSize);
 	mText.at(0).setFillColor(sf::Color::White);
 	mText.at(0).setFont(mFont);
 
 	mText.at(1).setString("Rematch");
 	mText.at(2).setString("Leaderboard");
 	mText.at(3).setString("Main Menu");
-}
-
-void WinMenu::SetupAudio()
-{
-	//Setup Audio
-	//Buffer
-	if (!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"))
-		assert(!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"));
-
-	//Sound
-	mButtonClickSfx.second.setBuffer(mButtonClickSfx.first);
-	mButtonClickSfx.second.setVolume(30.f);
 }
 
 void WinMenu::Update()

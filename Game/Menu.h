@@ -20,9 +20,9 @@ public:
 	//Setup functions
 	virtual void SetupTextures();
 	virtual void SetupSprites() = 0;
-	virtual void SetupFonts() = 0;
+	virtual void SetupFonts();
 	virtual void SetupText() = 0;
-	virtual void SetupAudio() = 0;
+	virtual void SetupAudio();
 
 
 protected:
@@ -53,6 +53,9 @@ protected:
 	int textAmount = 0;
 
 	sf::Vector2f mousePos;
+
+	const int TitleFontSize = 35;
+	const int BodyFontSize = 25;
 
 private:
 

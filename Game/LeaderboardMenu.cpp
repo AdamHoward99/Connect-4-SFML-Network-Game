@@ -42,43 +42,25 @@ void LeaderboardMenu::SetupSprites()
 	}
 }
 
-void LeaderboardMenu::SetupFonts()
-{
-	//Font for button text
-	if (!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"))
-		assert(!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"));
-}
-
 void LeaderboardMenu::SetupText()
 {
 	//Title 
 	mText.at(0).setString("Leaderboard");
 	mText.at(0).setFont(mFont);
 	mText.at(0).setPosition(350.f, 100.f);
-	mText.at(0).setCharacterSize(35);
+	mText.at(0).setCharacterSize(TitleFontSize);
 
 	float xOffset = 180.f;
 	for (int i = 1; i < textAmount; i++)
 	{
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(25);
+		mText.at(i).setCharacterSize(BodyFontSize);
 		mText.at(i).setPosition(xOffset, 610.f);
 		xOffset += 470.f;
 	}
 
 	mText.at(1).setString("Back");
 	mText.at(2).setString("Main Menu");
-}
-
-void LeaderboardMenu::SetupAudio()
-{
-	//Buffer
-	if (!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"))
-		assert(!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"));
-
-	//Sound
-	mButtonClickSfx.second.setBuffer(mButtonClickSfx.first);
-	mButtonClickSfx.second.setVolume(30.f);
 }
 
 void LeaderboardMenu::Update()

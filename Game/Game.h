@@ -7,6 +7,7 @@
 #include "ControlMenu.h"
 #include "WinMenu.h"
 #include "LeaderboardMenu.h"
+#include "PauseMenu.h"
 #include <cassert>
 
 class Game
@@ -20,6 +21,7 @@ public:
 	void Draw();
 
 	void MouseReleased(sf::Event ev);
+	void KeyPressed(sf::Event ev);
 
 private:
 	sf::RenderWindow& window;
@@ -32,6 +34,7 @@ private:
 	ControlMenu mControls;
 	WinMenu mWin;
 	LeaderboardMenu mLeaderboard;
+	PauseMenu mPause;
 
 	States mStates = States::Start_Menu;
 };

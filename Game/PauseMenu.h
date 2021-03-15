@@ -2,17 +2,19 @@
 #include "Menu.h"
 #include <cassert>
 
-class LeaderboardMenu : public Menu
+class PauseMenu : public Menu
 {
 public:
-	LeaderboardMenu(sf::RenderWindow& mApp);		//Default Constructor
-	~LeaderboardMenu();		//Default Destructor
+	PauseMenu(sf::RenderWindow& mApp);		//Default Constructor
+	~PauseMenu();			//Default Destructor
 
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 
 	States DetectButtonPress() override;
+
+	bool GetIfForfeiting() { return leftGame; }
 private:
 	sf::RenderWindow& window;
 
@@ -20,5 +22,8 @@ private:
 	void SetupText() override;
 
 	void HoverOnButton() override;
+
+	bool leftGame = false;
+	//Incorporate a timer when doing p v p
 
 };

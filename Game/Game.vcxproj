@@ -135,6 +135,7 @@
     <ClCompile Include="LeaderboardMenu.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="StartMenu.cpp" />
     <ClCompile Include="WinMenu.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="LeaderboardMenu.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="StartMenu.h" />
     <ClInclude Include="States.h" />

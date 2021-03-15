@@ -27,6 +27,8 @@ int main()
 				window.close();
 			else if (event.type == sf::Event::MouseButtonReleased)
 				mGame.MouseReleased(event);
+			else if (event.type == sf::Event::KeyPressed)
+				mGame.KeyPressed(event);
 
 		}
 

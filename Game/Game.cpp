@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w), mStart(w), mControls(w), mWin(w), mLeaderboard(w)
+	:window(w), mPlayState(w), mStart(w), mControls(w), mWin(w), mLeaderboard(w), mPause(w)
 {
 	//Setup elements of game
 	Initialize();
@@ -14,7 +14,7 @@ Game::~Game()
 
 void Game::Initialize()
 {
-	//Setup all elements of the game
+	//Setup all elements of the game, not needed as constructors of each call initialize
 	mPlayState.Initialize();
 	mStart.Initialize();
 	mControls.Initialize();
@@ -38,7 +38,7 @@ void Game::Update()
 		break;
 
 	case States::Pause_Menu:
-		//Pause functionality here
+		mPause.Update();
 		break;
 
 	case States::Control_Menu:
@@ -79,7 +79,8 @@ void Game::Draw()
 		break;
 
 	case States::Pause_Menu:
-		//Pause functionality here
+		mPlayState.Draw();
+		mPause.Draw();
 		break;
 
 	case States::Control_Menu:
@@ -116,7 +117,9 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		case States::Pause_Menu:
-			//Pause functionality here
+			ChangeState(mPause.DetectButtonPress());
+			if (mPause.GetIfForfeiting())		//Reset game when quitting out from pause menu
+				mPlayState.Reset();
 			break;
 
 		case States::Control_Menu:
@@ -140,6 +143,22 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 		}
 		
+	}
+}
+
+void Game::KeyPressed(sf::Event ev)
+{
+	if (ev.key.code == sf::Keyboard::P)
+	{
+		switch (mStates)
+		{
+		case States::Play:
+			mStates = States::Pause_Menu;
+			break;
+
+		default:
+			break;
+		}
 	}
 }
 

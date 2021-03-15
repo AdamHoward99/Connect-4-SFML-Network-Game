@@ -26,6 +26,36 @@ void StartMenu::Initialize()
 	SetupAudio();
 }
 
+void StartMenu::SetupTextures()
+{
+	//Background Texture
+	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
+	{
+		assert(!mBackgroundTex.loadFromFile("menuBackground.png"));
+	}
+	mBackgroundTex.setSmooth(true);
+
+	//Button Texture
+	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
+	{
+		assert(!mButtonTex.loadFromFile("MenuButton.png"));
+	}
+	mButtonTex.setSmooth(true);
+
+	//Move this stuff into overriden start menu function
+	//Play Sound Texture
+	if (!mMuteButtonPlay.loadFromFile("bin/Textures/MusicPlay.png"))
+		assert(!mMuteButtonPlay.loadFromFile("MusicPlay.png"));
+
+	mMuteButtonPlay.setSmooth(true);
+
+	//Mute Sound Texture
+	if (!mMuteButtonMuted.loadFromFile("bin/Textures/MusicMute.png"))
+		assert(!mMuteButtonMuted.loadFromFile("MusicMute.png"));
+
+	mMuteButtonMuted.setSmooth(true);
+}
+
 void StartMenu::SetupSprites()
 {
 	//Background Sprite
@@ -48,15 +78,6 @@ void StartMenu::SetupSprites()
 	mMuteButtonSpr.setScale(sf::Vector2f(0.1f, 0.1f));
 }
 
-void StartMenu::SetupFonts()
-{
-	//Font for button text
-	if (!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"))
-	{
-		assert(!mFont.loadFromFile("bin/FontsOpenSans-Regular.ttf"));
-	}
-}
-
 void StartMenu::SetupText()
 {
 	float yOffset = 310.f;
@@ -65,7 +86,7 @@ void StartMenu::SetupText()
 		mText.at(i).setFillColor(sf::Color::White);
 		mText.at(i).setPosition(sf::Vector2f(350.f, yOffset));
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(25);
+		mText.at(i).setCharacterSize(BodyFontSize);
 
 		yOffset += 140.f;
 	}

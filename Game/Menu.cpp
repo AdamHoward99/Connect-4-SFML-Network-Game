@@ -35,18 +35,27 @@ void Menu::SetupTextures()
 		assert(!mButtonTex.loadFromFile("MenuButton.png"));
 	}
 	mButtonTex.setSmooth(true);
+}
 
-	//Play Sound Texture
-	if (!mMuteButtonPlay.loadFromFile("bin/Textures/MusicPlay.png"))
-		assert(!mMuteButtonPlay.loadFromFile("MusicPlay.png"));
+void Menu::SetupFonts()
+{
+	//Font for button text
+	if (!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"))
+	{
+		assert(!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"));
+	}
+}
 
-	mMuteButtonPlay.setSmooth(true);
+void Menu::SetupAudio()
+{
+	//Setup Audio
+	//Buffer
+	if (!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"))
+		assert(!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"));
 
-	//Mute Sound Texture
-	if (!mMuteButtonMuted.loadFromFile("bin/Textures/MusicMute.png"))
-		assert(!mMuteButtonMuted.loadFromFile("MusicMute.png"));
-
-	mMuteButtonMuted.setSmooth(true);
+	//Sound
+	mButtonClickSfx.second.setBuffer(mButtonClickSfx.first);
+	mButtonClickSfx.second.setVolume(30.f);
 }
 
 States Menu::DetectButtonPress()

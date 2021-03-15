@@ -18,9 +18,7 @@ private:
 	sf::RenderWindow& window;
 
 	void SetupSprites() override;
-	void SetupFonts() override;
 	void SetupText() override;
-	void SetupAudio() override;
 
 	void HoverOnButton() override;
 };
