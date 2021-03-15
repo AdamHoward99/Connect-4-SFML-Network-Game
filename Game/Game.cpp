@@ -33,6 +33,7 @@ void Game::Update()
 		if (mPlayState.GetIfGameWon())
 		{
 			mStates = States::Win_Menu;
+			mWin.SetWinScreenTitle(mPlayState.GetWinMessage());
 			mPlayState.Reset();
 		}
 		break;

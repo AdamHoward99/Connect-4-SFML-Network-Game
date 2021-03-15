@@ -14,6 +14,7 @@ public:
 
 	States DetectButtonPress() override;
 
+	void SetWinScreenTitle(std::string);
 private:
 	sf::RenderWindow& window;
 

@@ -19,6 +19,8 @@ public:
 	void SetIfGameWon(bool foo) { gameWon = foo; }
 	bool GetIfGameWon() { return gameWon; }
 
+	std::string GetWinMessage() { return winMessage; }
+
 	void Reset();
 private:
 	sf::RenderWindow& window;
@@ -49,4 +51,6 @@ private:
 	bool gameWon = false;
 
 	std::pair<sf::SoundBuffer, sf::Sound> mPieceSfx;
+
+	std::string winMessage;
 };

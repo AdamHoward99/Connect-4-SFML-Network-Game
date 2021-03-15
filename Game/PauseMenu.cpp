@@ -26,12 +26,28 @@ void PauseMenu::Initialize()
 	SetupAudio();
 }
 
+void PauseMenu::SetupTextures()
+{
+	//Background Texture
+	if (!mBackgroundTex.loadFromFile("bin/Textures/PauseMenuUI.png"))
+	{
+		assert(!mBackgroundTex.loadFromFile("bin/Textures/PauseMenuUI.png"));
+	}
+	mBackgroundTex.setSmooth(true);
+
+	//Button Texture
+	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
+	{
+		assert(!mButtonTex.loadFromFile("MenuButton.png"));
+	}
+	mButtonTex.setSmooth(true);
+}
+
 void PauseMenu::SetupSprites()
 {
 	//Background Sprite		//Change into a panel instead
 	mBackgroundSpr.setTexture(mBackgroundTex);
-	mBackgroundSpr.setScale(0.4f, 0.4f);
-	mBackgroundSpr.setPosition(200.f, 100.f);
+	mBackgroundSpr.setPosition(350.f, 100.f);
 
 	//Button Sprite
 	mButtons.at(0).setTexture(mButtonTex);

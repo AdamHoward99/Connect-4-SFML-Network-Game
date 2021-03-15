@@ -37,4 +37,6 @@ private:
 	PauseMenu mPause;
 
 	States mStates = States::Start_Menu;
+
+	std::string winMessage;		//Changes based on if you won, lost or tied
 };

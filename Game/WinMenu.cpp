@@ -54,7 +54,7 @@ void WinMenu::SetupText()
 		xOffset += 290.f;
 	}
 
-	mText.at(0).setString("You Win");			//Have win/lose options
+	//mText.at(0).setString("You Win");			//Have win/lose options
 	mText.at(0).setPosition(350.f, 200.f);
 	mText.at(0).setCharacterSize(TitleFontSize);
 	mText.at(0).setFillColor(sf::Color::White);
@@ -115,4 +115,9 @@ void WinMenu::HoverOnButton()
 		else
 			mText.at(i+1).setFillColor(sf::Color::White);
 	}
+}
+
+void WinMenu::SetWinScreenTitle(std::string str)
+{
+	mText.at(0).setString(str);
 }

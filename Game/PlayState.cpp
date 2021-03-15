@@ -41,11 +41,19 @@ void PlayState::Update()
 		if (HasConnected4())
 		{
 			gameWon = true;
+
+			if (mGameTurn == Turn::Player_1_Turn)
+				winMessage = "Player 1 Wins";
+			else
+				winMessage = "Player 2 Wins";
 		}
 
 		//Function to see if there is a winner
 		if (IsBoardFull())
-			float t = 1.f;		//Transition to another state
+		{
+			gameWon = true;
+			winMessage = "Tie";
+		}
 
 		SwitchTurns();		//Changes piece colour and turn variable, sets turnEnd to false
 	}

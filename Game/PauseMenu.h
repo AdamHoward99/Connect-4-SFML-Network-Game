@@ -18,6 +18,7 @@ public:
 private:
 	sf::RenderWindow& window;
 
+	void SetupTextures() override;
 	void SetupSprites() override;
 	void SetupText() override;
 
