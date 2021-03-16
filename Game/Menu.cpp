@@ -46,9 +46,9 @@ void Menu::SetupTextures()
 void Menu::SetupFonts()
 {
 	//Font for button text
-	if (!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"))
+	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
 	{
-		assert(!mFont.loadFromFile("bin/Fonts/OpenSans-Regular.ttf"));
+		assert(!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
 	}
 }
 

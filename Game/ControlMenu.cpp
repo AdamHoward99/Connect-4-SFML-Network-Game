@@ -34,7 +34,7 @@ void ControlMenu::SetupSprites()
 	//Button Sprite
 	mButtons.at(0).setTexture(mButtonTex);
 	mButtons.at(0).setScale(sf::Vector2f(0.75f, 0.75f));
-	mButtons.at(0).setPosition(300.f, 600.f);
+	mButtons.at(0).setPosition(350.f, 600.f);
 }
 
 void ControlMenu::SetupText()
@@ -46,19 +46,23 @@ void ControlMenu::SetupText()
 	}
 
 	mText.at(0).setString("Controls");
-	mText.at(0).setPosition(sf::Vector2f(350.f, 100.f));
+	mText.at(0).setPosition(sf::Vector2f(380.f, 100.f));
 	mText.at(0).setCharacterSize(TitleFontSize);
 
-	mText.at(1).setString("Mouse the mouse horizontally to select which column to put a piece in."
-		"\nLeft Click to place the piece. Aim of the game is to get 4 in a row,"
-		"\neither horizontally, vertically or diagonally.");
+	mText.at(1).setString("Two players alternate turns dropping pieces into unfilled columns,\n"
+		"When a player connects 4 of their pieces in a row, they win.\n"
+		"If all columns are filled, the game ends in a tie.\n"
+		"Each player gets 30 seconds to make their move, \nafter this the CPU makes a move automatically for the player.\n"
+		"\nMove the mouse horizontally to select a column,\n"
+		"Left click to drop a piece in the selected column.\n"
+		"Press 'P' to pause the game.");
+
 	mText.at(1).setCharacterSize(20);
-	mText.at(1).setPosition(sf::Vector2f(150.f, 250.f));
+	mText.at(1).setPosition(sf::Vector2f(150.f, 200.f));
 
 	mText.at(2).setString("Back");
-	mText.at(2).setPosition(sf::Vector2f(390.f, 610.f));
+	mText.at(2).setPosition(sf::Vector2f(430.f, 610.f));
 	mText.at(2).setCharacterSize(BodyFontSize);
-
 }
 
 void ControlMenu::Update()
