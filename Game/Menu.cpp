@@ -35,6 +35,12 @@ void Menu::SetupTextures()
 		assert(!mButtonTex.loadFromFile("MenuButton.png"));
 	}
 	mButtonTex.setSmooth(true);
+
+	//Logo Texture
+	if (!mLogoTex.loadFromFile("bin/Textures/logo.png"))
+		assert(!mLogoTex.loadFromFile("bin/Textures/logo.png"));
+
+	mLogoTex.setSmooth(true);
 }
 
 void Menu::SetupFonts()

@@ -33,9 +33,12 @@ protected:
 	sf::Texture mMuteButtonPlay;
 	sf::Texture mMuteButtonMuted;
 
+	sf::Texture mLogoTex;
+
 	//Sprite Variables
 	sf::Sprite mBackgroundSpr;
 	std::vector<sf::Sprite> mButtons;
+	sf::Sprite mLogoSpr;
 
 	//Font Variables
 	sf::Font mFont;
@@ -56,6 +59,9 @@ protected:
 
 	const int TitleFontSize = 35;
 	const int BodyFontSize = 25;
+
+	const float GameHeight = 800.f;
+	const float GameWidth = 900.f;
 
 private:
 

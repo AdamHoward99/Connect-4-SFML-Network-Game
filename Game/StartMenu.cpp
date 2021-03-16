@@ -54,6 +54,12 @@ void StartMenu::SetupTextures()
 		assert(!mMuteButtonMuted.loadFromFile("MusicMute.png"));
 
 	mMuteButtonMuted.setSmooth(true);
+
+	//Logo Texture
+	if (!mLogoTex.loadFromFile("bin/Textures/logo.png"))
+		assert(!mLogoTex.loadFromFile("bin/Textures/logo.png"));
+
+	mLogoTex.setSmooth(true);
 }
 
 void StartMenu::SetupSprites()
@@ -66,7 +72,7 @@ void StartMenu::SetupSprites()
 	for (int i = 0; i < buttonAmount; i++)
 	{
 		mButtons.at(i).setTexture(mButtonTex);
-		mButtons.at(i).setPosition(300.f, yOffset);
+		mButtons.at(i).setPosition(350.f, yOffset);
 		mButtons.at(i).setScale(sf::Vector2f(0.75f, 0.75f));
 
 		yOffset += 140.f;
@@ -76,6 +82,11 @@ void StartMenu::SetupSprites()
 	mMuteButtonSpr.setTexture(mMuteButtonPlay);
 	mMuteButtonSpr.setPosition(sf::Vector2f(750.f, 50.f));
 	mMuteButtonSpr.setScale(sf::Vector2f(0.1f, 0.1f));
+
+	//Logo Sprite
+	mLogoSpr.setTexture(mLogoTex);
+	mLogoSpr.setPosition(sf::Vector2f(300.f, 100.f));
+	mLogoSpr.setScale(0.9f, 0.9f);
 }
 
 void StartMenu::SetupText()
@@ -84,10 +95,9 @@ void StartMenu::SetupText()
 	for (int i = 0; i < textAmount; i++)
 	{
 		mText.at(i).setFillColor(sf::Color::White);
-		mText.at(i).setPosition(sf::Vector2f(350.f, yOffset));
+		mText.at(i).setPosition(sf::Vector2f(400.f, yOffset));
 		mText.at(i).setFont(mFont);
 		mText.at(i).setCharacterSize(BodyFontSize);
-
 		yOffset += 140.f;
 	}
 
@@ -96,7 +106,7 @@ void StartMenu::SetupText()
 	mText.at(2).setString("Quit Game");
 
 	//Reposition one of the text, could remove in future
-	mText.at(1).setPosition(sf::Vector2f(360.f, 450.f));
+	mText.at(1).setPosition(sf::Vector2f(410.f, 450.f));
 
 }
 
@@ -131,6 +141,7 @@ void StartMenu::Draw()
 {
 	window.draw(mBackgroundSpr);
 	window.draw(mMuteButtonSpr);
+	window.draw(mLogoSpr);
 
 	for (auto b : mButtons)
 		window.draw(b);

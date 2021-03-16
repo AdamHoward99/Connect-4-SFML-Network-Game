@@ -7,7 +7,7 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Connect 4");
+	sf::RenderWindow window(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Connect 4", sf::Style::Titlebar | sf::Style::Close);
 
 	//FPS
 	window.setFramerateLimit(60);
