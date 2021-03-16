@@ -51,10 +51,9 @@ void WinMenu::SetupText()
 		mText.at(i).setFont(mFont);
 		mText.at(i).setCharacterSize(BodyFontSize);
 		mText.at(i).setPosition(xOffset, 610.f);
-		xOffset += 290.f;
+		xOffset += 295.f;
 	}
 
-	//mText.at(0).setString("You Win");			//Have win/lose options
 	mText.at(0).setPosition(350.f, 200.f);
 	mText.at(0).setCharacterSize(TitleFontSize);
 	mText.at(0).setFillColor(sf::Color::White);
@@ -62,6 +61,7 @@ void WinMenu::SetupText()
 
 	mText.at(1).setString("Rematch");
 	mText.at(2).setString("Leaderboard");
+	mText.at(2).setPosition(370.f, 610.f);
 	mText.at(3).setString("Main Menu");
 }
 

@@ -52,7 +52,7 @@ void PlayState::Update()
 		if (IsBoardFull())
 		{
 			gameWon = true;
-			winMessage = "Tie";
+			winMessage = " It's a Tie";
 		}
 
 		SwitchTurns();		//Changes piece colour and turn variable, sets turnEnd to false
