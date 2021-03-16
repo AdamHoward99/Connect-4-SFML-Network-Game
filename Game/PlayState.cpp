@@ -15,27 +15,65 @@ PlayState::~PlayState()
 void PlayState::Initialize()
 {
 	board.Initialize();
-
 	pieceToAdd = sf::CircleShape(30.f);
-
 	DecideTurnOrder();
 
+	//Setup Functions
+	SetupTextures();
+	SetupSprites();
+	SetupFonts();
+	SetupText();
+	SetupAudio();
+}
+
+void PlayState::SetupTextures()
+{
+	//Button Texture
+	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
+		assert(!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"));
+
+	mButtonTex.setSmooth(true);
+}
+
+void PlayState::SetupSprites()
+{
+	//Chat Button
+	mChatButton.setTexture(mButtonTex);
+	mChatButton.setPosition(750.f, 670.f);
+	mChatButton.setScale(0.4f, 0.75f);
+}
+
+void PlayState::SetupFonts()
+{
+	//Font
+	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
+		assert(!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
+}
+
+void PlayState::SetupText()
+{
+	//Pause Text
+	mTimerText.setFillColor(sf::Color::White);
+	mTimerText.setCharacterSize(35);
+	mTimerText.setFont(mFont);
+	mTimerText.setPosition(40.f, 740.f);
+
+	//Chat Text
+	mChatButtonText.setString("Chat");
+	mChatButtonText.setFillColor(sf::Color::White);
+	mChatButtonText.setCharacterSize(25);
+	mChatButtonText.setFont(mFont);
+	mChatButtonText.setPosition(780.f, 680.f);
+}
+
+void PlayState::SetupAudio()
+{
 	//Audio
 	if (!mPieceSfx.first.loadFromFile("bin/Music/PieceSfx.wav"))
 		assert(!mPieceSfx.first.loadFromFile("bin/Music/PieceSfx.wav"));
 
 	mPieceSfx.second.setBuffer(mPieceSfx.first);
 	mPieceSfx.second.setVolume(40.f);
-
-	//Font
-	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
-		assert(!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
-
-	//Pause Text
-	mTimerText.setFillColor(sf::Color::White);
-	mTimerText.setCharacterSize(35);
-	mTimerText.setFont(mFont);
-	mTimerText.setPosition(40.f, 740.f);
 }
 
 void PlayState::Update()
@@ -74,27 +112,27 @@ void PlayState::Update()
 void PlayState::UpdateMousePosition()
 {
 	//Updating mouse position
-	mousePos = sf::Mouse::getPosition(window);
+	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
 	//Todo: could make this look better
-	if (mousePos.x <= 100)
-		mousePos.x = 50;
-	else if (mousePos.x <= 200)
-		mousePos.x = 150;
-	else if (mousePos.x <= 300)
-		mousePos.x = 250;
-	else if (mousePos.x <= 400)
-		mousePos.x = 350;
-	else if (mousePos.x <= 500)
-		mousePos.x = 450;
-	else if (mousePos.x <= 600)
-		mousePos.x = 550;
-	else if (mousePos.x <= 700)
-		mousePos.x = 650;
+	if (mousePos.x <= 100.f)
+		xColumnPosition = 50.f;
+	else if (mousePos.x <= 200.f)
+		xColumnPosition = 150.f;
+	else if (mousePos.x <= 300.f)
+		xColumnPosition = 250.f;
+	else if (mousePos.x <= 400.f)
+		xColumnPosition = 350.f;
+	else if (mousePos.x <= 500.f)
+		xColumnPosition = 450.f;
+	else if (mousePos.x <= 600.f)
+		xColumnPosition = 550.f;
+	else if (mousePos.x <= 700.f)
+		xColumnPosition = 650.f;
 	else
-		mousePos.x = 650;
+		xColumnPosition = 650.f;
 
-	pieceToAdd.setPosition(static_cast<float>(mousePos.x), 20.f);
+	pieceToAdd.setPosition(xColumnPosition, 20.f);
 }
 
 bool PlayState::IsBoardFull()
@@ -248,17 +286,17 @@ void PlayState::SwitchTurns()
 void PlayState::PlacePiece()
 {
 	int col;
-	if (mousePos.x == 50.f)
+	if (xColumnPosition == 50.f)
 		col = 0;
-	else if (mousePos.x == 150.f)
+	else if (xColumnPosition == 150.f)
 		col = 1;
-	else if (mousePos.x == 250.f)
+	else if (xColumnPosition == 250.f)
 		col = 2;
-	else if (mousePos.x == 350.f)
+	else if (xColumnPosition == 350.f)
 		col = 3;
-	else if (mousePos.x == 450.f)
+	else if (xColumnPosition == 450.f)
 		col = 4;
-	else if (mousePos.x == 550.f)
+	else if (xColumnPosition == 550.f)
 		col = 5;
 	else
 		col = 6;
@@ -283,6 +321,8 @@ void PlayState::Draw()
 	board.Draw();
 	window.draw(pieceToAdd);
 	window.draw(mTimerText);
+	window.draw(mChatButton);
+	window.draw(mChatButtonText);
 }
 
 void PlayState::Reset()
@@ -324,4 +364,14 @@ void PlayState::AutomaticPiecePlacement()
 			}
 		}
 	}
+}
+
+void PlayState::ButtonPress()
+{
+	if (mChatButton.getGlobalBounds().contains(mousePos))
+	{
+		float f = 1.f;
+	}
+	else
+		PlacePiece();
 }

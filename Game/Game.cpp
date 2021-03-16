@@ -145,7 +145,7 @@ void Game::MouseReleased(sf::Event ev)
 		switch (mStates)
 		{
 		case States::Play:
-			mPlayState.PlacePiece();
+			mPlayState.ButtonPress();
 			break;
 
 		case States::Pause_Menu:
