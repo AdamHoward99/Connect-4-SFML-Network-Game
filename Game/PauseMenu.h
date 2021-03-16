@@ -18,6 +18,9 @@ public:
 private:
 	sf::RenderWindow& window;
 
+	sf::Texture mPauseTex;
+	sf::Sprite mPauseSpr;
+
 	void SetupTextures() override;
 	void SetupSprites() override;
 	void SetupText() override;

@@ -4,7 +4,7 @@ PauseMenu::PauseMenu(sf::RenderWindow& w)
 	:window(w)
 {
 	buttonAmount = 2;
-	textAmount = 2;
+	textAmount = 3;
 
 	mButtons = std::vector<sf::Sprite>(buttonAmount);
 	mText = std::vector<sf::Text>(textAmount);
@@ -29,11 +29,11 @@ void PauseMenu::Initialize()
 void PauseMenu::SetupTextures()
 {
 	//Background Texture
-	if (!mBackgroundTex.loadFromFile("bin/Textures/PauseMenuUI.png"))
+	if (!mPauseTex.loadFromFile("bin/Textures/PauseMenuUI.png"))
 	{
-		assert(!mBackgroundTex.loadFromFile("bin/Textures/PauseMenuUI.png"));
+		assert(!mPauseTex.loadFromFile("bin/Textures/PauseMenuUI.png"));
 	}
-	mBackgroundTex.setSmooth(true);
+	mPauseTex.setSmooth(true);
 
 	//Button Texture
 	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
@@ -46,30 +46,39 @@ void PauseMenu::SetupTextures()
 void PauseMenu::SetupSprites()
 {
 	//Background Sprite		//Change into a panel instead
-	mBackgroundSpr.setTexture(mBackgroundTex);
-	mBackgroundSpr.setPosition(350.f, 100.f);
+	mPauseSpr.setTexture(mPauseTex);
+	mPauseSpr.setPosition(300.f, 200.f);
 
-	//Button Sprite
-	mButtons.at(0).setTexture(mButtonTex);
-	mButtons.at(0).setScale(0.75f, 0.75f);
-	mButtons.at(0).setPosition(400.f, 200.f);
-
-	mButtons.at(1).setTexture(mButtonTex);
-	mButtons.at(1).setScale(0.75f, 0.75f);
-	mButtons.at(1).setPosition(400.f, 400.f);
+	//Button Sprites
+	float yOffset = 400.f;
+	for (int i = 0; i < buttonAmount; i++)
+	{
+		mButtons.at(i).setTexture(mButtonTex);
+		mButtons.at(i).setScale(0.75f, 0.75f);
+		mButtons.at(i).setPosition(350.f, yOffset);
+		yOffset += 150.f;
+	}
 }
 
 void PauseMenu::SetupText()
 {
-	mText.at(0).setString("Resume");
-	mText.at(0).setFont(mFont);
-	mText.at(0).setPosition(410.f, 220.f);
-	mText.at(0).setCharacterSize(BodyFontSize);
+	//Text
+	float yOffset = 410.f;
+	for (int i = 0; i < textAmount - 1; i++)
+	{
+		mText.at(i).setFont(mFont);
+		mText.at(i).setCharacterSize(BodyFontSize);
+		mText.at(i).setPosition(420.f, yOffset);
+		yOffset += 150.f;
+	}
 
+	mText.at(0).setString("Resume");
 	mText.at(1).setString("Forfeit");
-	mText.at(1).setFont(mFont);
-	mText.at(1).setPosition(410.f, 420.f);
-	mText.at(1).setCharacterSize(BodyFontSize);
+
+	mText.at(2).setString("Paused");
+	mText.at(2).setFont(mFont);
+	mText.at(2).setCharacterSize(TitleFontSize);
+	mText.at(2).setPosition(400.f, 250.f);
 }
 
 void PauseMenu::Update()
@@ -81,7 +90,7 @@ void PauseMenu::Update()
 
 void PauseMenu::Draw() 
 {
-	window.draw(mBackgroundSpr);
+	window.draw(mPauseSpr);
 
 	for (auto b : mButtons)
 		window.draw(b);
