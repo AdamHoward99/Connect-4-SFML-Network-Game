@@ -25,6 +25,15 @@ void Game::Initialize()
 {
 	//Setup all elements of the game, not needed as constructors of each call initialize
 	mPlayState.Initialize();
+
+	if (!mTextFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
+		assert(!mTextFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
+
+	//Pause Text
+	mPauseTimerTxt.setFillColor(sf::Color::White);
+	mPauseTimerTxt.setCharacterSize(25);
+	mPauseTimerTxt.setFont(mTextFont);
+	mPauseTimerTxt.setPosition(590.f, 210.f);
 }
 
 void Game::Update()
@@ -78,8 +87,11 @@ void Game::Update()
 void Game::UpdatePauseTimer()
 {
 	mPauseTimer.second = std::chrono::steady_clock::now();
+	auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mPauseTimer.second - mPauseTimer.first).count() / 1000000.f;
 
-	if (std::chrono::duration_cast<std::chrono::microseconds>(mPauseTimer.second - mPauseTimer.first).count() / 1000000.f > pauseTimerAllowance)
+	mPauseTimerTxt.setString(std::to_string(static_cast<int>(pauseTimerAllowance - elapsedTime)));		//Shows player how long they have left on the pause menu
+
+	if (elapsedTime > pauseTimerAllowance)
 	{
 		mStates = States::Play;
 		if(pauseTimerAllowance > 10)	
@@ -100,6 +112,7 @@ void Game::Draw()
 	case States::Pause_Menu:
 		mPlayState.Draw();
 		mPause.Draw();
+		window.draw(mPauseTimerTxt);
 		break;
 
 	case States::Control_Menu:

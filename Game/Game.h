@@ -46,4 +46,8 @@ private:
 
 	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mPauseTimer;		//Would there need to be a timer for turns too?
 	float pauseTimerAllowance = 30.f;	//How many secs can they pause for, is reduced every time they hit the limit
+
+	//Show timer
+	sf::Text mPauseTimerTxt;
+	sf::Font mTextFont;
 };
