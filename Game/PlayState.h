@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
 #include "GameBoard.h"
+#include <chrono>
 
 class PlayState
 {
@@ -22,6 +23,8 @@ public:
 	std::string GetWinMessage() { return winMessage; }
 
 	void Reset();
+
+	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mTurnTimer;
 private:
 	sf::RenderWindow& window;
 
@@ -53,4 +56,10 @@ private:
 	std::pair<sf::SoundBuffer, sf::Sound> mPieceSfx;
 
 	std::string winMessage;
+
+	void UpdateTurnTimer();
+	void AutomaticPiecePlacement();
+
+	sf::Font mFont;
+	sf::Text mTimerText;
 };

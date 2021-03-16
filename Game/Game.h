@@ -44,7 +44,7 @@ private:
 
 	std::string winMessage;		//Changes based on if you won, lost or tied
 
-	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mPauseTimer;		//Would there need to be a timer for turns too?
+	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mPauseTimer;
 	float pauseTimerAllowance = 30.f;	//How many secs can they pause for, is reduced every time they hit the limit
 
 	//Show timer

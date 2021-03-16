@@ -94,6 +94,7 @@ void Game::UpdatePauseTimer()
 	if (elapsedTime > pauseTimerAllowance)
 	{
 		mStates = States::Play;
+		mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 		if(pauseTimerAllowance > 10)	
 			pauseTimerAllowance *= 0.5f;
 	}
@@ -149,6 +150,9 @@ void Game::MouseReleased(sf::Event ev)
 
 		case States::Pause_Menu:
 			ChangeState(mPause.DetectButtonPress());
+
+			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
+
 			if (mPause.GetIfForfeiting())		//Reset game when quitting out from pause menu
 				mPlayState.Reset();
 			break;
@@ -159,6 +163,7 @@ void Game::MouseReleased(sf::Event ev)
 
 		case States::Start_Menu:
 			ChangeState(mMenus["StartMenu"].get()->DetectButtonPress());
+			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 			break;
 
 		case States::Leaderboard:
@@ -167,6 +172,7 @@ void Game::MouseReleased(sf::Event ev)
 
 		case States::Win_Menu:
 			ChangeState(mWin.DetectButtonPress());
+			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 			break;
 
 		default:

@@ -26,12 +26,23 @@ void PlayState::Initialize()
 
 	mPieceSfx.second.setBuffer(mPieceSfx.first);
 	mPieceSfx.second.setVolume(40.f);
+
+	//Font
+	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
+		assert(!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
+
+	//Pause Text
+	mTimerText.setFillColor(sf::Color::White);
+	mTimerText.setCharacterSize(35);
+	mTimerText.setFont(mFont);
+	mTimerText.setPosition(40.f, 740.f);
 }
 
 void PlayState::Update()
 {
 	board.Update();
 
+	UpdateTurnTimer();
 	UpdateMousePosition();
 
 	//Switch turns, put into its own function
@@ -229,6 +240,8 @@ void PlayState::SwitchTurns()
 		pieceToAdd.setFillColor(sf::Color::Red);
 	}
 
+	mTurnTimer.first = std::chrono::steady_clock::now();
+
 	turnEnd = false;
 }
 
@@ -269,6 +282,7 @@ void PlayState::Draw()
 {
 	board.Draw();
 	window.draw(pieceToAdd);
+	window.draw(mTimerText);
 }
 
 void PlayState::Reset()
@@ -276,4 +290,38 @@ void PlayState::Reset()
 	board.ResetBoard();
 	gameWon = false;
 	DecideTurnOrder();
+}
+
+void PlayState::UpdateTurnTimer()
+{
+	mTurnTimer.second = std::chrono::steady_clock::now();
+	auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mTurnTimer.second - mTurnTimer.first).count() / 1000000.f;
+
+	mTimerText.setString(std::to_string(static_cast<int>(30 - elapsedTime)));		//Shows player how long they have left on the pause menu
+
+	if (elapsedTime > 30.f)
+	{
+		AutomaticPiecePlacement();	//Function to place a piece automatically
+	}
+}
+
+void PlayState::AutomaticPiecePlacement()
+{
+	for (int y = 0; y < BOARD_WIDTH; y++)
+	{
+		for (int i = BOARD_HEIGHT - 1; i >= 0; i--)
+		{
+			if (board.pieces[i][y].getFillColor() == sf::Color::White)		//Finds an empty piece
+			{
+				//Add stuff for when the column is full
+				pieceToAdd.setPosition(board.pieces[i][y].getPosition());
+				board.pieces[i][y] = pieceToAdd;
+				turnEnd = true;
+				lastMove = sf::Vector2i(i, y);
+				mPieceSfx.second.play();
+				y = BOARD_WIDTH;
+				break;
+			}
+		}
+	}
 }
