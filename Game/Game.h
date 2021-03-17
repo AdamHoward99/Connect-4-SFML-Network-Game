@@ -12,6 +12,8 @@
 #include <chrono>
 #include <unordered_map>
 
+#define PAUSE_KEY 112
+
 class Game
 {
 public:

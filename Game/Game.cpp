@@ -185,18 +185,21 @@ void Game::MouseReleased(sf::Event ev)
 
 void Game::KeyPressed(sf::Event ev)
 {
-	if (ev.key.code == sf::Keyboard::P)
+	switch (mStates)
 	{
-		switch (mStates)
+	case States::Play:
+		if (ev.text.unicode == PAUSE_KEY && !mPlayState.GetIfChatIsOpen())
 		{
-		case States::Play:
 			mStates = States::Pause_Menu;
 			StartPauseTimer();
-			break;
-
-		default:
-			break;
 		}
+		else
+			mPlayState.ChatInput(ev);
+
+		break;
+
+	default:
+		break;
 	}
 }
 

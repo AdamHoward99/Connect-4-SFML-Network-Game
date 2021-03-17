@@ -33,6 +33,12 @@ void PlayState::SetupTextures()
 		assert(!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"));
 
 	mButtonTex.setSmooth(true);
+
+	//Chat Texture
+	if (!mChatPanelTex.loadFromFile("bin/Textures/ChatPanel.png"))
+		assert(!mChatPanelTex.loadFromFile("bin/Textures/ChatPanel.png"));
+
+	mChatPanelTex.setSmooth(true);
 }
 
 void PlayState::SetupSprites()
@@ -41,6 +47,11 @@ void PlayState::SetupSprites()
 	mChatButton.setTexture(mButtonTex);
 	mChatButton.setPosition(750.f, 670.f);
 	mChatButton.setScale(0.4f, 0.75f);
+
+	//Chat Panel
+	mChatPanelSpr.setTexture(mChatPanelTex);
+	mChatPanelSpr.setPosition(900.f, 50.f);
+	mChatPanelSpr.setScale(1.f, 1.f);
 }
 
 void PlayState::SetupFonts()
@@ -64,6 +75,14 @@ void PlayState::SetupText()
 	mChatButtonText.setCharacterSize(25);
 	mChatButtonText.setFont(mFont);
 	mChatButtonText.setPosition(780.f, 680.f);
+
+	//Chat Input Text
+	mChatText.setFillColor(sf::Color::Black);
+	mChatText.setFont(mFont);
+	mChatText.setPosition(620.f, 600.f);
+	mChatText.setCharacterSize(15);
+
+	//Chat Log text
 }
 
 void PlayState::SetupAudio()
@@ -323,6 +342,15 @@ void PlayState::Draw()
 	window.draw(mTimerText);
 	window.draw(mChatButton);
 	window.draw(mChatButtonText);
+
+	if (isChatOpen)
+	{
+		window.draw(mChatPanelSpr);
+		window.draw(mChatText);
+		for (auto t : mChatLogText)
+			window.draw(t);
+	}
+
 }
 
 void PlayState::Reset()
@@ -370,8 +398,74 @@ void PlayState::ButtonPress()
 {
 	if (mChatButton.getGlobalBounds().contains(mousePos))
 	{
-		float f = 1.f;
+		if (!isChatOpen) 
+		{
+			mChatPanelSpr.setPosition(600.f, 50.f);		//Make chat panel visible
+			isChatOpen = true;
+		}
+		else
+		{
+			mChatPanelSpr.setPosition(900.f, 50.f);		//Make chat panel visible
+			isChatOpen = false;
+		}
 	}
 	else
 		PlacePiece();
+}
+
+void PlayState::ChatInput(sf::Event ev)
+{
+	if (ev.type == sf::Event::TextEntered && isChatOpen)
+	{
+		if (ev.text.unicode == 13)		//Enter
+		{
+			if (mChatLog.size() <= 23)
+			{
+				mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
+				sf::Text t;
+				mChatLogText.push_back(t);
+			}
+			else
+			{
+				mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
+				mChatLogText.erase(mChatLogText.begin() + 0);
+
+				mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
+				sf::Text t;
+				mChatLogText.push_back(t);
+			}
+
+			chatInput.clear();
+			mChatText.setString(chatInput);
+
+			float yOffset = 520.f;
+			for (int i = mChatLog.size() - 1; i >= 0; i--)
+			{
+				mChatLogText.at(i).setString(mChatLog.at(i));
+				mChatLogText.at(i).setFillColor(sf::Color::Black);
+				mChatLogText.at(i).setFont(mFont);
+				mChatLogText.at(i).setCharacterSize(15);
+				mChatLogText.at(i).setPosition(620.f, yOffset);
+				yOffset -= 20.f;
+			}
+
+		}
+		else if (ev.text.unicode == 8)		//Backspace
+		{
+			if (chatInput.getSize() > 0)
+			{
+				chatInput.erase(chatInput.getSize() - 1);
+				mChatText.setString(chatInput);
+			}
+
+		}
+		else
+		{
+			if (chatInput.getSize() < 30)		//Prevents typing over 30 characters
+			{
+				chatInput += ev.text.unicode;
+				mChatText.setString(chatInput);
+			}
+		}
+	}
 }

@@ -20,9 +20,14 @@ public:
 	void SetIfGameWon(bool foo) { gameWon = foo; }
 	bool GetIfGameWon() { return gameWon; }
 
+	bool GetIfChatIsOpen() { return isChatOpen; }
+
 	std::string GetWinMessage() { return winMessage; }
 
 	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mTurnTimer;
+
+	void ChatInput(sf::Event ev);
+
 private:
 	sf::RenderWindow& window;
 
@@ -73,4 +78,16 @@ private:
 	sf::Sprite mChatButton;
 	sf::Texture mButtonTex;
 
+	sf::String chatInput;
+	sf::Text mChatText;
+
+	//sf::String mChatLog;
+	std::vector<sf::String> mChatLog;
+	std::vector<sf::Text> mChatLogText;
+	//sf::Text mChatLogText;
+
+	sf::Texture mChatPanelTex;
+	sf::Sprite mChatPanelSpr;
+
+	bool isChatOpen = false;
 };
