@@ -410,7 +410,8 @@ void PlayState::ButtonPress()
 		}
 	}
 	else
-		PlacePiece();
+		if(!mChatPanelSpr.getGlobalBounds().contains(mousePos))
+			PlacePiece();
 }
 
 void PlayState::ChatInput(sf::Event ev)
@@ -419,36 +420,39 @@ void PlayState::ChatInput(sf::Event ev)
 	{
 		if (ev.text.unicode == 13)		//Enter
 		{
-			if (mChatLog.size() <= 23)
+			if (chatInput.getSize() > 0)
 			{
-				mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
-				sf::Text t;
-				mChatLogText.push_back(t);
+				if (mChatLog.size() <= 23)
+				{
+					mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
+					sf::Text t;
+					mChatLogText.push_back(t);
+				}
+				else
+				{
+					mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
+					mChatLogText.erase(mChatLogText.begin() + 0);
+
+					mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
+					sf::Text t;
+					mChatLogText.push_back(t);
+				}
+
+				chatInput.clear();
+				mChatText.setString(chatInput);
+
+				float yOffset = 520.f;
+				for (int i = mChatLog.size() - 1; i >= 0; i--)
+				{
+					mChatLogText.at(i).setString(mChatLog.at(i));
+					mChatLogText.at(i).setFillColor(sf::Color::Black);
+					mChatLogText.at(i).setFont(mFont);
+					mChatLogText.at(i).setCharacterSize(15);
+					mChatLogText.at(i).setPosition(620.f, yOffset);
+					yOffset -= 20.f;
+				}
+
 			}
-			else
-			{
-				mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
-				mChatLogText.erase(mChatLogText.begin() + 0);
-
-				mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
-				sf::Text t;
-				mChatLogText.push_back(t);
-			}
-
-			chatInput.clear();
-			mChatText.setString(chatInput);
-
-			float yOffset = 520.f;
-			for (int i = mChatLog.size() - 1; i >= 0; i--)
-			{
-				mChatLogText.at(i).setString(mChatLog.at(i));
-				mChatLogText.at(i).setFillColor(sf::Color::Black);
-				mChatLogText.at(i).setFont(mFont);
-				mChatLogText.at(i).setCharacterSize(15);
-				mChatLogText.at(i).setPosition(620.f, yOffset);
-				yOffset -= 20.f;
-			}
-
 		}
 		else if (ev.text.unicode == 8)		//Backspace
 		{
