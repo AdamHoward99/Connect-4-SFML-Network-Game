@@ -5,6 +5,9 @@
 #include "GameBoard.h"
 #include <chrono>
 
+#define BACKSPACE_KEY 8
+#define ENTER_KEY 13
+
 class PlayState
 {
 public:
@@ -15,18 +18,22 @@ public:
 	void Update();
 	void Draw();
 	void Reset();
-	void ButtonPress();		//Detects if over the chat button, if not place's piece
+	void ChatInput(sf::Event ev);
 
+	void ButtonPress();		//Detects if over the chat button, if not, place's piece
+
+	//Game Won Variable Functions
 	void SetIfGameWon(bool foo) { gameWon = foo; }
 	bool GetIfGameWon() { return gameWon; }
 
+	//Chat Functions
 	bool GetIfChatIsOpen() { return isChatOpen; }
 
+	//Win Message Function
 	std::string GetWinMessage() { return winMessage; }
 
+	//Turn Timer Variable
 	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mTurnTimer;
-
-	void ChatInput(sf::Event ev);
 
 private:
 	sf::RenderWindow& window;
@@ -45,49 +52,57 @@ private:
 	void SetupText();
 	void SetupAudio();
 
+	//Chat Log Functions
+	void UpdateChatLog();
+
+	//Chat Log Variables
+	std::vector<sf::String> mChatLog;
+	std::vector<sf::Text> mChatLogText;
+
+	//Turn Variables
 	enum Turn
 	{
 		Player_1_Turn,
 		Player_2_Turn
 	};
-
 	Turn mGameTurn = Turn::Player_1_Turn;
+	bool turnEnd = false;
 
+	//Board & Piece Variables
 	GameBoard board;
 	sf::CircleShape pieceToAdd;
-
 	sf::Vector2f mousePos;
 	float xColumnPosition = 0.f;
-
-	bool gameWon = false;
-	bool turnEnd = false;
 	sf::Vector2i lastMove;		//Stores position of last move on board to easier check for a win
 
+	bool gameWon = false;
+
+	//Sound Variables
 	std::pair<sf::SoundBuffer, sf::Sound> mPieceSfx;
 
+	//Font Variables
+	sf::Font mFont;
+
+	//Win Message Variables
 	std::string winMessage;
 
+	//Timer Variables
+	sf::Text mTimerText;
 	void UpdateTurnTimer();
 	void AutomaticPiecePlacement();
 
-	sf::Font mFont;
-	sf::Text mTimerText;
-
-	//Chat Variables
+	//Chat Button Variables
 	sf::Text mChatButtonText;
 	sf::Sprite mChatButton;
 	sf::Texture mButtonTex;
 
-	sf::String chatInput;
-	sf::Text mChatText;
+	//Chat Input Variables
+	sf::String mChatInput;
+	sf::Text mChatInputText;
+	const unsigned int ChatLogCharacterLimit = 25;
 
-	//sf::String mChatLog;
-	std::vector<sf::String> mChatLog;
-	std::vector<sf::Text> mChatLogText;
-	//sf::Text mChatLogText;
-
+	//Chat Log Panel Variables
 	sf::Texture mChatPanelTex;
 	sf::Sprite mChatPanelSpr;
-
 	bool isChatOpen = false;
 };

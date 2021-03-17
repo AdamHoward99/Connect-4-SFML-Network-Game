@@ -69,7 +69,7 @@ void PlayState::SetupText()
 	mTimerText.setFont(mFont);
 	mTimerText.setPosition(40.f, 740.f);
 
-	//Chat Text
+	//Chat Button Text
 	mChatButtonText.setString("Chat");
 	mChatButtonText.setFillColor(sf::Color::White);
 	mChatButtonText.setCharacterSize(25);
@@ -77,12 +77,10 @@ void PlayState::SetupText()
 	mChatButtonText.setPosition(780.f, 680.f);
 
 	//Chat Input Text
-	mChatText.setFillColor(sf::Color::Black);
-	mChatText.setFont(mFont);
-	mChatText.setPosition(620.f, 600.f);
-	mChatText.setCharacterSize(15);
-
-	//Chat Log text
+	mChatInputText.setFillColor(sf::Color::Black);
+	mChatInputText.setFont(mFont);
+	mChatInputText.setPosition(620.f, 600.f);
+	mChatInputText.setCharacterSize(15);
 }
 
 void PlayState::SetupAudio()
@@ -346,7 +344,7 @@ void PlayState::Draw()
 	if (isChatOpen)
 	{
 		window.draw(mChatPanelSpr);
-		window.draw(mChatText);
+		window.draw(mChatInputText);
 		for (auto t : mChatLogText)
 			window.draw(t);
 	}
@@ -355,8 +353,17 @@ void PlayState::Draw()
 
 void PlayState::Reset()
 {
+	//Reset board
 	board.ResetBoard();
+
+	//Reset bools
 	gameWon = false;
+	isChatOpen = false;
+
+	//Reset chat
+	mChatInput.clear();
+	mChatInputText.setString(mChatInput);
+
 	DecideTurnOrder();
 }
 
@@ -405,7 +412,7 @@ void PlayState::ButtonPress()
 		}
 		else
 		{
-			mChatPanelSpr.setPosition(900.f, 50.f);		//Make chat panel visible
+			mChatPanelSpr.setPosition(900.f, 50.f);		//Make chat panel not visible
 			isChatOpen = false;
 		}
 	}
@@ -418,58 +425,64 @@ void PlayState::ChatInput(sf::Event ev)
 {
 	if (ev.type == sf::Event::TextEntered && isChatOpen)
 	{
-		if (ev.text.unicode == 13)		//Enter
+		if (ev.text.unicode == ENTER_KEY)
 		{
-			if (chatInput.getSize() > 0)
-			{
-				if (mChatLog.size() <= 23)
-				{
-					mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
-					sf::Text t;
-					mChatLogText.push_back(t);
-				}
-				else
-				{
-					mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
-					mChatLogText.erase(mChatLogText.begin() + 0);
-
-					mChatLog.push_back(chatInput += "\n");		//Add entered line into the string
-					sf::Text t;
-					mChatLogText.push_back(t);
-				}
-
-				chatInput.clear();
-				mChatText.setString(chatInput);
-
-				float yOffset = 520.f;
-				for (int i = mChatLog.size() - 1; i >= 0; i--)
-				{
-					mChatLogText.at(i).setString(mChatLog.at(i));
-					mChatLogText.at(i).setFillColor(sf::Color::Black);
-					mChatLogText.at(i).setFont(mFont);
-					mChatLogText.at(i).setCharacterSize(15);
-					mChatLogText.at(i).setPosition(620.f, yOffset);
-					yOffset -= 20.f;
-				}
-
-			}
+			if (mChatInput.getSize() > 0)
+				UpdateChatLog();
 		}
-		else if (ev.text.unicode == 8)		//Backspace
+
+		else if (ev.text.unicode == BACKSPACE_KEY)
 		{
-			if (chatInput.getSize() > 0)
+			if (mChatInput.getSize() > 0)
 			{
-				chatInput.erase(chatInput.getSize() - 1);
-				mChatText.setString(chatInput);
+				mChatInput.erase(mChatInput.getSize() - 1);
+				mChatInputText.setString(mChatInput);
 			}
 
 		}
+
 		else
 		{
-			if (chatInput.getSize() < 30)		//Prevents typing over 30 characters
+			if (mChatInput.getSize() < ChatLogCharacterLimit)		//Prevents typing over 25 characters
 			{
-				chatInput += ev.text.unicode;
-				mChatText.setString(chatInput);
+				mChatInput += ev.text.unicode;
+				mChatInputText.setString(mChatInput);
 			}
 		}
+	}
+}
+
+void PlayState::UpdateChatLog()
+{
+	//Prevents chat log going above chat panel sprite
+	if (mChatLog.size() <= 23)
+	{
+		mChatLog.push_back(mChatInput += "\n");		//Add entered line into the string
+		sf::Text t;
+		mChatLogText.push_back(t);
+	}
+	else
+	{
+		mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
+		mChatLogText.erase(mChatLogText.begin() + 0);
+
+		mChatLog.push_back(mChatInput += "\n");		//Add entered line into the string
+		sf::Text t;
+		mChatLogText.push_back(t);
+	}
+
+	mChatInput.clear();
+	mChatInputText.setString(mChatInput);
+
+	//Outputs all chat log messages
+	float yOffset = 520.f;
+	for (int i = mChatLog.size() - 1; i >= 0; i--)
+	{
+		mChatLogText.at(i).setString(mChatLog.at(i));
+		mChatLogText.at(i).setFillColor(sf::Color::Black);
+		mChatLogText.at(i).setFont(mFont);
+		mChatLogText.at(i).setCharacterSize(15);
+		mChatLogText.at(i).setPosition(620.f, yOffset);
+		yOffset -= 20.f;
 	}
 }
