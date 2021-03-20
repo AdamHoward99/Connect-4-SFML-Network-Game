@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include "Game.h"
 #include "GameBoard.h"
+#include "NetworkConnection.h"
 #include <Windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
@@ -24,49 +25,12 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Connect 4", sf::Style::Titlebar | sf::Style::Close);
 
-	//Winsock connection to server
-	WSADATA wsa_data;
-	if (WSAStartup(MAKEWORD(2, 2), &wsa_data) != 0)
-		return EXIT_FAILURE;
+	NetworkConnection connect;
 
-	//Create a Socket
-	SOCKET s;
-
-	if ((s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-		return EXIT_FAILURE;
-
-	//Connect to Server
-	struct sockaddr_in server;
-	server.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
-	server.sin_family = AF_INET;
-	server.sin_port = htons(8888);
-
-	//Connect to remote server
-	if (connect(s, (struct sockaddr *) &server, sizeof(server)) < 0)
-	{
-		closesocket(s);
-		WSACleanup();
-		return EXIT_FAILURE;
-	}
-
-	//Sends data to server
-	const int recvbuflen = 512;
-	const char *sendbuf = "Test from SFML Connect 4 game";
-	char recvbuf[recvbuflen];
-
-	int result;
-
-	//Send an initial buffer
-	result = send(s, sendbuf, (int)strlen(sendbuf), 0);
-	if (result == SOCKET_ERROR)
-	{
-		closesocket(s);
-		WSACleanup();
-		return EXIT_FAILURE;
-	}
-
-	closesocket(s);
-	WSACleanup();
+	connect.CreateSocket();
+	connect.ConnectToServer();
+	connect.SendData();
+	connect.CloseConnection();
 
 	//FPS
 	window.setFramerateLimit(60);
