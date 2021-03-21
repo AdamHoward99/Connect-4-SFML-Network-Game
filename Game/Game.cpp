@@ -52,6 +52,20 @@ void Game::Update()
 		}
 		break;
 
+	case States::Matchmaking:
+		//Connection stuff here, searches on server to find other clients, if can find another player, goes to play state
+		if (mConnection.ConnectToServer())
+		{
+			//look for other clients on the server
+			//If after certain time it cannot find another client, move back to menu state
+			//If can find other client, go to play state
+			mStates = States::Play;
+		}
+		else
+			mStates = States::Start_Menu;
+		//If connection to server failed, break out of this and either try again or move back to menu state
+		break;
+
 	case States::Pause_Menu:
 		mPause.Update();
 		UpdatePauseTimer();

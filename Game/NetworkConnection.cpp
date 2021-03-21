@@ -22,9 +22,19 @@ void NetworkConnection::CreateSocket()
 
 }
 
-void NetworkConnection::ConnectToServer()
+bool NetworkConnection::ConnectToServer()
 {
-	//Connect to Server
+	//Returns true if everything was setup and connected, returns false if anything messed up
+
+	//Winsock connection to server
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+		return false;
+
+	//Create the socket
+	if ((connectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
+		return false;
+
+	//Connect to the server
 	server.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
 	server.sin_family = AF_INET;
 	server.sin_port = htons(8888);
@@ -34,9 +44,10 @@ void NetworkConnection::ConnectToServer()
 	{
 		closesocket(connectSocket);
 		WSACleanup();
-		assert(EXIT_FAILURE);
+		return false;
 	}
 
+	return true;
 }
 
 void NetworkConnection::SendData()

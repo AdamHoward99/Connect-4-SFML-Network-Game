@@ -8,6 +8,8 @@
 #include "WinMenu.h"
 #include "LeaderboardMenu.h"
 #include "PauseMenu.h"
+#include "NetworkConnection.h"
+
 #include <cassert>
 #include <chrono>
 #include <unordered_map>
@@ -52,4 +54,7 @@ private:
 	//Show timer
 	sf::Text mPauseTimerTxt;
 	sf::Font mTextFont;
+
+	//Network Connection
+	NetworkConnection mConnection;
 };

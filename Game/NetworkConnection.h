@@ -22,8 +22,11 @@ public:
 	NetworkConnection();		//Default constructor
 	~NetworkConnection();		//Default destructor
 
+	//Game Class Functions
+	bool ConnectToServer();
+
+
 	void CreateSocket();
-	void ConnectToServer();
 	void SendData();
 	void CloseConnection();
 
