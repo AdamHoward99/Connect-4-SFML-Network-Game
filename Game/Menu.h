@@ -17,6 +17,8 @@ public:
 	virtual States DetectButtonPress();
 	virtual void HoverOnButton() = 0;
 
+	virtual void KeyboardInput(sf::Event ev);
+
 	//Setup functions
 	virtual void SetupTextures();
 	virtual void SetupSprites() = 0;

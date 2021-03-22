@@ -8,6 +8,7 @@
 #include "WinMenu.h"
 #include "LeaderboardMenu.h"
 #include "PauseMenu.h"
+#include "EnterNameMenu.h"
 #include "NetworkConnection.h"
 
 #include <cassert>

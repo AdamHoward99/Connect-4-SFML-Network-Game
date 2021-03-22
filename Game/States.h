@@ -6,6 +6,7 @@ enum States
 	Pause_Menu,
 	Win_Menu,
 	Matchmaking,
+	Enter_Name,
 	Play,
 	Leaderboard,
 	Control_Menu,

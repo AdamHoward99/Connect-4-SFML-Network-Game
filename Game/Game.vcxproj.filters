@@ -54,6 +54,9 @@
     <ClCompile Include="NetworkConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EnterNameMenu.cpp">
+      <Filter>Source Files\Menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameBoard.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="NetworkConnection.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnterNameMenu.h">
+      <Filter>Header Files\Menus</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

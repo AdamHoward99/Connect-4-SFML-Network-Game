@@ -155,7 +155,7 @@ States StartMenu::DetectButtonPress()
 	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
 	{
 		mButtonClickSfx.second.play();
-		return States::Matchmaking;
+		return States::Enter_Name;
 	}
 	else if (mButtons.at(1).getGlobalBounds().contains(mousePos))
 	{

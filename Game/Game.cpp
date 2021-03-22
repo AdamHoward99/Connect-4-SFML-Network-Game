@@ -6,7 +6,7 @@ Game::Game(sf::RenderWindow& w)
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
 	mMenus["ControlMenu"] = std::make_unique<ControlMenu>(w);
 	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w);
-
+	mMenus["EnterNameMenu"] = std::make_unique<EnterNameMenu>(w);
 
 	//Setup elements of game
 	Initialize();
@@ -18,6 +18,7 @@ Game::~Game()
 	mMenus["StartMenu"].reset();
 	mMenus["ControlMenu"].reset();
 	mMenus["LeaderboardMenu"].reset();
+	mMenus["EnterNameMenu"].reset();
 
 }
 
@@ -102,6 +103,10 @@ void Game::Update()
 		//If connection to server failed, break out of this and either try again or move back to menu state
 		break;
 
+	case States::Enter_Name:
+		mMenus["EnterNameMenu"].get()->Update();
+			break;
+
 	case States::Pause_Menu:
 		mPause.Update();
 		UpdatePauseTimer();
@@ -164,6 +169,10 @@ void Game::Draw()
 		DrawMatchmakingScreen();
 		break;
 
+	case States::Enter_Name:
+		mMenus["EnterNameMenu"].get()->Draw();
+		break;
+
 	case States::Pause_Menu:
 		mPlayState.Draw();
 		mPause.Draw();
@@ -219,6 +228,10 @@ void Game::MouseReleased(sf::Event ev)
 				mPlayState.Reset();
 			break;
 
+		case States::Enter_Name:
+			ChangeState(mMenus["EnterNameMenu"].get()->DetectButtonPress());
+			break;
+
 		case States::Control_Menu:
 			ChangeState(mMenus["ControlMenu"].get()->DetectButtonPress());
 			break;
@@ -258,6 +271,10 @@ void Game::KeyPressed(sf::Event ev)
 			mPlayState.ChatInput(ev);
 
 		break;
+
+	case States::Enter_Name:
+		mMenus["EnterNameMenu"].get()->KeyboardInput(ev);
+			break;
 
 	default:
 		break;

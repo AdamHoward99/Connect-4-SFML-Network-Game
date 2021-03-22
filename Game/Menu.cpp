@@ -68,3 +68,8 @@ States Menu::DetectButtonPress()
 {
 	return States::Start_Menu;
 }
+
+void Menu::KeyboardInput(sf::Event ev)
+{
+
+}
