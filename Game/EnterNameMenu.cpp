@@ -120,7 +120,10 @@ States EnterNameMenu::DetectButtonPress()
 		mButtonClickSfx.second.play();
 
 		if (mNameString.getSize() > 0)		//Only procede when a name has been entered
+		{
+			mName = mNameString;
 			return States::Matchmaking;
+		}
 		else
 			return States::Enter_Name;
 	}

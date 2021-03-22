@@ -19,6 +19,8 @@ public:
 
 	virtual void KeyboardInput(sf::Event ev);
 
+	virtual sf::String GetName() { return mName; }
+
 	//Setup functions
 	virtual void SetupTextures();
 	virtual void SetupSprites() = 0;
@@ -64,6 +66,8 @@ protected:
 
 	const float GameHeight = 800.f;
 	const float GameWidth = 900.f;
+
+	sf::String mName;
 
 private:
 

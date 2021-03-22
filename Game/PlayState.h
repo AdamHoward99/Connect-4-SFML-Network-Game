@@ -35,6 +35,9 @@ public:
 	//Turn Timer Variable
 	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mTurnTimer;
 
+	//Name Functions
+	void SetName(sf::String s) { mName = s; }
+
 private:
 	sf::RenderWindow& window;
 
@@ -105,4 +108,7 @@ private:
 	sf::Texture mChatPanelTex;
 	sf::Sprite mChatPanelSpr;
 	bool isChatOpen = false;
+
+	//Player Name
+	sf::String mName;
 };

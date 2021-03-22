@@ -230,6 +230,8 @@ void Game::MouseReleased(sf::Event ev)
 
 		case States::Enter_Name:
 			ChangeState(mMenus["EnterNameMenu"].get()->DetectButtonPress());
+			mPlayerName = mMenus["EnterNameMenu"].get()->GetName();
+			mPlayState.SetName(mPlayerName);
 			break;
 
 		case States::Control_Menu:

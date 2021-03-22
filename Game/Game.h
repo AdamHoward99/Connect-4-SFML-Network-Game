@@ -67,4 +67,7 @@ private:
 
 	sf::Font mFont;
 	std::vector<sf::Text> mLoadingText;
+
+	//Username of player
+	sf::String mPlayerName;
 };

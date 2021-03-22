@@ -457,7 +457,7 @@ void PlayState::UpdateChatLog()
 	//Prevents chat log going above chat panel sprite
 	if (mChatLog.size() <= 23)
 	{
-		mChatLog.push_back(mChatInput += "\n");		//Add entered line into the string
+		mChatLog.push_back(mName + ": " + mChatInput += "\n");		//Add entered line into the string
 		sf::Text t;
 		mChatLogText.push_back(t);
 	}
