@@ -57,4 +57,13 @@ private:
 
 	//Network Connection
 	NetworkConnection mConnection;
+
+	void InitializeMatchmakingScreen();
+	void DrawMatchmakingScreen();
+
+	sf::Texture mBackgroundTex;
+	sf::Sprite mBackgroundSpr;
+
+	sf::Font mFont;
+	std::vector<sf::Text> mLoadingText;
 };

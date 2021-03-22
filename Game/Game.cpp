@@ -34,6 +34,39 @@ void Game::Initialize()
 	mPauseTimerTxt.setCharacterSize(25);
 	mPauseTimerTxt.setFont(mTextFont);
 	mPauseTimerTxt.setPosition(590.f, 210.f);
+
+	InitializeMatchmakingScreen();
+}
+
+void Game::InitializeMatchmakingScreen()
+{
+	//Background Texture
+	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
+		assert(!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"));
+
+	mBackgroundTex.setSmooth(true);
+
+	//Background Sprite
+	mBackgroundSpr.setTexture(mBackgroundTex);
+
+	//Font
+	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
+		assert(!mFont.loadFromFile("bin/Fonts/Komica_display.ttf"));
+
+	//Loading Text
+	mLoadingText = std::vector<sf::Text>(2);
+
+	float yOffset = 300.f;
+	for (size_t i = 0; i < mLoadingText.size(); i++)
+	{
+		mLoadingText.at(i).setFillColor(sf::Color::White);
+		mLoadingText.at(i).setFont(mFont);
+		mLoadingText.at(i).setCharacterSize(25);
+		mLoadingText.at(i).setPosition(320.f, yOffset);
+		yOffset += 100.f;
+	}
+
+	mLoadingText.at(0).setString("Finding an Opponent...");
 }
 
 void Game::Update()
@@ -62,7 +95,10 @@ void Game::Update()
 			mStates = States::Play;
 		}
 		else
+		{
+			mLoadingText.at(1).setString("Cannot connect to server...");
 			mStates = States::Start_Menu;
+		}
 		//If connection to server failed, break out of this and either try again or move back to menu state
 		break;
 
@@ -124,6 +160,10 @@ void Game::Draw()
 		mPlayState.Draw();
 		break;
 
+	case States::Matchmaking:
+		DrawMatchmakingScreen();
+		break;
+
 	case States::Pause_Menu:
 		mPlayState.Draw();
 		mPause.Draw();
@@ -150,6 +190,14 @@ void Game::Draw()
 		assert(mStates);
 		break;
 	}
+}
+
+void Game::DrawMatchmakingScreen()
+{
+	window.draw(mBackgroundSpr);
+
+	for (auto t : mLoadingText)
+		window.draw(t);
 }
 
 void Game::MouseReleased(sf::Event ev)
@@ -190,7 +238,6 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		default:
-			assert(mStates);
 			break;
 		}
 		

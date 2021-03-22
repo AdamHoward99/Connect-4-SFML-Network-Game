@@ -474,6 +474,12 @@ void PlayState::UpdateChatLog()
 	mChatInput.clear();
 	mChatInputText.setString(mChatInput);
 
+	//Send chat log over server
+
+
+
+
+
 	//Outputs all chat log messages
 	float yOffset = 520.f;
 	for (int i = mChatLog.size() - 1; i >= 0; i--)
