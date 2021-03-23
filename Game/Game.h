@@ -42,9 +42,6 @@ private:
 
 	std::unordered_map<std::string, std::unique_ptr<Menu>> mMenus;
 
-	WinMenu mWin;
-	PauseMenu mPause;
-
 	States mStates = States::Start_Menu;
 
 	std::string winMessage;		//Changes based on if you won, lost or tied

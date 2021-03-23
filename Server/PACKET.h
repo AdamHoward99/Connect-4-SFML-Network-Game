@@ -1,0 +1,4 @@
+enum PACKET
+{
+	mChatMessage
+};

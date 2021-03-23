@@ -14,7 +14,6 @@ public:
 
 	States DetectButtonPress() override;
 
-	bool GetIfForfeiting() { return leftGame; }
 private:
 	sf::RenderWindow& window;
 
@@ -26,6 +25,4 @@ private:
 	void SetupText() override;
 
 	void HoverOnButton() override;
-
-	bool leftGame = false;
 };

@@ -47,7 +47,15 @@ bool NetworkConnection::ConnectToServer()
 		return false;
 	}
 
+	ConnectedToServer = true;
+
 	return true;
+}
+
+void NetworkConnection::SendPlayerName(std::string name)
+{
+	if (!SendString(name))
+		exit(0);
 }
 
 void NetworkConnection::SendData()
@@ -64,6 +72,86 @@ void NetworkConnection::SendData()
 		assert(EXIT_FAILURE);
 	}
 
+}
+
+bool NetworkConnection::GetBool(bool& value)
+{
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(bool), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::SendBool(const int& value) const
+{
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::SendString(const std::string& message)
+{
+	if (!SendPacketType(PACKET::mChatMessage))
+		return false;
+
+	int bufferLength = message.size();
+	if (!SendInt(bufferLength))
+		return false;
+
+	int returnCheck = send(connectSocket, message.c_str(), bufferLength, NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::GetString(std::string& message)
+{
+	int bufferLength = 0;
+	if (!GetInt(bufferLength))
+		return false;
+
+	char* buffer = new char[bufferLength + 1];
+	buffer[bufferLength] = '\0';
+
+	int returnCheck = recv(connectSocket, buffer, bufferLength, NULL);
+	message = buffer;
+	delete[] buffer;
+
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::GetInt(int& value)
+{
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(int), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::SendInt(const int& value) const
+{
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(int), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::SendPacketType(const PACKET& mPacket)
+{
+	int returnCheck = send(connectSocket, (char *)&mPacket, sizeof(PACKET), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
 }
 
 void NetworkConnection::CloseConnection()

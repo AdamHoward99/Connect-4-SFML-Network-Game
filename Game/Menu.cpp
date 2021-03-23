@@ -73,3 +73,8 @@ void Menu::KeyboardInput(sf::Event ev)
 {
 
 }
+
+void Menu::SetWinScreenTitle(std::string)
+{
+
+}

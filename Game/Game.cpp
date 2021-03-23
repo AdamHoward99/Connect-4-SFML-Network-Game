@@ -1,12 +1,14 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w), mWin(w), mPause(w)
+	:window(w), mPlayState(w)
 {
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
 	mMenus["ControlMenu"] = std::make_unique<ControlMenu>(w);
 	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w);
 	mMenus["EnterNameMenu"] = std::make_unique<EnterNameMenu>(w);
+	mMenus["PauseMenu"] = std::make_unique<PauseMenu>(w);
+	mMenus["WinMenu"] = std::make_unique<WinMenu>(w);
 
 	//Setup elements of game
 	Initialize();
@@ -14,11 +16,15 @@ Game::Game(sf::RenderWindow& w)
 
 Game::~Game()
 {
+	mConnection.CloseConnection();
+
 	//Remove all pointers
 	mMenus["StartMenu"].reset();
 	mMenus["ControlMenu"].reset();
 	mMenus["LeaderboardMenu"].reset();
 	mMenus["EnterNameMenu"].reset();
+	mMenus["PauseMenu"].reset();
+	mMenus["WinMenu"].reset();
 
 }
 
@@ -81,26 +87,53 @@ void Game::Update()
 		if (mPlayState.GetIfGameWon())
 		{
 			mStates = States::Win_Menu;
-			mWin.SetWinScreenTitle(mPlayState.GetWinMessage());
+			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetWinMessage());
 			mPlayState.Reset();
 		}
 		break;
 
 	case States::Matchmaking:
+	{
+
 		//Connection stuff here, searches on server to find other clients, if can find another player, goes to play state
-		if (mConnection.ConnectToServer())
+		if (!mConnection.AlreadyConnected())
 		{
-			//look for other clients on the server
-			//If after certain time it cannot find another client, move back to menu state
-			//If can find other client, go to play state
+			if (!mConnection.ConnectToServer())
+			{
+				mLoadingText.at(1).setString("Cannot connect to server...");
+				mStates = States::Start_Menu;
+			}
+
+			mConnection.SendPlayerName(mPlayerName);
+		}
+
+		//Send info to server to check if matchmaking is possible (>1 clients on server)
+		bool foo = false;
+
+		int result = 1;
+		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+		do
+		{
+			mConnection.SendBool(foo);
+			
+			if (!mConnection.GetBool(foo))
+				result = -1;				//Break out if cannot get value from server
+
+			if (foo)				//Break out if found an opponent
+				result = 0;
+
+			if (std::chrono::steady_clock::now() - start > std::chrono::seconds(20))
+				result = -1;		//Timed out while searching for an opponent
+
+		} while (result > 0);
+
+		//If other user is available, move to play state, if not available (time out or no result from server), move back to start menu
+		if (foo)
 			mStates = States::Play;
-		}
 		else
-		{
-			mLoadingText.at(1).setString("Cannot connect to server...");
 			mStates = States::Start_Menu;
-		}
-		//If connection to server failed, break out of this and either try again or move back to menu state
+
+	}
 		break;
 
 	case States::Enter_Name:
@@ -108,7 +141,7 @@ void Game::Update()
 			break;
 
 	case States::Pause_Menu:
-		mPause.Update();
+		mMenus["PauseMenu"].get()->Update();
 		UpdatePauseTimer();
 		break;
 
@@ -125,7 +158,7 @@ void Game::Update()
 		break;
 
 	case States::Win_Menu:
-		mWin.Update();
+		mMenus["WinMenu"].get()->Update();
 		break;
 
 	case States::Quit:
@@ -158,7 +191,6 @@ void Game::UpdatePauseTimer()
 void Game::Draw()
 {
 	//Draw elements of the game based on which state is active
-	//Include switch like in update for each state
 	switch (mStates)
 	{
 	case States::Play:
@@ -175,7 +207,7 @@ void Game::Draw()
 
 	case States::Pause_Menu:
 		mPlayState.Draw();
-		mPause.Draw();
+		mMenus["PauseMenu"].get()->Draw();
 		window.draw(mPauseTimerTxt);
 		break;
 
@@ -192,7 +224,7 @@ void Game::Draw()
 		break;
 
 	case States::Win_Menu:
-		mWin.Draw();
+		mMenus["WinMenu"].get()->Draw();
 		break;
 
 	default:
@@ -220,11 +252,11 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		case States::Pause_Menu:
-			ChangeState(mPause.DetectButtonPress());
+			ChangeState(mMenus["PauseMenu"].get()->DetectButtonPress());
 
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 
-			if (mPause.GetIfForfeiting())		//Reset game when quitting out from pause menu
+			if(mMenus["PauseMenu"].get()->GetIfForfeiting())		//Reset game when quitting out from pause menu
 				mPlayState.Reset();
 			break;
 
@@ -248,7 +280,7 @@ void Game::MouseReleased(sf::Event ev)
 			break;
 
 		case States::Win_Menu:
-			ChangeState(mWin.DetectButtonPress());
+			ChangeState(mMenus["WinMenu"].get()->DetectButtonPress());
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 			break;
 

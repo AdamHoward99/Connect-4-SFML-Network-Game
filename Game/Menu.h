@@ -21,13 +21,16 @@ public:
 
 	virtual sf::String GetName() { return mName; }
 
+	virtual bool GetIfForfeiting() { return leftGame; }
+
+	virtual void SetWinScreenTitle(std::string);		//Network stuff might be changing this
+
 	//Setup functions
 	virtual void SetupTextures();
 	virtual void SetupSprites() = 0;
 	virtual void SetupFonts();
 	virtual void SetupText() = 0;
 	virtual void SetupAudio();
-
 
 protected:
 	//Texture Variables
@@ -68,6 +71,8 @@ protected:
 	const float GameWidth = 900.f;
 
 	sf::String mName;
+
+	bool leftGame;
 
 private:
 
