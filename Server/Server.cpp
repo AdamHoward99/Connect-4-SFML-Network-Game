@@ -86,11 +86,11 @@ void Server::ListenForNewConnections()
 	else
 	{
 		printf("\nA client has been connected...");
-		mClientConnections[mConnections] = client_socket;
+		mClientConnections.push_back(client_socket);
 		//Tell new client if there are 2 (or more) clients on the server, allowing matchmaking
 		GetUsername(mConnections);
 
-		mConnectionThreads[mConnections] = std::thread(ClientHandler, mConnections);
+		mConnectionThreads.push_back(std::thread(ClientHandler, mConnections));
 		mConnections++;
 	}
 
@@ -111,8 +111,15 @@ void Server::ClientHandler(int index)
 			break;
 	}
 
-	printf("\nLost Connection with User:" + index);
+	printf("\nLost Connection with User: %d", index);
 	serverPtr->CloseConnection(index);
+	serverPtr->mConnections--;
+	serverPtr->usernames.erase(serverPtr->usernames.begin() + index);
+	serverPtr->mClientConnections.erase(serverPtr->mClientConnections.begin() + index);
+	serverPtr->mConnectionThreads[index].detach();
+	serverPtr->mConnectionThreads.erase(serverPtr->mConnectionThreads.begin() + index);
+	//Debug out messages
+	printf("\nConnections on server: %d ", serverPtr->mConnections);
 }
 
 void Server::CloseConnection(int index)

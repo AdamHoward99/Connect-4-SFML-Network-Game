@@ -46,8 +46,8 @@ public:
 	std::vector<std::string> usernames = {};
 
 private:
-	SOCKET mClientConnections[100];
-	std::thread mConnectionThreads[100];
+	std::vector<SOCKET> mClientConnections;
+	std::vector<std::thread> mConnectionThreads;
 	int mConnections;
 
 	SOCKET listen_socket;
