@@ -1,3 +1,4 @@
+#pragma once
 //Prevents Winsock 1.1 from being included
 
 #ifndef WIN32_LEAN_AND_MEAN

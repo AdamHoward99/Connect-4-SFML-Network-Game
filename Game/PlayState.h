@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
 #include "GameBoard.h"
+#include "NetworkConnection.h"
 #include <chrono>
 
 #define BACKSPACE_KEY 8
@@ -11,7 +12,7 @@
 class PlayState
 {
 public:
-	PlayState(sf::RenderWindow& window);		//Default Constructor
+	PlayState(sf::RenderWindow& window, NetworkConnection& connection);		//Default Constructor
 	~PlayState();
 
 	void Initialize();
@@ -40,6 +41,7 @@ public:
 
 private:
 	sf::RenderWindow& window;
+	NetworkConnection& mServer;
 
 	void PlacePiece();
 	void UpdateMousePosition();

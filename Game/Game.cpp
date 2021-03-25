@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w)
+	:window(w), mPlayState(w, mConnection)
 {
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
 	mMenus["ControlMenu"] = std::make_unique<ControlMenu>(w);
@@ -260,6 +260,8 @@ void Game::MouseReleased(sf::Event ev)
 		case States::Pause_Menu:
 			ChangeState(mMenus["PauseMenu"].get()->DetectButtonPress());
 
+			//Send information to server that this player has unpaused.
+
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 
 			if(mMenus["PauseMenu"].get()->GetIfForfeiting())		//Reset game when quitting out from pause menu
@@ -304,6 +306,7 @@ void Game::KeyPressed(sf::Event ev)
 	case States::Play:
 		if (ev.text.unicode == PAUSE_KEY && !mPlayState.GetIfChatIsOpen())
 		{
+			//Send information to server that this player has paused the game
 			mStates = States::Pause_Menu;
 			StartPauseTimer();
 		}

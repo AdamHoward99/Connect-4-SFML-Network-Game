@@ -1,7 +1,7 @@
 #include "PlayState.h"
 
-PlayState::PlayState(sf::RenderWindow& mApp)
-	:window(mApp), board(mApp)
+PlayState::PlayState(sf::RenderWindow& mApp, NetworkConnection& connect)
+	:window(mApp), board(mApp), mServer(connect)
 {
 
 }
@@ -95,9 +95,14 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
+	//if turn = none, function to find turn order on server
+	//assign turn order
+
+	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
+
 	board.Update();
 
-	UpdateTurnTimer();
+	UpdateTurnTimer();		//In this function, pass the server the time count, maybe not needed if other player doesnt need to see turn timer?
 	UpdateMousePosition();
 
 	//Switch turns, put into its own function
@@ -106,6 +111,7 @@ void PlayState::Update()
 		//Function to check if 4 are connected
 		if (HasConnected4())
 		{
+			//Pass information that this player has won to the server, returns win screen string
 			gameWon = true;
 
 			if (mGameTurn == Turn::Player_1_Turn)
@@ -117,10 +123,12 @@ void PlayState::Update()
 		//Function to see if there is a winner
 		if (IsBoardFull())
 		{
+			//Pass information that no player has won to the server,returns win screen string
 			gameWon = true;
 			winMessage = " It's a Tie";
 		}
 
+		//Pass information to server, board information, information to change turns
 		SwitchTurns();		//Changes piece colour and turn variable, sets turnEnd to false
 	}
 
@@ -270,7 +278,7 @@ void PlayState::DecideTurnOrder()
 {
 	int random = std::rand() % 100 + 1;
 
-	if (random < 49)
+	if (random < 49)		//Move turn decision over to the server, send bool value, server returns info abouts whos turn to both players 
 	{
 		mGameTurn = Turn::Player_1_Turn;
 		pieceToAdd.setFillColor(sf::Color::Red);
@@ -429,6 +437,9 @@ void PlayState::ChatInput(sf::Event ev)
 		{
 			if (mChatInput.getSize() > 0)
 				UpdateChatLog();
+
+			//Send information to server, string from chat
+			//Receive information from server, string from chat
 		}
 
 		else if (ev.text.unicode == BACKSPACE_KEY)
