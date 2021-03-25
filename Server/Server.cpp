@@ -88,6 +88,7 @@ void Server::ListenForNewConnections()
 		printf("\nA client has been connected...");
 		mClientConnections.push_back(client_socket);
 		mClientAvailable.push_back(true);
+		mThreadActive.push_back(true);
 		//Tell new client if there are 2 (or more) clients on the server, allowing matchmaking
 		GetUsername(mConnections);
 
@@ -114,13 +115,15 @@ void Server::ClientHandler(int index)
 
 	printf("\nLost Connection with User: %d", index);
 	serverPtr->CloseConnection(index);
-	serverPtr->mConnections--;
-	serverPtr->usernames.erase(serverPtr->usernames.begin() + index);
-	serverPtr->mClientConnections.erase(serverPtr->mClientConnections.begin() + index);
 	serverPtr->mConnectionThreads[index].detach();
-	serverPtr->mConnectionThreads.erase(serverPtr->mConnectionThreads.begin() + index);
+	serverPtr->mThreadActive[index] = false;
+	//serverPtr->mConnections--;
+	//serverPtr->usernames.erase(serverPtr->usernames.begin() + index);
+	//serverPtr->mClientConnections.erase(serverPtr->mClientConnections.begin() + index);
+	//serverPtr->mConnectionThreads[index].detach();
+	//serverPtr->mConnectionThreads.erase(serverPtr->mConnectionThreads.begin() + index);
 	//Delete from vector of booleans
-	serverPtr->mClientAvailable.erase(serverPtr->mClientAvailable.begin() + index);
+	//serverPtr->mClientAvailable.erase(serverPtr->mClientAvailable.begin() + index);
 	//Remove pair of int vectors, turn one that didnt connect to available
 	for (int i = 0; i < serverPtr->mMatchups.size(); i++)
 	{
@@ -136,7 +139,7 @@ void Server::ClientHandler(int index)
 		}
 	}
 	//Debug out messages
-	printf("\nConnections on server: %d ", serverPtr->mConnections);
+	printf("\nLifetime Connections on server: %d ", serverPtr->mConnections);
 }
 
 void Server::CloseConnection(int index)
@@ -275,22 +278,25 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		for (size_t i = 0; i < mClientConnections.size(); i++)
 		{
-			if (i == index)
-				continue;
-
-			if (mClientAvailable.at(i) == true)
+			if (mThreadActive[i] == true)			//Only way to 'disable' removed threads since deleting gives errors
 			{
-				matchmakingPossible = true;
-				mMatchups.push_back({ index, i });
-				mClientAvailable.at(i) = false;
-				mClientAvailable.at(index) = false;
+				if (i == index)
+					continue;
 
-				if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))
+				if (mClientAvailable.at(i) == true)
 				{
-					printf("\nFailed to send bool message");
-					return false;
+					matchmakingPossible = true;
+					mMatchups.push_back({ index, i });
+					mClientAvailable.at(i) = false;
+					mClientAvailable.at(index) = false;
+
+					if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))
+					{
+						printf("\nFailed to send bool message");
+						return false;
+					}
+					break;
 				}
-				break;
 			}
 		}
 
