@@ -193,8 +193,11 @@ bool Server::GetBool(int id, bool& value)
 	return true;
 }
 
-bool Server::SendBool(int id, bool value)
+bool Server::SendBool(int id, bool value)		//Create own function specifically for matching checks
 {
+	if (!SendPacketType(id, PACKET::mMatchmakingCheck))
+		return false;
+
 	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
@@ -248,12 +251,12 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		printf("\nMessage was sent across clients");
 		break;
 
-	default:
-		//For now default is boolean packet value
+	case PACKET::mMatchmakingCheck:
+		//For now default is boolean packet value 
 		if (!GetBool(index, matchmakingPossible))
 			return false;
 
-		for (int i = 0; i < mConnections; i++)
+		for (size_t i = 0; i < mClientConnections.size(); i++)
 		{
 			if (i == index)
 				continue;
@@ -267,6 +270,9 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			}
 		}
 
+		break;
+
+	default:
 		//printf("\nUnknown Packet type...");
 		//return false;
 		break;
@@ -287,7 +293,7 @@ void Server::GetUsername(int index)
 	if (!serverPtr->GetPacketType(index, mPacket))
 		printf("\nUnable to obtain client username...");
 
-	if (!mPacket == PACKET::mChatMessage)
+	if (mPacket == PACKET::mMatchmakingCheck)
 		printf("\nObtaining username type not found...");
 
 	std::string username;

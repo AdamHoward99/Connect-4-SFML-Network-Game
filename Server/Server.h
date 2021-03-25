@@ -48,7 +48,7 @@ public:
 private:
 	std::vector<SOCKET> mClientConnections;
 	std::vector<std::thread> mConnectionThreads;
-	int mConnections;
+	int mConnections = 0;
 
 	SOCKET listen_socket;
 	addrinfo* info;

@@ -60,9 +60,6 @@ void NetworkConnection::SendPlayerName(std::string name)
 
 void NetworkConnection::SendData()
 {
-	//Sends data to server
-	const int receiveBufferLength = 512;
-	char receiveBuffer[receiveBufferLength];
 
 	//Send an initial buffer
 	connectionResult = send(connectSocket, sendBuffer ,(int)strlen(sendBuffer), 0);
@@ -83,8 +80,11 @@ bool NetworkConnection::GetBool(bool& value)
 	return true;
 }
 
-bool NetworkConnection::SendBool(const int& value) const
+bool NetworkConnection::SendBool(const int& value)
 {
+	if (!SendPacketType(PACKET::mMatchmakingCheck))
+		return false;
+
 	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;

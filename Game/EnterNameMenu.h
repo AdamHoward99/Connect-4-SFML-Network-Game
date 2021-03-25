@@ -33,5 +33,5 @@ private:
 	sf::Sprite mTextboxSpr;
 
 	sf::String mNameString;
-	const unsigned int mNameSize = 15;
+	const unsigned int mNameSize = 6;
 };

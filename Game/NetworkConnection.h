@@ -34,7 +34,7 @@ public:
 
 	//Boolean Data Functions
 	bool GetBool(bool &foo);
-	bool SendBool(const int& value) const;
+	bool SendBool(const int& value);
 
 	//String Data Functions
 	bool SendString(const std::string& message);
