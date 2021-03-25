@@ -71,7 +71,7 @@ void NetworkConnection::SendData()
 
 }
 
-bool NetworkConnection::GetBool(bool& value)
+bool NetworkConnection::GetMatch(bool& value)
 {
 	int returnCheck = recv(connectSocket, (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
@@ -80,7 +80,7 @@ bool NetworkConnection::GetBool(bool& value)
 	return true;
 }
 
-bool NetworkConnection::SendBool(const int& value)
+bool NetworkConnection::SendMatch(const int& value)
 {
 	if (!SendPacketType(PACKET::mMatchmakingCheck))
 		return false;

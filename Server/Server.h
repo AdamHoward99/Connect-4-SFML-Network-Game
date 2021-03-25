@@ -38,8 +38,10 @@ public:
 	bool SendString(int id, const std::string& message);
 	bool GetString(int id, std::string& message);
 
-	bool SendBool(int id, bool value);
-	bool GetBool(int id, bool& value);
+	bool SendMatch(int id, bool value);
+	bool GetMatch(int id, bool& value);
+
+	//bool functions, replaced by match functions above
 
 	void GetUsername(int id);
 
@@ -49,6 +51,9 @@ private:
 	std::vector<SOCKET> mClientConnections;
 	std::vector<std::thread> mConnectionThreads;
 	int mConnections = 0;
+
+	std::vector<std::pair<int, int>> mMatchups;
+	std::vector<bool> mClientAvailable;
 
 	SOCKET listen_socket;
 	addrinfo* info;

@@ -33,8 +33,10 @@ public:
 	void SendData();
 
 	//Boolean Data Functions
-	bool GetBool(bool &foo);
-	bool SendBool(const int& value);
+
+	//Match up Functions (bool value determining if other clients are on the server)
+	bool GetMatch(bool &foo);
+	bool SendMatch(const int& value);
 
 	//String Data Functions
 	bool SendString(const std::string& message);

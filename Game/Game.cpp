@@ -109,25 +109,28 @@ void Game::Update()
 
 		//Send info to server to check if matchmaking is possible (>1 clients on server)
 		bool foo = false;
+		mConnection.SendMatch(foo);
 
 		int result = 1;
 		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 		do
 		{
-			mConnection.SendBool(foo);
-			
-			if (!mConnection.GetBool(foo))
+			std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
+			if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 5)		//Doesnt work, gets stuck on getmatch function but when returning info from server, its always true
+			{
+				result = -1;
+				break;
+			}
+
+			if (!mConnection.GetMatch(foo))	
 				result = -1;				//Break out if cannot get value from server
 
 			if (foo)				//Break out if found an opponent
 				result = 0;
 
-			if (std::chrono::steady_clock::now() - start > std::chrono::seconds(20))
-				result = -1;		//Timed out while searching for an opponent
-
 		} while (result > 0);
 
-		//If other user is available, move to play state, if not available (time out or no result from server), move back to start menu
+		//If other user is available, move to play state, if not available (time out or no result from server), disconnet and move back to start menu
 		if (foo)
 			mStates = States::Play;
 		else

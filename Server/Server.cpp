@@ -87,6 +87,7 @@ void Server::ListenForNewConnections()
 	{
 		printf("\nA client has been connected...");
 		mClientConnections.push_back(client_socket);
+		mClientAvailable.push_back(true);
 		//Tell new client if there are 2 (or more) clients on the server, allowing matchmaking
 		GetUsername(mConnections);
 
@@ -118,6 +119,22 @@ void Server::ClientHandler(int index)
 	serverPtr->mClientConnections.erase(serverPtr->mClientConnections.begin() + index);
 	serverPtr->mConnectionThreads[index].detach();
 	serverPtr->mConnectionThreads.erase(serverPtr->mConnectionThreads.begin() + index);
+	//Delete from vector of booleans
+	serverPtr->mClientAvailable.erase(serverPtr->mClientAvailable.begin() + index);
+	//Remove pair of int vectors, turn one that didnt connect to available
+	for (int i = 0; i < serverPtr->mMatchups.size(); i++)
+	{
+		if (serverPtr->mMatchups[i].first == index)
+		{
+			serverPtr->mClientAvailable[serverPtr->mMatchups[i].second] = true;		//Makes other user available again
+			serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
+		}
+		else if (serverPtr->mMatchups[i].second == index)
+		{
+			serverPtr->mClientAvailable[serverPtr->mMatchups[i].first] = true;		//Makes other user available again
+			serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
+		}
+	}
 	//Debug out messages
 	printf("\nConnections on server: %d ", serverPtr->mConnections);
 }
@@ -184,7 +201,7 @@ bool Server::GetString(int id, std::string& message)
 	return true;
 }
 
-bool Server::GetBool(int id, bool& value)
+bool Server::GetMatch(int id, bool& value)
 {
 	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
@@ -193,7 +210,7 @@ bool Server::GetBool(int id, bool& value)
 	return true;
 }
 
-bool Server::SendBool(int id, bool value)		//Create own function specifically for matching checks
+bool Server::SendMatch(int id, bool value)
 {
 	if (!SendPacketType(id, PACKET::mMatchmakingCheck))
 		return false;
@@ -253,7 +270,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 	case PACKET::mMatchmakingCheck:
 		//For now default is boolean packet value 
-		if (!GetBool(index, matchmakingPossible))
+		if (!GetMatch(index, matchmakingPossible))
 			return false;
 
 		for (size_t i = 0; i < mClientConnections.size(); i++)
@@ -261,14 +278,25 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			if (i == index)
 				continue;
 
-			//Other user on server, connect them?, store users who are connected together in a vector like structure
-			bool found = true;
-			if (!SendBool(index, found))
+			if (mClientAvailable.at(i) == true)
 			{
-				printf("\nFailed to send bool message");
-				return false;
+				matchmakingPossible = true;
+				mMatchups.push_back({ index, i });
+				mClientAvailable.at(i) = false;
+				mClientAvailable.at(index) = false;
+
+				if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))
+				{
+					printf("\nFailed to send bool message");
+					return false;
+				}
+				break;
 			}
 		}
+
+		break;
+
+	case PACKET::None:
 
 		break;
 
