@@ -49,8 +49,6 @@ public:
 	//Packet Data Functions
 	bool SendPacketType(const PACKET& mType);
 
-	bool AlreadyConnected() { return ConnectedToServer; }
-
 private:
 	WSAData wsaData;
 	SOCKET connectSocket;

@@ -111,6 +111,12 @@ void Server::ClientHandler(int index)
 
 		if (!serverPtr->ProcessPacket(index, mPacketType))
 			break;
+
+		if (!serverPtr->mThreadActive[index])
+		{
+			printf("\nUser %d disconnected due to other client disconnection", index);		//In game, send bool to check if still connected, disconnect if not
+			break;
+		}
 	}
 
 	printf("\nLost Connection with User: %d", index);
@@ -125,16 +131,18 @@ void Server::ClientHandler(int index)
 	//Delete from vector of booleans
 	//serverPtr->mClientAvailable.erase(serverPtr->mClientAvailable.begin() + index);
 	//Remove pair of int vectors, turn one that didnt connect to available
-	for (int i = 0; i < serverPtr->mMatchups.size(); i++)
+	for (size_t i = 0; i < serverPtr->mMatchups.size(); i++)
 	{
 		if (serverPtr->mMatchups[i].first == index)
 		{
-			serverPtr->mClientAvailable[serverPtr->mMatchups[i].second] = true;		//Makes other user available again
+			printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
+			serverPtr->mClientAvailable[serverPtr->mMatchups[i].second] = false;		//Makes other user available again
 			serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
 		}
 		else if (serverPtr->mMatchups[i].second == index)
 		{
-			serverPtr->mClientAvailable[serverPtr->mMatchups[i].first] = true;		//Makes other user available again
+			printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
+			serverPtr->mClientAvailable[serverPtr->mMatchups[i].first] = false;		//Makes other user available again
 			serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
 		}
 	}

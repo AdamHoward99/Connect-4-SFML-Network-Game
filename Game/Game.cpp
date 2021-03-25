@@ -94,18 +94,15 @@ void Game::Update()
 
 	case States::Matchmaking:
 	{
-
 		//Connection stuff here, searches on server to find other clients, if can find another player, goes to play state
-		if (!mConnection.AlreadyConnected())
+		if (!mConnection.ConnectToServer())
 		{
-			if (!mConnection.ConnectToServer())
-			{
-				mLoadingText.at(1).setString("Cannot connect to server...");
-				mStates = States::Start_Menu;
-			}
-
-			mConnection.SendPlayerName(mPlayerName);
+			mLoadingText.at(1).setString("Cannot connect to server...");
+			mStates = States::Start_Menu;
+			break;
 		}
+
+		mConnection.SendPlayerName(mPlayerName);
 
 		//Send info to server to check if matchmaking is possible (>1 clients on server)
 		bool foo = false;
@@ -132,9 +129,15 @@ void Game::Update()
 
 		//If other user is available, move to play state, if not available (time out or no result from server), disconnet and move back to start menu
 		if (foo)
+		{
+			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 			mStates = States::Play;
+		}
 		else
+		{
+			mConnection.CloseConnection();
 			mStates = States::Start_Menu;
+		}
 
 	}
 		break;
