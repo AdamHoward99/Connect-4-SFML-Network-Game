@@ -341,14 +341,14 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetPlayerType(index, playerType))
 			return false;
 
-		for (int i = 0; i < mMatchups.size(); i++)
+		for (size_t i = 0; i < mMatchups.size(); i++)
 		{
 			if (index == mMatchups[i].first)		//If the first position
 			{
 				playerType = 1;
 				if (!SendPlayerType(index, playerType))
 					return false;
-				printf("\nThe player %d is getting set as player 1", index);
+				printf("\nThe player %d is getting set as player 1", index);		//Error can occur when both get same player value, guessing its parallel getting the value but still shouldnt be happening
 				break;
 			}
 
