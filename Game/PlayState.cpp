@@ -16,7 +16,7 @@ void PlayState::Initialize()
 {
 	board.Initialize();
 	pieceToAdd = sf::CircleShape(30.f);
-	DecideTurnOrder();
+	//DecideTurnOrder();
 
 	//Setup Functions
 	SetupTextures();
@@ -95,6 +95,18 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
+	//if (mGameTurn == Turn::None)
+	//{
+		if (player == 1)
+			pieceToAdd.setFillColor(sf::Color::Red);
+		else if (player == 2)
+			pieceToAdd.setFillColor(sf::Color::Yellow);
+		else
+			exit(0);
+
+		mGameTurn = Turn::None;
+	//}
+
 	//if (mGameTurn == Turn::None)		//Only happens during first launch of game
 	//{
 	//	//Function to find turn order on server (gets probability, returns the turn)
@@ -307,12 +319,12 @@ void PlayState::DecideTurnOrder()
 	if (random < 49)		//Move turn decision over to the server, send bool value, server returns info abouts whos turn to both players 
 	{
 		mGameTurn = Turn::Player_1_Turn;
-		pieceToAdd.setFillColor(sf::Color::Red);
+		//pieceToAdd.setFillColor(sf::Color::Red);
 	}
 	else
 	{
 		mGameTurn = Turn::Player_2_Turn;
-		pieceToAdd.setFillColor(sf::Color::Yellow);
+		//pieceToAdd.setFillColor(sf::Color::Yellow);
 	}
 }
 
@@ -321,12 +333,12 @@ void PlayState::SwitchTurns()
 	if (mGameTurn == Turn::Player_1_Turn)
 	{
 		mGameTurn = Turn::Player_2_Turn;
-		pieceToAdd.setFillColor(sf::Color::Yellow);
+		//pieceToAdd.setFillColor(sf::Color::Yellow);
 	}
 	else
 	{
 		mGameTurn = Turn::Player_1_Turn;
-		pieceToAdd.setFillColor(sf::Color::Red);
+		//pieceToAdd.setFillColor(sf::Color::Red);
 	}
 
 	mTurnTimer.first = std::chrono::steady_clock::now();

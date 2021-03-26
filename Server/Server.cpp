@@ -131,21 +131,21 @@ void Server::ClientHandler(int index)
 	//Delete from vector of booleans
 	//serverPtr->mClientAvailable.erase(serverPtr->mClientAvailable.begin() + index);
 	//Remove pair of int vectors, turn one that didnt connect to available
-	for (size_t i = 0; i < serverPtr->mMatchups.size(); i++)
-	{
-		if (serverPtr->mMatchups[i].first == index)
-		{
-			printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
-			serverPtr->mClientAvailable[serverPtr->mMatchups[i].second] = false;		//Makes other user available again
-			serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
-		}
-		else if (serverPtr->mMatchups[i].second == index)
-		{
-			printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
-			serverPtr->mClientAvailable[serverPtr->mMatchups[i].first] = false;		//Makes other user available again
-			serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
-		}
-	}
+	//for (size_t i = 0; i < serverPtr->mMatchups.size(); i++)
+	//{
+	//	if (serverPtr->mMatchups[i].first == index)
+	//	{
+	//		printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
+	//		serverPtr->mClientAvailable[serverPtr->mMatchups[i].second] = false;		//Makes other user available again
+	//		serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
+	//	}
+	//	else if (serverPtr->mMatchups[i].second == index)
+	//	{
+	//		printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
+	//		serverPtr->mClientAvailable[serverPtr->mMatchups[i].first] = false;		//Makes other user available again
+	//		serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
+	//	}
+	//}
 	//Debug out messages
 	printf("\nLifetime Connections on server: %d ", serverPtr->mConnections);
 }
@@ -343,15 +343,35 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		for (int i = 0; i < mMatchups.size(); i++)
 		{
-			if (index == mMatchups[i].first)
+			if (index == mMatchups[i].first)		//If the first position
 			{
-				if (!SendPlayerType(index, 1))
+				playerType = 1;
+				if (!SendPlayerType(index, playerType))
 					return false;
+				printf("\nThe player %d is getting set as player 1", index);
+				break;
 			}
 
-			else if (index == mMatchups[i].second)
-				if (!SendPlayerType(index, 2))
+			if (index == mMatchups[i].second)
+			{
+				playerType = 2;
+				if (!SendPlayerType(index, playerType))
 					return false;
+				printf("\nThe player %d is getting set as player 2", index);
+				break;
+			}
+
+			//if (index == mMatchups[i].first)
+			//{
+			//	if (!SendPlayerType(index, 1) || !SendPlayerType(mMatchups[i].second, 2))
+			//		return false;
+			//	break;
+			//}
+
+			//else if (index == mMatchups[i].second)
+			//	if (!SendPlayerType(index, 2) || !SendPlayerType(mMatchups[i].first, 1))
+			//		return false;
+			//break;
 		}
 
 		break;

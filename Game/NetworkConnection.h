@@ -29,7 +29,7 @@ public:
 	void CreateSocket();
 	void CloseConnection();
 
-	void SendPlayerName(std::string username);
+	bool SendPlayerName(std::string username);
 
 	void SendData();
 

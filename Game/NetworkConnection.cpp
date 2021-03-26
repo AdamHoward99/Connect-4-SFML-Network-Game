@@ -52,10 +52,12 @@ bool NetworkConnection::ConnectToServer()
 	return true;
 }
 
-void NetworkConnection::SendPlayerName(std::string name)
+bool NetworkConnection::SendPlayerName(std::string name)
 {
 	if (!SendString(name))
-		exit(0);
+		return false;
+
+	return true;
 }
 
 void NetworkConnection::SendData()
