@@ -75,7 +75,7 @@ private:
 		Player_1_Turn,
 		Player_2_Turn
 	};
-	Turn mGameTurn = Turn::None;
+	Turn mGameTurn = Turn::Player_1_Turn;
 	bool turnEnd = false;
 
 	//Board & Piece Variables

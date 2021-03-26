@@ -95,42 +95,11 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
-	//if (mGameTurn == Turn::None)
-	//{
-		if (player == 1)
-			pieceToAdd.setFillColor(sf::Color::Red);
-		else if (player == 2)
-			pieceToAdd.setFillColor(sf::Color::Yellow);
-		else
-			exit(0);
-
-		mGameTurn = Turn::None;
-	//}
-
-	//if (mGameTurn == Turn::None)		//Only happens during first launch of game
-	//{
-	//	//Function to find turn order on server (gets probability, returns the turn)
-	//	int playerTurn = 0;
-	//	mServer.SendInt(playerTurn);
-
-	//	//Waits for server response for what turn starts
-	//	do
-	//	{
-	//		if (!mServer.GetInt(playerTurn))			//Cannot get connection to server
-	//		{
-	//			playerTurn = -1;
-	//			mServer.CloseConnection();
-	//		}
-
-	//	} while (playerTurn == 0);
-
-	//	if (playerTurn == 1)
-	//		mGameTurn = Turn::Player_1_Turn;
-	//	else if (playerTurn == 2)
-	//		mGameTurn = Turn::Player_2_Turn;
-	//	else
-	//		exit(0);
-	//}
+	//Change and put the get player code in here, maybe put random turn start here as well
+	if (player == 1)
+		pieceToAdd.setFillColor(sf::Color::Red);
+	else if (player == 2)
+		pieceToAdd.setFillColor(sf::Color::Yellow);
 
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
@@ -382,10 +351,14 @@ void PlayState::PlacePiece()
 void PlayState::Draw()
 {
 	board.Draw();
-	window.draw(pieceToAdd);
-	window.draw(mTimerText);
 	window.draw(mChatButton);
 	window.draw(mChatButtonText);
+
+	if (mGameTurn == player)
+	{
+		window.draw(pieceToAdd);
+		window.draw(mTimerText);
+	}
 
 	if (isChatOpen)
 	{

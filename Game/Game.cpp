@@ -134,17 +134,21 @@ void Game::Update()
 			mStates = States::Play;
 			
 			int playerType = 0;
+			result = 0;
 			mConnection.SendPlayerType(playerType);		//Finds which player they are in the game (1 or 2)
 
 			do
 			{
 				if (!mConnection.GetPlayerType(playerType))
 				{
-					playerType = -1;
+					result = -1;
 					mConnection.CloseConnection();
 				}
 
-			} while (playerType > 2 || playerType == 0);
+				if (playerType == 1 || playerType == 2)
+					result = 1;
+
+			} while (result == 0);
 
 			mPlayState.SetPlayer(playerType);
 		}

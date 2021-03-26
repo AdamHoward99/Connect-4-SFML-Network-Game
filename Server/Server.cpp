@@ -336,42 +336,32 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		break;
 
-	case PACKET::mPlayerType:
+	case PACKET::mPlayerType:				//Error when sending this, rarely both exes are set as player 1, no explanation for this
 
 		if (!GetPlayerType(index, playerType))
 			return false;
 
+
 		for (size_t i = 0; i < mMatchups.size(); i++)
 		{
-			if (index == mMatchups[i].first)		//If the first position
+			if (index <= mMatchups[i].second)
 			{
-				playerType = 1;
-				if (!SendPlayerType(index, playerType))
+				if (!SendPlayerType(index, 2))
 					return false;
-				printf("\nThe player %d is getting set as player 1", index);		//Error can occur when both get same player value, guessing its parallel getting the value but still shouldnt be happening
-				break;
+
+				printf("\nThe client at %d is getting set as player 2", index);
+				i = mMatchups.size();
+			}
+			else
+			{
+				if (!SendPlayerType(index, 1))
+					return false;
+
+				printf("\nThe client at %d is getting set as player 1", index);
+				i = mMatchups.size();		//break out of loop
 			}
 
-			if (index == mMatchups[i].second)
-			{
-				playerType = 2;
-				if (!SendPlayerType(index, playerType))
-					return false;
-				printf("\nThe player %d is getting set as player 2", index);
-				break;
-			}
-
-			//if (index == mMatchups[i].first)
-			//{
-			//	if (!SendPlayerType(index, 1) || !SendPlayerType(mMatchups[i].second, 2))
-			//		return false;
-			//	break;
-			//}
-
-			//else if (index == mMatchups[i].second)
-			//	if (!SendPlayerType(index, 2) || !SendPlayerType(mMatchups[i].first, 1))
-			//		return false;
-			//break;
+			printf("\nThe matchup vector for %d is <%d,%d>...", index, mMatchups[0].first, mMatchups[0].second);
 		}
 
 		break;
