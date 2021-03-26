@@ -39,6 +39,10 @@ public:
 	//Name Functions
 	void SetName(sf::String s) { mName = s; }
 
+	//Set which player in the game via server functions
+	int GetPlayer() { return player; }
+	void SetPlayer(int p) { player = p; }
+
 private:
 	sf::RenderWindow& window;
 	NetworkConnection& mServer;
@@ -67,10 +71,11 @@ private:
 	//Turn Variables
 	enum Turn
 	{
+		None,
 		Player_1_Turn,
 		Player_2_Turn
 	};
-	Turn mGameTurn = Turn::Player_1_Turn;
+	Turn mGameTurn = Turn::None;
 	bool turnEnd = false;
 
 	//Board & Piece Variables
@@ -113,4 +118,6 @@ private:
 
 	//Player Name
 	sf::String mName;
+
+	int player = 0;
 };

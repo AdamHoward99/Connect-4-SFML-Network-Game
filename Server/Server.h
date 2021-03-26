@@ -41,6 +41,10 @@ public:
 	bool SendMatch(int id, bool value);
 	bool GetMatch(int id, bool& value);
 
+	//Player Type Functions
+	bool SendPlayerType(int id, int value);
+	bool GetPlayerType(int id, int& value);
+
 	//bool functions, replaced by match functions above
 
 	void GetUsername(int id);

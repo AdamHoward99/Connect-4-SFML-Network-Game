@@ -233,6 +233,27 @@ bool Server::SendMatch(int id, bool value)
 	return true;
 }
 
+bool Server::GetPlayerType(int id, int& value)
+{
+	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(int), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool Server::SendPlayerType(int id, int value)
+{
+	if (!SendPacketType(id, PACKET::mPlayerType))
+		return false;
+
+	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(int), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
 bool Server::SendPacketType(int id, const PACKET& mPacket)
 {
 	int returnCheck = send(mClientConnections[id], (char *)& mPacket, sizeof(PACKET), NULL);
@@ -258,6 +279,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 {
 	std::string message;
 	bool matchmakingPossible = false;
+	int playerType;
 
 	switch (mType)
 	{
@@ -311,6 +333,26 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		break;
 
 	case PACKET::None:
+
+		break;
+
+	case PACKET::mPlayerType:
+
+		if (!GetPlayerType(index, playerType))
+			return false;
+
+		for (int i = 0; i < mMatchups.size(); i++)
+		{
+			if (index == mMatchups[i].first)
+			{
+				if (!SendPlayerType(index, 1))
+					return false;
+			}
+
+			else if (index == mMatchups[i].second)
+				if (!SendPlayerType(index, 2))
+					return false;
+		}
 
 		break;
 

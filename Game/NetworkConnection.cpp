@@ -92,6 +92,27 @@ bool NetworkConnection::SendMatch(const int& value)
 	return true;
 }
 
+bool NetworkConnection::GetPlayerType(int& value)
+{
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(int), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::SendPlayerType(const int& value)
+{
+	if (!SendPacketType(PACKET::mPlayerType))
+		return false;
+
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(int), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
 bool NetworkConnection::SendString(const std::string& message)
 {
 	if (!SendPacketType(PACKET::mChatMessage))

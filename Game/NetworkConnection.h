@@ -39,6 +39,10 @@ public:
 	bool GetMatch(bool &foo);
 	bool SendMatch(const int& value);
 
+	//Getting Player Type Functions (int value returning 1 or 2)
+	bool GetPlayerType(int& value);
+	bool SendPlayerType(const int& value);
+
 	//String Data Functions
 	bool SendString(const std::string& message);
 	bool GetString(std::string& message);

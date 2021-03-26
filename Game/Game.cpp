@@ -132,6 +132,21 @@ void Game::Update()
 		{
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 			mStates = States::Play;
+			
+			int playerType = 0;
+			mConnection.SendPlayerType(playerType);		//Finds which player they are in the game (1 or 2)
+
+			do
+			{
+				if (!mConnection.GetPlayerType(playerType))
+				{
+					playerType = -1;
+					mConnection.CloseConnection();
+				}
+
+			} while (playerType > 2 || playerType == 0);
+
+			mPlayState.SetPlayer(playerType);
 		}
 		else
 		{

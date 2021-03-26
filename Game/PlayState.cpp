@@ -95,14 +95,40 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
-	//if turn = none, function to find turn order on server
-	//assign turn order
+	//if (mGameTurn == Turn::None)		//Only happens during first launch of game
+	//{
+	//	//Function to find turn order on server (gets probability, returns the turn)
+	//	int playerTurn = 0;
+	//	mServer.SendInt(playerTurn);
+
+	//	//Waits for server response for what turn starts
+	//	do
+	//	{
+	//		if (!mServer.GetInt(playerTurn))			//Cannot get connection to server
+	//		{
+	//			playerTurn = -1;
+	//			mServer.CloseConnection();
+	//		}
+
+	//	} while (playerTurn == 0);
+
+	//	if (playerTurn == 1)
+	//		mGameTurn = Turn::Player_1_Turn;
+	//	else if (playerTurn == 2)
+	//		mGameTurn = Turn::Player_2_Turn;
+	//	else
+	//		exit(0);
+	//}
 
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
 	board.Update();
 
-	UpdateTurnTimer();		//In this function, pass the server the time count, maybe not needed if other player doesnt need to see turn timer?
+	if (mGameTurn == player)		//If its the players turn
+	{
+		UpdateTurnTimer();		//In this function, pass the server the time count, maybe not needed if other player doesnt need to see turn timer?
+	}
+
 	UpdateMousePosition();
 
 	//Switch turns, put into its own function
