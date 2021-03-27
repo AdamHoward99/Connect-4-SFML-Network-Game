@@ -156,6 +156,7 @@
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="StartMenu.h" />
     <ClInclude Include="States.h" />
+    <ClInclude Include="Turn.h" />
     <ClInclude Include="WinMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

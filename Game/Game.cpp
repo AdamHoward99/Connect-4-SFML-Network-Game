@@ -112,18 +112,21 @@ void Game::Update()
 		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 		do
 		{
-			std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
-			if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 5)		//Doesnt work, gets stuck on getmatch function but when returning info from server, its always true
-			{
-				result = -1;
-				break;
-			}
+			//mConnection.GetMatch(foo);
 
-			if (!mConnection.GetMatch(foo))	
+			if(!mConnection.GetMatch(foo))
 				result = -1;				//Break out if cannot get value from server
 
 			if (foo)				//Break out if found an opponent
 				result = 0;
+
+			std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
+			if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 10)		//Doesnt work, gets stuck on getmatch function but when returning info from server, its always true
+			{
+				mConnection.CloseConnection();
+				result = -1;
+				break;
+			}
 
 		} while (result > 0);
 

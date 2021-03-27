@@ -17,6 +17,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include "../Server/PACKET.h"
+#include "Turn.h"
 
 class NetworkConnection
 {
@@ -50,6 +51,10 @@ public:
 	//Int Data Functions
 	bool GetInt(int& value);
 	bool SendInt(const int& value) const;
+
+	//Turn Functions
+	bool GetPlayerTurn(Turn& value);
+	bool SendPlayerTurn(const Turn& value);
 
 	//Packet Data Functions
 	bool SendPacketType(const PACKET& mType);

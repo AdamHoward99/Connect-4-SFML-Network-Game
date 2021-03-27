@@ -103,6 +103,12 @@ void PlayState::Update()
 
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
+	Turn newTurn = mGameTurn;
+	mServer.GetPlayerTurn(newTurn);
+
+	if (newTurn <= 2)
+		mGameTurn = newTurn;		//Updates when a new turn happens
+
 	board.Update();
 
 	if (mGameTurn == player)		//If its the players turn
@@ -134,6 +140,14 @@ void PlayState::Update()
 			gameWon = true;
 			winMessage = " It's a Tie";
 		}
+
+		//Server send turn info
+		mServer.SendPlayerTurn(mGameTurn);
+
+		do
+		{
+			mServer.GetPlayerTurn(mGameTurn);
+		} while (mGameTurn > 2);
 
 		//Pass information to server, board information, information to change turns
 		SwitchTurns();		//Changes piece colour and turn variable, sets turnEnd to false
@@ -299,16 +313,16 @@ void PlayState::DecideTurnOrder()
 
 void PlayState::SwitchTurns()
 {
-	if (mGameTurn == Turn::Player_1_Turn)
-	{
-		mGameTurn = Turn::Player_2_Turn;
-		//pieceToAdd.setFillColor(sf::Color::Yellow);
-	}
-	else
-	{
-		mGameTurn = Turn::Player_1_Turn;
-		//pieceToAdd.setFillColor(sf::Color::Red);
-	}
+	//if (mGameTurn == Turn::Player_1_Turn)
+	//{
+	//	mGameTurn = Turn::Player_2_Turn;
+	//	//pieceToAdd.setFillColor(sf::Color::Yellow);
+	//}
+	//else
+	//{
+	//	mGameTurn = Turn::Player_1_Turn;
+	//	//pieceToAdd.setFillColor(sf::Color::Red);
+	//}
 
 	mTurnTimer.first = std::chrono::steady_clock::now();
 

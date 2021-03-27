@@ -254,6 +254,27 @@ bool Server::SendPlayerType(int id, int value)
 	return true;
 }
 
+bool Server::GetPlayerTurn(int id, Turn& value)
+{
+	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool Server::SendPlayerTurn(int id, Turn value)
+{
+	if (!SendPacketType(id, PACKET::mPlayerTurn))
+		return false;
+
+	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
 bool Server::SendPacketType(int id, const PACKET& mPacket)
 {
 	int returnCheck = send(mClientConnections[id], (char *)& mPacket, sizeof(PACKET), NULL);
@@ -280,6 +301,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	std::string message;
 	bool matchmakingPossible = false;
 	int playerType;
+	Turn playerTurn;
 
 	switch (mType)
 	{
@@ -332,7 +354,36 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		break;
 
-	case PACKET::None:
+	case PACKET::Empty:
+
+		break;
+
+	case PACKET::mPlayerTurn:
+	{
+
+		if (!GetPlayerTurn(index, playerTurn))
+			return false;
+
+		Turn returnedTurn = Turn::None;
+
+		if (playerTurn == Turn::Player_1_Turn)		//If end of player 1's turn, switch to p2
+			 returnedTurn = Turn::Player_2_Turn;
+
+		else if (playerTurn == Turn::Player_2_Turn)
+			returnedTurn = Turn::Player_1_Turn;
+
+		else
+			printf("\nThe turn count is out of range with client %d", index);
+
+		for (int i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
+		{
+			if (index == mMatchups[i].first || index == mMatchups[i].second)
+			{
+				if (!SendPlayerTurn(mMatchups[i].first, returnedTurn) || !SendPlayerTurn(mMatchups[i].second, returnedTurn))
+					return false;
+			}
+		}
+	}
 
 		break;
 

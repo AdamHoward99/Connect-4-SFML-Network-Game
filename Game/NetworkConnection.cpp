@@ -47,6 +47,11 @@ bool NetworkConnection::ConnectToServer()
 		return false;
 	}
 
+	//Disables blocking for send, recv etc.
+	u_long mode = 1;
+	if (ioctlsocket(connectSocket, FIONBIO, &mode) == SOCKET_ERROR)
+		exit(0);
+
 	ConnectedToServer = true;
 
 	return true;
@@ -75,9 +80,12 @@ void NetworkConnection::SendData()
 
 bool NetworkConnection::GetMatch(bool& value)
 {
-	int returnCheck = recv(connectSocket, (char *)&value, sizeof(bool), NULL);
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(bool), MSG_PEEK);
 	if (returnCheck == SOCKET_ERROR)
-		return false;
+	{
+		if (WSAGetLastError() != WSAEWOULDBLOCK)		//Error expected due to time constraints of connection (Non blocking mode only)
+			return false;
+	}
 
 	return true;
 }
@@ -87,7 +95,28 @@ bool NetworkConnection::SendMatch(const int& value)
 	if (!SendPacketType(PACKET::mMatchmakingCheck))
 		return false;
 
-	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), NULL);
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), MSG_PARTIAL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::GetPlayerTurn(Turn& value)
+{
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(Turn), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::SendPlayerTurn(const Turn& value)
+{
+	if (!SendPacketType(PACKET::mPlayerTurn))
+		return false;
+
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(Turn), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -179,6 +208,8 @@ bool NetworkConnection::SendPacketType(const PACKET& mPacket)
 
 void NetworkConnection::CloseConnection()
 {
+	ioctlsocket(connectSocket, FIONBIO, 0);
+
 	closesocket(connectSocket);
 	WSACleanup();
 

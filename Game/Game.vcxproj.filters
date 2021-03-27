@@ -95,5 +95,8 @@
     <ClInclude Include="EnterNameMenu.h">
       <Filter>Header Files\Menus</Filter>
     </ClInclude>
+    <ClInclude Include="Turn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
