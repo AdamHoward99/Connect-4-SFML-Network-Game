@@ -94,6 +94,33 @@ bool NetworkConnection::Matchmake()
 	return result == 0;
 }
 
+bool NetworkConnection::GetPlayer(int& playerType)
+{
+	//Find which player is which (player 1 or 2)
+	int result = 0;
+
+	if (!SendPlayerType(playerType))		//Finds which player they are in the game (1 or 2)
+	{
+		CloseConnection();
+		return false;
+	}
+
+	do
+	{
+		if (!GetPlayerType(playerType))		//Connection error with server, break out
+		{
+			CloseConnection();
+			return false;
+		}
+
+		if (playerType == 1 || playerType == 2)			//Found result from server
+			result = 1;
+
+	} while (result == 0);
+
+	return true;
+}
+
 void NetworkConnection::SendData()
 {
 
@@ -156,7 +183,10 @@ bool NetworkConnection::GetPlayerType(int& value)
 {
 	int returnCheck = recv(connectSocket, (char *)&value, sizeof(int), NULL);
 	if (returnCheck == SOCKET_ERROR)
-		return false;
+	{
+		if (WSAGetLastError() != WSAEWOULDBLOCK)
+			return false;
+	}
 
 	return true;
 }

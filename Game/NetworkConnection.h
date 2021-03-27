@@ -34,6 +34,7 @@ public:
 	bool SendPlayerName(std::string username);
 
 	bool Matchmake();		//Returns true if opponent is found
+	bool GetPlayer(int& playerType);		//Returns true if type is 1 or 2
 
 	void SendData();
 
