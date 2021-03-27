@@ -50,7 +50,7 @@ bool NetworkConnection::ConnectToServer()
 	//Disables blocking for send, recv etc.
 	u_long mode = 1;
 	if (ioctlsocket(connectSocket, FIONBIO, &mode) == SOCKET_ERROR)
-		exit(0);
+		CloseConnection();
 
 	ConnectedToServer = true;
 
@@ -63,6 +63,35 @@ bool NetworkConnection::SendPlayerName(std::string name)
 		return false;
 
 	return true;
+}
+
+bool NetworkConnection::Matchmake()
+{
+	bool opponentFound = false;
+
+	if (!SendMatch(opponentFound))
+		return false;
+
+	int result = 1;
+	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point current;
+
+	do
+	{
+		if (!GetMatch(opponentFound))		//Break out if cannot get a value from the server
+			result = -1;
+
+		if (opponentFound)		//If found an opponent
+			result = 0;
+
+		current = std::chrono::steady_clock::now();			//Get current time
+
+		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 8)			//If application times out or takes too long
+			result = -1;
+
+	} while (result > 0);
+
+	return result == 0;
 }
 
 void NetworkConnection::SendData()
@@ -80,7 +109,7 @@ void NetworkConnection::SendData()
 
 bool NetworkConnection::GetMatch(bool& value)
 {
-	int returnCheck = recv(connectSocket, (char *)&value, sizeof(bool), MSG_PEEK);
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() != WSAEWOULDBLOCK)		//Error expected due to time constraints of connection (Non blocking mode only)
@@ -95,7 +124,7 @@ bool NetworkConnection::SendMatch(const int& value)
 	if (!SendPacketType(PACKET::mMatchmakingCheck))
 		return false;
 
-	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), MSG_PARTIAL);
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 

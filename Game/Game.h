@@ -38,6 +38,8 @@ private:
 	void StartPauseTimer() {mPauseTimer.first = std::chrono::steady_clock::now();}
 	void UpdatePauseTimer();
 
+	//Network Functions
+
 	PlayState mPlayState;
 
 	std::unordered_map<std::string, std::unique_ptr<Menu>> mMenus;

@@ -12,6 +12,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <chrono>
 
 #include <Windows.h>
 #include <WinSock2.h>
@@ -31,6 +32,8 @@ public:
 	void CloseConnection();
 
 	bool SendPlayerName(std::string username);
+
+	bool Matchmake();		//Returns true if opponent is found
 
 	void SendData();
 

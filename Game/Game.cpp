@@ -102,64 +102,51 @@ void Game::Update()
 			break;
 		}
 
-		mConnection.SendPlayerName(mPlayerName);
-
-		//Send info to server to check if matchmaking is possible (>1 clients on server)
-		bool foo = false;
-		mConnection.SendMatch(foo);
-
-		int result = 1;
-		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-		do
+		if(!mConnection.SendPlayerName(mPlayerName))
 		{
-			//mConnection.GetMatch(foo);
-
-			if(!mConnection.GetMatch(foo))
-				result = -1;				//Break out if cannot get value from server
-
-			if (foo)				//Break out if found an opponent
-				result = 0;
-
-			std::chrono::steady_clock::time_point current = std::chrono::steady_clock::now();
-			if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 10)		//Doesnt work, gets stuck on getmatch function but when returning info from server, its always true
-			{
-				mConnection.CloseConnection();
-				result = -1;
-				break;
-			}
-
-		} while (result > 0);
-
-		//If other user is available, move to play state, if not available (time out or no result from server), disconnet and move back to start menu
-		if (foo)
-		{
-			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
-			mStates = States::Play;
-			
-			int playerType = 0;
-			result = 0;
-			mConnection.SendPlayerType(playerType);		//Finds which player they are in the game (1 or 2)
-
-			do
-			{
-				if (!mConnection.GetPlayerType(playerType))
-				{
-					result = -1;
-					mConnection.CloseConnection();
-				}
-
-				if (playerType == 1 || playerType == 2)
-					result = 1;
-
-			} while (result == 0);
-
-			mPlayState.SetPlayer(playerType);
+			mStates = States::Start_Menu;
+			break;
 		}
-		else
+		
+		//Send info to server to check if matchmaking is possible (>1 clients on server)
+		if (!mConnection.Matchmake())		//Couldnt find an opponent
 		{
 			mConnection.CloseConnection();
 			mStates = States::Start_Menu;
 		}
+		else				//Did find an opponent
+		{
+			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
+			mStates = States::Play;
+
+			//Find which player is which (player 1 or 2)
+		}
+
+		////If other user is available, move to play state, if not available (time out or no result from server), disconnet and move back to start menu
+		//if (foo)
+		//{
+		//	mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
+		//	mStates = States::Play;
+		//	
+		//	int playerType = 0;
+		//	result = 0;
+		//	mConnection.SendPlayerType(playerType);		//Finds which player they are in the game (1 or 2)
+
+		//	do
+		//	{
+		//		if (!mConnection.GetPlayerType(playerType))
+		//		{
+		//			result = -1;
+		//			mConnection.CloseConnection();
+		//		}
+
+		//		if (playerType == 1 || playerType == 2)
+		//			result = 1;
+
+		//	} while (result == 0);
+
+		//	mPlayState.SetPlayer(playerType);
+		//}
 
 	}
 		break;
@@ -350,3 +337,5 @@ void Game::ChangeState(States newState)
 {
 	mStates = newState;
 }
+
+
