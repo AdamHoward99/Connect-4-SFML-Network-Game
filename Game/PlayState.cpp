@@ -95,11 +95,8 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
-	//Change and put the get player code in here, maybe put random turn start here as well
-	if (player == 1)
-		pieceToAdd.setFillColor(sf::Color::Red);
-	else if (player == 2)
-		pieceToAdd.setFillColor(sf::Color::Yellow);
+	//Maybe put random turn start here
+
 
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
@@ -527,4 +524,25 @@ void PlayState::UpdateChatLog()
 		mChatLogText.at(i).setPosition(620.f, yOffset);
 		yOffset -= 20.f;
 	}
+}
+
+void PlayState::SetPlayer(int p)
+{
+	player = p;
+
+	switch (player)
+	{
+	case 1:
+		pieceToAdd.setFillColor(sf::Color::Red);
+		break;
+
+	case 2:
+		pieceToAdd.setFillColor(sf::Color::Yellow);
+		break;
+
+	default:
+		mServer.CloseConnection();
+		break;
+	}
+
 }

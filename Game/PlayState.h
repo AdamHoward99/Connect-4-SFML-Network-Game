@@ -42,7 +42,7 @@ public:
 
 	//Set which player in the game via server functions
 	int GetPlayer() { return player; }
-	void SetPlayer(int p) { player = p; }
+	void SetPlayer(int p);
 
 private:
 	sf::RenderWindow& window;
