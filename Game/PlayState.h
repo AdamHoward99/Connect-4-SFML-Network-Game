@@ -44,6 +44,8 @@ public:
 	int GetPlayer() { return player; }
 	void SetPlayer(int p);
 
+	bool IsPlayersTurn();		//Returns if the player can go
+
 private:
 	sf::RenderWindow& window;
 	NetworkConnection& mServer;

@@ -121,6 +121,19 @@ bool NetworkConnection::GetPlayer(int& playerType)
 	return true;
 }
 
+bool NetworkConnection::GetTurnUpdate(Turn& mTurn)
+{
+	Turn newTurn;
+
+	if (!GetPlayerTurn(newTurn))
+		return false;
+
+	if (newTurn == Turn::Player_1_Turn || newTurn == Turn::Player_2_Turn)		//If is a valid turn value
+		mTurn = newTurn;
+
+	return true;
+}
+
 void NetworkConnection::SendData()
 {
 
@@ -162,7 +175,10 @@ bool NetworkConnection::GetPlayerTurn(Turn& value)
 {
 	int returnCheck = recv(connectSocket, (char *)&value, sizeof(Turn), NULL);
 	if (returnCheck == SOCKET_ERROR)
-		return false;
+	{
+		if(WSAGetLastError() != WSAEWOULDBLOCK)
+			return false;
+	}
 
 	return true;
 }

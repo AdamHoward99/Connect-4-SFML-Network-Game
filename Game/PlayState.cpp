@@ -100,17 +100,18 @@ void PlayState::Update()
 
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
-	Turn newTurn = mGameTurn;
-	mServer.GetPlayerTurn(newTurn);
-
-	if (newTurn <= 2)
-		mGameTurn = newTurn;		//Updates when a new turn happens
+	//Detect Turn Switch on other player
+	if (!mServer.GetTurnUpdate(mGameTurn))
+	{
+		mServer.CloseConnection();
+		return;
+	}
 
 	board.Update();
 
-	if (mGameTurn == player)		//If its the players turn
+	if (IsPlayersTurn())
 	{
-		UpdateTurnTimer();		//In this function, pass the server the time count, maybe not needed if other player doesnt need to see turn timer?
+		UpdateTurnTimer();
 	}
 
 	UpdateMousePosition();
@@ -365,7 +366,7 @@ void PlayState::Draw()
 	window.draw(mChatButton);
 	window.draw(mChatButtonText);
 
-	if (mGameTurn == player)
+	if (IsPlayersTurn())
 	{
 		window.draw(pieceToAdd);
 		window.draw(mTimerText);
@@ -447,7 +448,7 @@ void PlayState::ButtonPress()
 		}
 	}
 	else
-		if(!mChatPanelSpr.getGlobalBounds().contains(mousePos))
+		if(!mChatPanelSpr.getGlobalBounds().contains(mousePos) && IsPlayersTurn())
 			PlacePiece();
 }
 
@@ -545,4 +546,9 @@ void PlayState::SetPlayer(int p)
 		break;
 	}
 
+}
+
+bool PlayState::IsPlayersTurn()
+{
+	return mGameTurn == player;
 }

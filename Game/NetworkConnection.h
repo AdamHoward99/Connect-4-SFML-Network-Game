@@ -35,6 +35,7 @@ public:
 
 	bool Matchmake();		//Returns true if opponent is found
 	bool GetPlayer(int& playerType);		//Returns true if type is 1 or 2
+	bool GetTurnUpdate(Turn& mCurrentTurn);		//Checks with server for the current turn of the game
 
 	void SendData();
 
