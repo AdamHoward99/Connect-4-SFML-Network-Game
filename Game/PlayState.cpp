@@ -113,6 +113,8 @@ void PlayState::Update()
 	{
 		UpdateTurnTimer();
 	}
+	else
+		mTurnTimer.first = std::chrono::steady_clock::now();
 
 	UpdateMousePosition();
 
@@ -139,16 +141,23 @@ void PlayState::Update()
 			winMessage = " It's a Tie";
 		}
 
-		//Server send turn info
-		mServer.SendPlayerTurn(mGameTurn);
-
-		do
+		//Send turn changes to server
+		if (!mServer.SendPlayerTurn(mGameTurn))
 		{
-			mServer.GetPlayerTurn(mGameTurn);
-		} while (mGameTurn > 2);
+			mServer.CloseConnection();
+			return;
+		}
 
-		//Pass information to server, board information, information to change turns
-		SwitchTurns();		//Changes piece colour and turn variable, sets turnEnd to false
+		while (mGameTurn > 2)		//Makes sure it receives the new turn value before moving on
+		{
+			if (!mServer.GetPlayerTurn(mGameTurn))
+			{
+				mServer.CloseConnection();
+				return;		//Break would be better?
+			}
+		}
+
+		turnEnd = false;
 	}
 
 }
@@ -307,24 +316,6 @@ void PlayState::DecideTurnOrder()
 		mGameTurn = Turn::Player_2_Turn;
 		//pieceToAdd.setFillColor(sf::Color::Yellow);
 	}
-}
-
-void PlayState::SwitchTurns()
-{
-	//if (mGameTurn == Turn::Player_1_Turn)
-	//{
-	//	mGameTurn = Turn::Player_2_Turn;
-	//	//pieceToAdd.setFillColor(sf::Color::Yellow);
-	//}
-	//else
-	//{
-	//	mGameTurn = Turn::Player_1_Turn;
-	//	//pieceToAdd.setFillColor(sf::Color::Red);
-	//}
-
-	mTurnTimer.first = std::chrono::steady_clock::now();
-
-	turnEnd = false;
 }
 
 void PlayState::PlacePiece()
