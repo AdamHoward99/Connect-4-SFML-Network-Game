@@ -18,7 +18,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include "../Server/PACKET.h"
-#include "Turn.h"
+#include "GameData.h"
 
 class NetworkConnection
 {
@@ -58,8 +58,8 @@ public:
 	bool SendInt(const int& value) const;
 
 	//Turn Functions
-	bool GetPlayerTurn(Turn& value);
-	bool SendPlayerTurn(const Turn& value);
+	bool GetGameData(GameData& value);
+	bool SendGameData(const GameData& value);
 
 	//Packet Data Functions
 	bool SendPacketType(const PACKET& mType);

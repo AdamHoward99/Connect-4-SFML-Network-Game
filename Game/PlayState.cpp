@@ -150,7 +150,7 @@ void PlayState::Update()
 			mGameData.mTurn = Turn::Player_1_Turn;
 
 		//Send turn changes to server
-		if (!mServer.SendPlayerTurn(mGameData.mTurn))
+		if (!mServer.SendGameData(mGameData))
 		{
 			mServer.CloseConnection();
 			return;
@@ -158,7 +158,7 @@ void PlayState::Update()
 
 		while (mGameData.mTurn > 2)		//Makes sure it receives the new turn value before moving on
 		{
-			if (!mServer.GetPlayerTurn(mGameData.mTurn))
+			if (!mServer.GetGameData(mGameData))
 			{
 				mServer.CloseConnection();
 				return;		//Break would be better?

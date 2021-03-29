@@ -7,7 +7,7 @@
 #include <winsock2.h>
 #include <WS2tcpip.h>
 #include "PACKET.h"
-#include "../Game/Turn.h"
+#include "../Game/GameData.h"
 
 #include <vector>
 #include <thread>
@@ -47,8 +47,8 @@ public:
 	bool GetPlayerType(int id, int& value);
 
 	//Player Turn Functions
-	bool SendPlayerTurn(int id, Turn value);
-	bool GetPlayerTurn(int id, Turn& value);
+	bool SendGameData(int id, GameData value);
+	bool GetGameData(int id, GameData& value);
 
 	//bool functions, replaced by match functions above
 

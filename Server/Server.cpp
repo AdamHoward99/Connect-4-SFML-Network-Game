@@ -254,21 +254,21 @@ bool Server::SendPlayerType(int id, int value)
 	return true;
 }
 
-bool Server::GetPlayerTurn(int id, Turn& value)
+bool Server::GetGameData(int id, GameData& value)
 {
-	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
+	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(GameData), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
 	return true;
 }
 
-bool Server::SendPlayerTurn(int id, Turn value)
+bool Server::SendGameData(int id, GameData value)
 {
 	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
-	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
+	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(GameData), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -301,7 +301,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	std::string message;
 	bool matchmakingPossible = false;
 	int playerType;
-	Turn playerTurn;
+	GameData mData;
 
 	switch (mType)
 	{
@@ -361,14 +361,14 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	case PACKET::mData:
 	{
 
-		if (!GetPlayerTurn(index, playerTurn))
+		if (!GetGameData(index, mData))
 			return false;
 
 		for (int i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
 		{
 			if (index == mMatchups[i].first || index == mMatchups[i].second)
 			{
-				if (!SendPlayerTurn(mMatchups[i].first, playerTurn) || !SendPlayerTurn(mMatchups[i].second, playerTurn))
+				if (!SendGameData(mMatchups[i].first, mData) || !SendGameData(mMatchups[i].second, mData))
 					return false;
 			}
 		}
