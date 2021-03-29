@@ -5,5 +5,5 @@ enum PACKET
 	mMatchmakingCheck,
 	mChatMessage,
 	mPlayerType,
-	mPlayerTurn,
+	mData,
 };

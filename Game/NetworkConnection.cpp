@@ -185,7 +185,7 @@ bool NetworkConnection::GetPlayerTurn(Turn& value)
 
 bool NetworkConnection::SendPlayerTurn(const Turn& value)
 {
-	if (!SendPacketType(PACKET::mPlayerTurn))
+	if (!SendPacketType(PACKET::mData))
 		return false;
 
 	int returnCheck = send(connectSocket, (char *)&value, sizeof(Turn), NULL);

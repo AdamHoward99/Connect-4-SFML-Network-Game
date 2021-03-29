@@ -141,6 +141,13 @@ void PlayState::Update()
 			winMessage = " It's a Tie";
 		}
 
+
+		//Swaps turns, passes this to server to relay to other clients
+		if (mGameTurn == Turn::Player_1_Turn)
+			mGameTurn = Turn::Player_2_Turn;
+		else
+			mGameTurn = Turn::Player_1_Turn;
+
 		//Send turn changes to server
 		if (!mServer.SendPlayerTurn(mGameTurn))
 		{

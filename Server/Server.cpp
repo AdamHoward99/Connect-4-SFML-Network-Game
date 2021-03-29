@@ -265,7 +265,7 @@ bool Server::GetPlayerTurn(int id, Turn& value)
 
 bool Server::SendPlayerTurn(int id, Turn value)
 {
-	if (!SendPacketType(id, PACKET::mPlayerTurn))
+	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
 	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
@@ -358,28 +358,17 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		break;
 
-	case PACKET::mPlayerTurn:
+	case PACKET::mData:
 	{
 
 		if (!GetPlayerTurn(index, playerTurn))
 			return false;
 
-		Turn returnedTurn = Turn::None;
-
-		if (playerTurn == Turn::Player_1_Turn)		//If end of player 1's turn, switch to p2
-			 returnedTurn = Turn::Player_2_Turn;
-
-		else if (playerTurn == Turn::Player_2_Turn)
-			returnedTurn = Turn::Player_1_Turn;
-
-		else
-			printf("\nThe turn count is out of range with client %d", index);
-
 		for (int i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
 		{
 			if (index == mMatchups[i].first || index == mMatchups[i].second)
 			{
-				if (!SendPlayerTurn(mMatchups[i].first, returnedTurn) || !SendPlayerTurn(mMatchups[i].second, returnedTurn))
+				if (!SendPlayerTurn(mMatchups[i].first, playerTurn) || !SendPlayerTurn(mMatchups[i].second, playerTurn))
 					return false;
 			}
 		}
