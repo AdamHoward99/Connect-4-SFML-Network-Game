@@ -202,6 +202,8 @@ bool NetworkConnection::GetPlayerType(int& value)
 	{
 		if (WSAGetLastError() != WSAEWOULDBLOCK)
 			return false;
+
+		value = 0;
 	}
 
 	return true;

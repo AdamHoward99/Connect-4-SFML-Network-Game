@@ -395,17 +395,18 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		for (size_t i = 0; i < mMatchups.size(); i++)
 		{
-			if (index <= mMatchups[i].second)
+			if (index == mMatchups[i].first)
 			{
-				if (!SendPlayerType(index, 2))
+				if (!SendPlayerType(index, 1))
 					return false;
 
 				printf("\nThe client at %d is getting set as player 2", index);
 				i = mMatchups.size();
 			}
-			else
+
+			else if(index == mMatchups[i].second)
 			{
-				if (!SendPlayerType(index, 1))
+				if (!SendPlayerType(index, 2))
 					return false;
 
 				printf("\nThe client at %d is getting set as player 1", index);
