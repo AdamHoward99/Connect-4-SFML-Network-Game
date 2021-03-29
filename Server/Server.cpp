@@ -360,7 +360,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 	case PACKET::mData:
 	{
-
 		if (!GetGameData(index, mData))
 			return false;
 

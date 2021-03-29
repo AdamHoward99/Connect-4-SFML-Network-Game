@@ -52,7 +52,6 @@ private:
 
 	void PlacePiece();
 	void UpdateMousePosition();
-	void DecideTurnOrder();
 	bool IsBoardFull();
 	bool HasConnected4();
 

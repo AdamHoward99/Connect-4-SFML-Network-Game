@@ -37,10 +37,6 @@ public:
 	bool GetPlayer(int& playerType);		//Returns true if type is 1 or 2
 	bool GetTurnUpdate(Turn& mCurrentTurn);		//Checks with server for the current turn of the game
 
-	void SendData();
-
-	//Boolean Data Functions
-
 	//Match up Functions (bool value determining if other clients are on the server)
 	bool GetMatch(bool &foo);
 	bool SendMatch(const int& value);
@@ -68,8 +64,4 @@ private:
 	WSAData wsaData;
 	SOCKET connectSocket;
 	struct sockaddr_in server;
-
-	const char *sendBuffer = "Test Message to server";		//Not sure if needed anymore
-	int connectionResult;
-	bool ConnectedToServer = false;
 };

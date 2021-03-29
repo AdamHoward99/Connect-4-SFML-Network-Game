@@ -52,8 +52,6 @@ bool NetworkConnection::ConnectToServer()
 	if (ioctlsocket(connectSocket, FIONBIO, &mode) == SOCKET_ERROR)
 		CloseConnection();
 
-	ConnectedToServer = true;
-
 	return true;
 }
 
@@ -132,19 +130,6 @@ bool NetworkConnection::GetTurnUpdate(Turn& mTurn)
 		mTurn = newTurn.mTurn;
 
 	return true;
-}
-
-void NetworkConnection::SendData()
-{
-
-	//Send an initial buffer
-	connectionResult = send(connectSocket, sendBuffer ,(int)strlen(sendBuffer), 0);
-	if (connectionResult == SOCKET_ERROR)
-	{
-		CloseConnection();
-		assert(EXIT_FAILURE);
-	}
-
 }
 
 bool NetworkConnection::GetMatch(bool& value)

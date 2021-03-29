@@ -17,7 +17,6 @@ void PlayState::Initialize()
 	board.Initialize();
 	pieceToAdd = sf::CircleShape(30.f);
 	mGameData.mTurn = Turn::Player_1_Turn;
-	//DecideTurnOrder();
 
 	//Setup Functions
 	SetupTextures();
@@ -96,9 +95,6 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
-	//Maybe put random turn start here
-
-
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
 	//Detect Turn Switch on other player
@@ -110,6 +106,7 @@ void PlayState::Update()
 
 	board.Update();
 
+	//Put this in its own function?
 	if (IsPlayersTurn())
 	{
 		UpdateTurnTimer();
@@ -143,7 +140,7 @@ void PlayState::Update()
 		}
 
 
-		//Swaps turns, passes this to server to relay to other clients
+		//Swaps turns, passes this to server to relay to other clients, put all this in its own function?
 		if (mGameData.mTurn == Turn::Player_1_Turn)
 			mGameData.mTurn = Turn::Player_2_Turn;
 		else
@@ -156,14 +153,14 @@ void PlayState::Update()
 			return;
 		}
 
-		while (mGameData.mTurn > 2)		//Makes sure it receives the new turn value before moving on
-		{
-			if (!mServer.GetGameData(mGameData))
-			{
-				mServer.CloseConnection();
-				return;		//Break would be better?
-			}
-		}
+		//while (mGameData.mTurn > 2)		//Makes sure it receives the new turn value before moving on
+		//{
+		//	if (!mServer.GetGameData(mGameData))
+		//	{
+		//		mServer.CloseConnection();
+		//		return;		//Break would be better?
+		//	}
+		//}
 
 		turnEnd = false;
 	}
@@ -310,22 +307,6 @@ bool PlayState::HasConnected4()
 	return false;
 }
 
-void PlayState::DecideTurnOrder()
-{
-	int random = std::rand() % 100 + 1;
-
-	if (random < 49)		//Move turn decision over to the server, send bool value, server returns info abouts whos turn to both players 
-	{
-		mGameData.mTurn = Turn::Player_1_Turn;
-		//pieceToAdd.setFillColor(sf::Color::Red);
-	}
-	else
-	{
-		mGameData.mTurn = Turn::Player_2_Turn;
-		//pieceToAdd.setFillColor(sf::Color::Yellow);
-	}
-}
-
 void PlayState::PlacePiece()
 {
 	int col;
@@ -393,8 +374,6 @@ void PlayState::Reset()
 	//Reset chat
 	mChatInput.clear();
 	mChatInputText.setString(mChatInput);
-
-	DecideTurnOrder();
 }
 
 void PlayState::UpdateTurnTimer()
