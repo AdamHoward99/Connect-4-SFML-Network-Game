@@ -16,6 +16,7 @@ void PlayState::Initialize()
 {
 	board.Initialize();
 	pieceToAdd = sf::CircleShape(30.f);
+	mGameData.mTurn = Turn::Player_1_Turn;
 	//DecideTurnOrder();
 
 	//Setup Functions
@@ -101,7 +102,7 @@ void PlayState::Update()
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
 	//Detect Turn Switch on other player
-	if (!mServer.GetTurnUpdate(mGameTurn))
+	if (!mServer.GetTurnUpdate(mGameData.mTurn))
 	{
 		mServer.CloseConnection();
 		return;
@@ -127,7 +128,7 @@ void PlayState::Update()
 			//Pass information that this player has won to the server, returns win screen string
 			gameWon = true;
 
-			if (mGameTurn == Turn::Player_1_Turn)
+			if (mGameData.mTurn == Turn::Player_1_Turn)
 				winMessage = "Player 1 Wins";
 			else
 				winMessage = "Player 2 Wins";
@@ -143,21 +144,21 @@ void PlayState::Update()
 
 
 		//Swaps turns, passes this to server to relay to other clients
-		if (mGameTurn == Turn::Player_1_Turn)
-			mGameTurn = Turn::Player_2_Turn;
+		if (mGameData.mTurn == Turn::Player_1_Turn)
+			mGameData.mTurn = Turn::Player_2_Turn;
 		else
-			mGameTurn = Turn::Player_1_Turn;
+			mGameData.mTurn = Turn::Player_1_Turn;
 
 		//Send turn changes to server
-		if (!mServer.SendPlayerTurn(mGameTurn))
+		if (!mServer.SendPlayerTurn(mGameData.mTurn))
 		{
 			mServer.CloseConnection();
 			return;
 		}
 
-		while (mGameTurn > 2)		//Makes sure it receives the new turn value before moving on
+		while (mGameData.mTurn > 2)		//Makes sure it receives the new turn value before moving on
 		{
-			if (!mServer.GetPlayerTurn(mGameTurn))
+			if (!mServer.GetPlayerTurn(mGameData.mTurn))
 			{
 				mServer.CloseConnection();
 				return;		//Break would be better?
@@ -220,7 +221,7 @@ bool PlayState::HasConnected4()
 
 	sf::Color c;
 
-	if (mGameTurn == Turn::Player_1_Turn)
+	if (mGameData.mTurn == Turn::Player_1_Turn)
 		c = sf::Color::Red;
 	else
 		c = sf::Color::Yellow;
@@ -315,12 +316,12 @@ void PlayState::DecideTurnOrder()
 
 	if (random < 49)		//Move turn decision over to the server, send bool value, server returns info abouts whos turn to both players 
 	{
-		mGameTurn = Turn::Player_1_Turn;
+		mGameData.mTurn = Turn::Player_1_Turn;
 		//pieceToAdd.setFillColor(sf::Color::Red);
 	}
 	else
 	{
-		mGameTurn = Turn::Player_2_Turn;
+		mGameData.mTurn = Turn::Player_2_Turn;
 		//pieceToAdd.setFillColor(sf::Color::Yellow);
 	}
 }
@@ -548,5 +549,5 @@ void PlayState::SetPlayer(int p)
 
 bool PlayState::IsPlayersTurn()
 {
-	return mGameTurn == player;
+	return mGameData.mTurn == player;
 }

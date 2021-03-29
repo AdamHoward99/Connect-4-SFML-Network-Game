@@ -4,7 +4,7 @@
 #include "SFML/Audio.hpp"
 #include "GameBoard.h"
 #include "NetworkConnection.h"
-#include "Turn.h"
+#include "GameData.h"
 #include <chrono>
 
 #define BACKSPACE_KEY 8
@@ -71,7 +71,7 @@ private:
 	std::vector<sf::Text> mChatLogText;
 
 	//Turn Variables
-	Turn mGameTurn = Turn::Player_1_Turn;
+	GameData mGameData;
 	bool turnEnd = false;
 
 	//Board & Piece Variables

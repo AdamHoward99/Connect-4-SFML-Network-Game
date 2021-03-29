@@ -149,6 +149,7 @@
     <ClInclude Include="EnterNameMenu.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBoard.h" />
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="LeaderboardMenu.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="NetworkConnection.h" />
