@@ -1,12 +1,13 @@
 #pragma once
 
-#include <utility>
+#include <string>
 #include "Turn.h"
 
 struct GameData			//Gets information for the game from the server in a single receive function
 {
 	//turn, board update, chat
 	Turn mTurn;
+	//std::string mMessage = "Test";`		//Chat Variable
 	//std::pair<int, int> mLastMove;
-	//Chat Variable
+
 };

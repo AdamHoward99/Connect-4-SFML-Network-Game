@@ -259,6 +259,22 @@ bool NetworkConnection::SendInt(const int& value) const
 	return true;
 }
 
+void NetworkConnection::SerializeStruct(GameData mPacket, std::ostream& os)
+{
+	//Serialize GameData struct into a stringstream
+	char end = '\0';
+	char inbetween = '/';
+
+	//os.write((char *)mPacket.mTurn, sizeof(Turn));
+	//os.write(&inbetween, 1);		//Separates data in struct
+	//os.write(&end, 1);		//End the data stream
+}
+
+void NetworkConnection::DeserializeStruct(GameData& mPacket, std::istream is)
+{
+
+}
+
 bool NetworkConnection::SendPacketType(const PACKET& mPacket)
 {
 	int returnCheck = send(connectSocket, (char *)&mPacket, sizeof(PACKET), NULL);

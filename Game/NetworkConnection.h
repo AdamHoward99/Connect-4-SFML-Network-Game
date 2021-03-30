@@ -57,6 +57,10 @@ public:
 	bool GetGameData(GameData& value);
 	bool SendGameData(const GameData& value);
 
+	//Serialize and Deserialize Struct Functions
+	void SerializeStruct(GameData mDataPacket, std::ostream& os);
+	void DeserializeStruct(GameData& mDataPacket, std::istream is);
+
 	//Packet Data Functions
 	bool SendPacketType(const PACKET& mType);
 

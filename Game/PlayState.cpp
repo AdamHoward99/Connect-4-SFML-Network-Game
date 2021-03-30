@@ -153,15 +153,6 @@ void PlayState::Update()
 			return;
 		}
 
-		//while (mGameData.mTurn > 2)		//Makes sure it receives the new turn value before moving on
-		//{
-		//	if (!mServer.GetGameData(mGameData))
-		//	{
-		//		mServer.CloseConnection();
-		//		return;		//Break would be better?
-		//	}
-		//}
-
 		turnEnd = false;
 	}
 
