@@ -50,7 +50,12 @@ bool NetworkConnection::ConnectToServer()
 	//Disables blocking for send, recv etc.
 	u_long mode = 1;
 	if (ioctlsocket(connectSocket, FIONBIO, &mode) == SOCKET_ERROR)
+	{
 		CloseConnection();
+		return false;
+	}
+
+	OutputDebugStringA("\nConnection was made to the server...");
 
 	return true;
 }
@@ -59,6 +64,8 @@ bool NetworkConnection::SendPlayerName(std::string name)
 {
 	if (!SendString(name))
 		return false;
+
+	OutputDebugStringA("\nPlayer name was sent to the server...");
 
 	return true;
 }
@@ -77,15 +84,21 @@ bool NetworkConnection::Matchmake()
 	do
 	{
 		if (!GetMatch(opponentFound))		//Break out if cannot get a value from the server
-			result = -1;
+			return false;
 
 		if (opponentFound)		//If found an opponent
-			result = 0;
+		{
+			OutputDebugStringA("\nFound an opponent, returning true...");
+			return true;
+		}
 
 		current = std::chrono::steady_clock::now();			//Get current time
 
 		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 8)			//If application times out or takes too long
-			result = -1;
+		{
+			OutputDebugStringA("\nTimed out...");
+			return false;
+		}
 
 	} while (result > 0);
 
@@ -139,7 +152,11 @@ bool NetworkConnection::GetMatch(bool& value)
 	{
 		if (WSAGetLastError() != WSAEWOULDBLOCK)		//Error expected due to time constraints of connection (Non blocking mode only)
 			return false;
+
+		value = false;
 	}
+
+	OutputDebugStringA("\nGetting the match from the server happened...");
 
 	return true;
 }
@@ -152,6 +169,8 @@ bool NetworkConnection::SendMatch(const int& value)
 	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
+
+	OutputDebugStringA("\nSent searching for match to the server");
 
 	return true;
 }
@@ -202,6 +221,8 @@ bool NetworkConnection::SendPlayerType(const int& value)
 	int returnCheck = send(connectSocket, (char *)&value, sizeof(int), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
+
+	OutputDebugStringA("\nPlayer type was sent to the server...");
 
 	return true;
 }

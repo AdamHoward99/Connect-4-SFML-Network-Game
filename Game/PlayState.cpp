@@ -504,14 +504,18 @@ void PlayState::SetPlayer(int p)
 	{
 	case 1:
 		pieceToAdd.setFillColor(sf::Color::Red);
+		OutputDebugStringA("\nSets as player 1...");
 		break;
 
 	case 2:
 		pieceToAdd.setFillColor(sf::Color::Yellow);
+		OutputDebugStringA("\nSets as player 2...");
 		break;
 
 	default:
+		OutputDebugStringA("\nGets default, no value, closes the connection...");
 		mServer.CloseConnection();
+		exit(0);
 		break;
 	}
 

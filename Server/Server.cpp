@@ -123,6 +123,7 @@ void Server::ClientHandler(int index)
 	serverPtr->CloseConnection(index);
 	serverPtr->mConnectionThreads[index].detach();
 	serverPtr->mThreadActive[index] = false;
+
 	//serverPtr->mConnections--;
 	//serverPtr->usernames.erase(serverPtr->usernames.begin() + index);
 	//serverPtr->mClientConnections.erase(serverPtr->mClientConnections.begin() + index);
@@ -328,6 +329,8 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetMatch(index, matchmakingPossible))
 			return false;
 
+		printf("\nGetMatch function returned...");
+
 		for (size_t i = 0; i < mClientConnections.size(); i++)
 		{
 			if (mThreadActive[i] == true)			//Only way to 'disable' removed threads since deleting gives errors
@@ -347,6 +350,8 @@ bool Server::ProcessPacket(int index, PACKET mType)
 						printf("\nFailed to send bool message");
 						return false;
 					}
+
+					printf("\nMessages were sent to %d and %d", i, index);
 					break;
 				}
 			}
@@ -385,7 +390,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		{
 			if (index == mMatchups[i].first)
 			{
-				if (!SendPlayerType(index, 1))
+				if (!SendPlayerType(index, 1) || !SendPlayerType(mMatchups[i].second, 2))
 					return false;
 
 				printf("\nThe client at %d is getting set as player 2", index);
@@ -394,7 +399,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 			else if(index == mMatchups[i].second)
 			{
-				if (!SendPlayerType(index, 2))
+				if (!SendPlayerType(mMatchups[i].first, 1) || !SendPlayerType(index, 2))
 					return false;
 
 				printf("\nThe client at %d is getting set as player 1", index);
