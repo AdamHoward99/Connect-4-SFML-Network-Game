@@ -97,12 +97,12 @@ void PlayState::Update()
 {
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
-	//Detect Turn Switch on other player
 	if (!mServer.GetTurnUpdate(mGameData.mTurn))
 	{
 		mServer.CloseConnection();
 		return;
 	}
+
 
 	board.Update();
 
@@ -139,7 +139,6 @@ void PlayState::Update()
 			winMessage = " It's a Tie";
 		}
 
-
 		//Swaps turns, passes this to server to relay to other clients, put all this in its own function?
 		if (mGameData.mTurn == Turn::Player_1_Turn)
 			mGameData.mTurn = Turn::Player_2_Turn;
@@ -147,7 +146,7 @@ void PlayState::Update()
 			mGameData.mTurn = Turn::Player_1_Turn;
 
 		//Send turn changes to server
-		if (!mServer.SendGameData(mGameData))
+		if (!mServer.SendGameData(mGameData.mTurn))
 		{
 			mServer.CloseConnection();
 			return;

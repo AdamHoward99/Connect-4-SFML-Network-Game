@@ -255,21 +255,21 @@ bool Server::SendPlayerType(int id, int value)
 	return true;
 }
 
-bool Server::GetGameData(int id, GameData& value)
+bool Server::GetGameData(int id, Turn& value)
 {
-	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(GameData), NULL);
+	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
 	return true;
 }
 
-bool Server::SendGameData(int id, GameData value)
+bool Server::SendGameData(int id, Turn value)
 {
 	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
-	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(GameData), NULL);
+	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -302,7 +302,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	std::string message;
 	bool matchmakingPossible = false;
 	int playerType;
-	GameData mData;
+	Turn mData;
 
 	switch (mType)
 	{
@@ -370,10 +370,20 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		for (int i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
 		{
-			if (index == mMatchups[i].first || index == mMatchups[i].second)
+			if (index == mMatchups[i].first)
 			{
-				if (!SendGameData(mMatchups[i].first, mData) || !SendGameData(mMatchups[i].second, mData))
+				if (!SendGameData(mMatchups[i].second, mData))
 					return false;
+
+				i = mMatchups.size();
+			}
+
+			else if (index == mMatchups[i].second)
+			{
+				if (!SendGameData(mMatchups[i].first, mData))
+					return false;
+			
+				i = mMatchups.size();
 			}
 		}
 	}
@@ -390,7 +400,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		{
 			if (index == mMatchups[i].first)
 			{
-				if (!SendPlayerType(index, 1) || !SendPlayerType(mMatchups[i].second, 2))
+				if (!SendPlayerType(index, 1))
 					return false;
 
 				printf("\nThe client at %d is getting set as player 2", index);
@@ -399,7 +409,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 			else if(index == mMatchups[i].second)
 			{
-				if (!SendPlayerType(mMatchups[i].first, 1) || !SendPlayerType(index, 2))
+				if (!SendPlayerType(index, 2))
 					return false;
 
 				printf("\nThe client at %d is getting set as player 1", index);

@@ -54,8 +54,8 @@ public:
 	bool SendInt(const int& value) const;
 
 	//Turn Functions
-	bool GetGameData(GameData& value);
-	bool SendGameData(const GameData& value);
+	bool GetGameData(Turn& value);
+	bool SendGameData(const Turn& value);
 
 	//Serialize and Deserialize Struct Functions
 	void SerializeStruct(GameData mDataPacket, std::ostream& os);

@@ -47,8 +47,8 @@ public:
 	bool GetPlayerType(int id, int& value);
 
 	//Player Turn Functions
-	bool SendGameData(int id, GameData value);
-	bool GetGameData(int id, GameData& value);
+	bool SendGameData(int id, Turn value);
+	bool GetGameData(int id, Turn& value);
 
 	//bool functions, replaced by match functions above
 

@@ -129,6 +129,11 @@ void Game::Update()
 				break;
 			}
 			mPlayState.SetPlayer(player);
+
+			//Send Which player will be going first, is obtained from server in PlayState::Update
+			if (!mConnection.SendGameData(mPlayState.GetTurn()))
+				mConnection.CloseConnection();
+
 		}
 
 	}

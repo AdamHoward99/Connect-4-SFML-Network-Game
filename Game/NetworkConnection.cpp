@@ -134,13 +134,16 @@ bool NetworkConnection::GetPlayer(int& playerType)
 
 bool NetworkConnection::GetTurnUpdate(Turn& mTurn)
 {
-	GameData newTurn;
+	Turn newTurn;
 
 	if (!GetGameData(newTurn))
 		return false;
 
-	if (newTurn.mTurn == Turn::Player_1_Turn || newTurn.mTurn == Turn::Player_2_Turn)		//If is a valid turn value
-		mTurn = newTurn.mTurn;
+	if (newTurn != Turn::None)		//If is a valid turn value
+	{
+		OutputDebugStringA("\nA valid value for the turn has been found...");
+		mTurn = newTurn;
+	}
 
 	return true;
 }
@@ -175,26 +178,34 @@ bool NetworkConnection::SendMatch(const int& value)
 	return true;
 }
 
-bool NetworkConnection::GetGameData(GameData& value)
+bool NetworkConnection::GetGameData(Turn& value)
 {
-	int returnCheck = recv(connectSocket, (char *)&value, sizeof(GameData), NULL);
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(Turn), NULL);
 	if (returnCheck == SOCKET_ERROR)
 	{
 		if(WSAGetLastError() != WSAEWOULDBLOCK)
 			return false;
+
+		OutputDebugStringA("\nGamedata has returned null...");
+		value = Turn::None;
 	}
+
+	//if (value == Turn::Player_2_Turn)
+	//	exit(0);
 
 	return true;
 }
 
-bool NetworkConnection::SendGameData(const GameData& value)
+bool NetworkConnection::SendGameData(const Turn& value)
 {
 	if (!SendPacketType(PACKET::mData))
 		return false;
 
-	int returnCheck = send(connectSocket, (char *)&value, sizeof(GameData), NULL);
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(Turn), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
+
+	OutputDebugStringA("\nThe turn has been sent to the server");
 
 	return true;
 }

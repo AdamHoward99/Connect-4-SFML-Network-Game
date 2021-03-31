@@ -46,6 +46,8 @@ public:
 
 	bool IsPlayersTurn();		//Returns if the player can go
 
+	Turn GetTurn() { return mGameData.mTurn; }
+
 private:
 	sf::RenderWindow& window;
 	NetworkConnection& mServer;
