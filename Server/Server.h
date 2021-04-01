@@ -47,8 +47,12 @@ public:
 	bool GetPlayerType(int id, int& value);
 
 	//Player Turn Functions
-	bool SendGameData(int id, Turn value);
-	bool GetGameData(int id, Turn& value);
+	bool SendGameData(int id, GameData value);
+	bool GetGameData(int id, GameData& value);
+
+	//Serialize and Deserialize Functions
+	void SerializeStruct(GameData* mData, char *data);
+	void DeserializeStruct(GameData* mData, char *data);
 
 	//bool functions, replaced by match functions above
 

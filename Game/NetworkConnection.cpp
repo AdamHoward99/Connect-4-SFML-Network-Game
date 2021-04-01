@@ -180,7 +180,11 @@ bool NetworkConnection::SendMatch(const int& value)
 
 bool NetworkConnection::GetGameData(GameData& value)
 {
-	int returnCheck = recv(connectSocket, (char *)&value, sizeof(GameData), NULL);
+	char data[sizeof(GameData)];
+	int returnCheck = recv(connectSocket, data, sizeof(GameData), NULL);
+
+	DeserializeStruct(&value, data);
+
 	if (returnCheck == SOCKET_ERROR)
 	{
 		if(WSAGetLastError() != WSAEWOULDBLOCK)
@@ -193,12 +197,16 @@ bool NetworkConnection::GetGameData(GameData& value)
 	return true;
 }
 
-bool NetworkConnection::SendGameData(const GameData& value)
+bool NetworkConnection::SendGameData(GameData& value)
 {
 	if (!SendPacketType(PACKET::mData))
 		return false;
 
-	int returnCheck = send(connectSocket, (char *)&value, sizeof(GameData), NULL);
+	char data[sizeof(GameData)];
+
+	SerializeStruct(&value, data);
+
+	int returnCheck = send(connectSocket, data, sizeof(GameData), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -288,20 +296,19 @@ bool NetworkConnection::SendInt(const int& value) const
 	return true;
 }
 
-void NetworkConnection::SerializeStruct(GameData mPacket, std::ostream& os)
+void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 {
-	//Serialize GameData struct into a stringstream
-	char end = '\0';
-	char inbetween = '/';
-
-	//os.write((char *)mPacket.mTurn, sizeof(Turn));
-	//os.write(&inbetween, 1);		//Separates data in struct
-	//os.write(&end, 1);		//End the data stream
+	//Serialize GameData struct
+	int *q = (int *)data;
+	*q = mPacket->mTurn;
+	q++;
 }
 
-void NetworkConnection::DeserializeStruct(GameData& mPacket, std::istream is)
+void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 {
-
+	int *q = (int*)data;
+	mPacket->mTurn = (Turn) *q;	
+	q++;
 }
 
 bool NetworkConnection::SendPacketType(const PACKET& mPacket)

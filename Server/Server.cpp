@@ -255,25 +255,47 @@ bool Server::SendPlayerType(int id, int value)
 	return true;
 }
 
-bool Server::GetGameData(int id, Turn& value)
+bool Server::GetGameData(int id, GameData& value)
 {
-	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
+	char data[sizeof(GameData)];
+	int returnCheck = recv(mClientConnections[id], data, sizeof(GameData), NULL);
+
+	DeserializeStruct(&value, data);
+
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
 	return true;
 }
 
-bool Server::SendGameData(int id, Turn value)
+bool Server::SendGameData(int id, GameData value)
 {
 	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
-	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(Turn), NULL);
+	char data[sizeof(GameData)];
+
+	SerializeStruct(&value, data);
+
+	int returnCheck = send(mClientConnections[id], data, sizeof(GameData), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
 	return true;
+}
+
+void Server::SerializeStruct(GameData* mData, char *data)
+{
+	int *q = (int *)data;
+	*q = mData->mTurn;
+	q++;
+}
+
+void Server::DeserializeStruct(GameData* mData, char *data)
+{
+	int *q = (int*)data;
+	mData->mTurn = (Turn)*q;
+	q++;
 }
 
 bool Server::SendPacketType(int id, const PACKET& mPacket)
@@ -302,7 +324,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	std::string message;
 	bool matchmakingPossible = false;
 	int playerType;
-	Turn mData;
+	GameData mData;
 
 	switch (mType)
 	{

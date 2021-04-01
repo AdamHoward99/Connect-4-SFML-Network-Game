@@ -55,11 +55,11 @@ public:
 
 	//Turn Functions
 	bool GetGameData(GameData& value);
-	bool SendGameData(const GameData& value);
+	bool SendGameData(GameData& value);
 
 	//Serialize and Deserialize Struct Functions
-	void SerializeStruct(GameData mDataPacket, std::ostream& os);
-	void DeserializeStruct(GameData& mDataPacket, std::istream is);
+	void SerializeStruct(GameData* mDataPacket,char *data);
+	void DeserializeStruct(GameData* mDataPacket, char *data);
 
 	//Packet Data Functions
 	bool SendPacketType(const PACKET& mType);
