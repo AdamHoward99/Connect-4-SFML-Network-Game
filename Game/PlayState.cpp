@@ -146,7 +146,7 @@ void PlayState::Update()
 			mGameData.mTurn = Turn::Player_1_Turn;
 
 		//Send turn changes to server
-		if (!mServer.SendGameData(mGameData.mTurn))
+		if (!mServer.SendGameData(mGameData))
 		{
 			mServer.CloseConnection();
 			return;

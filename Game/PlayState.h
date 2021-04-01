@@ -46,7 +46,7 @@ public:
 
 	bool IsPlayersTurn();		//Returns if the player can go
 
-	Turn GetTurn() { return mGameData.mTurn; }
+	GameData GetData() { return mGameData; }
 
 private:
 	sf::RenderWindow& window;
