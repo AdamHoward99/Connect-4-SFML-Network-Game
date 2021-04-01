@@ -328,12 +328,18 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 {
 	int i = 0;
-	while (data[i] != '/')
-	{
-		mPacket->mTurn = (Turn) data[i];
-		i++;
-	}
 
+	if (data[i] == '|')
+	{
+		while (data[i] != '/' && i < sizeof(Turn))
+		{
+			mPacket->mTurn = (Turn) data[i];
+			i++;
+
+			if (i > 100)
+				exit(0);
+		}
+	}
 
 	//int *q = (int*)data;
 	//mPacket->mTurn = (Turn) *q;	

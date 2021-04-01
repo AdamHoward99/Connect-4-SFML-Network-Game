@@ -287,6 +287,8 @@ bool Server::SendGameData(int id, GameData value)
 void Server::SerializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
+	data[i] = '|';		//Starting point
+	i++;
 	data[i] = mData->mTurn;
 	i++;
 	data[i] = '/';
@@ -309,7 +311,7 @@ void Server::SerializeStruct(GameData* mData, char *data)
 void Server::DeserializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
-	while (data[i] != '/')
+	while (data[i] != '/' && i < sizeof(Turn))
 	{
 		mData->mTurn = (Turn)data[i];
 		i++;
