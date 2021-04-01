@@ -299,16 +299,54 @@ bool NetworkConnection::SendInt(const int& value) const
 void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 {
 	//Serialize GameData struct
-	int *q = (int *)data;
-	*q = mPacket->mTurn;
-	q++;
+	int i = 0;
+	data[i] = mPacket->mTurn;
+	i++;
+	data[i] = '/';
+	i++;
+
+	//while (i < mPacket->mMessage.size() + 1)
+	//{
+	//	data[i] = mPacket->mMessage[i - 1];
+	//	i++;
+	//}
+
+	//int *q = (int *)data;
+	//*q = mPacket->mTurn;
+	//q++;
+
+	//char *p = data;
+	//int i = 1;
+	//while (i < mPacket->mMessage.size())
+	//{
+	//	*p = mPacket->mMessage[i];
+	//	p++;
+	//	i++;
+	//}
 }
 
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 {
-	int *q = (int*)data;
-	mPacket->mTurn = (Turn) *q;	
-	q++;
+	int i = 0;
+	while (data[i] != '/')
+	{
+		mPacket->mTurn = (Turn) data[i];
+		i++;
+	}
+
+
+	//int *q = (int*)data;
+	//mPacket->mTurn = (Turn) *q;	
+	//q++;
+
+	//char *p = (char*)q;
+	//int i = 0;
+	//while (i < mPacket->mMessage.size())
+	//{
+	//	mPacket->mMessage[i] = *p;
+	//	p++;
+	//	i++;
+	//}
 }
 
 bool NetworkConnection::SendPacketType(const PACKET& mPacket)

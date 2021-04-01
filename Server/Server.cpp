@@ -286,16 +286,47 @@ bool Server::SendGameData(int id, GameData value)
 
 void Server::SerializeStruct(GameData* mData, char *data)
 {
-	int *q = (int *)data;
-	*q = mData->mTurn;
-	q++;
+	int i = 0;
+	data[i] = mData->mTurn;
+	i++;
+	data[i] = '/';
+	i++;
+
+	//int *q = (int *)data;
+	//*q = mData->mTurn;
+	//q++;
+
+	//char *p = (char*)q;
+	//int i = 0;
+	//while (i < mData->mMessage.size())
+	//{
+	//	*p = mData->mMessage[i];
+	//	p++;
+	//	i++;
+	//}
 }
 
 void Server::DeserializeStruct(GameData* mData, char *data)
 {
-	int *q = (int*)data;
-	mData->mTurn = (Turn)*q;
-	q++;
+	int i = 0;
+	while (data[i] != '/')
+	{
+		mData->mTurn = (Turn)data[i];
+		i++;
+	}
+
+	//int *q = (int*)data;
+	//mData->mTurn = (Turn)*q;
+	//q++;
+
+	//char *p = (char *)q;
+	//int i = 0;
+	//while (i < mData->mMessage.size())
+	//{
+	//	mData->mMessage[i] = *p;
+	//	p++;
+	//	i++;
+	//}
 }
 
 bool Server::SendPacketType(int id, const PACKET& mPacket)

@@ -58,7 +58,7 @@ public:
 	bool SendGameData(GameData& value);
 
 	//Serialize and Deserialize Struct Functions
-	void SerializeStruct(GameData* mDataPacket,char *data);
+	void SerializeStruct(GameData* mDataPacket, char *data);
 	void DeserializeStruct(GameData* mDataPacket, char *data);
 
 	//Packet Data Functions
