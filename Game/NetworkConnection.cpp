@@ -202,11 +202,12 @@ bool NetworkConnection::SendGameData(GameData& value)
 	if (!SendPacketType(PACKET::mData))
 		return false;
 
-	char data[sizeof(GameData)];
+	const int dataSize = 1;
+	char data[dataSize];
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(connectSocket, data, sizeof(GameData), NULL);
+	int returnCheck = send(connectSocket, data, sizeof(data), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -301,9 +302,6 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 	//Serialize GameData struct
 	int i = 0;
 	data[i] = mPacket->mTurn;
-	i++;
-	data[i] = '/';
-	i++;
 
 	//while (i < mPacket->mMessage.size() + 1)
 	//{
@@ -329,17 +327,8 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 {
 	int i = 0;
 
-	if (data[i] == '|')
-	{
-		while (data[i] != '/' && i < sizeof(Turn))
-		{
-			mPacket->mTurn = (Turn) data[i];
-			i++;
-
-			if (i > 100)
-				exit(0);
-		}
-	}
+	mPacket->mTurn = (Turn)data[i];
+	i++;
 
 	//int *q = (int*)data;
 	//mPacket->mTurn = (Turn) *q;	
@@ -366,9 +355,8 @@ bool NetworkConnection::SendPacketType(const PACKET& mPacket)
 
 void NetworkConnection::CloseConnection()
 {
-	ioctlsocket(connectSocket, FIONBIO, 0);
-
 	closesocket(connectSocket);
 	WSACleanup();
+	exit(0);
 
 }

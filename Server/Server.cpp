@@ -260,10 +260,10 @@ bool Server::GetGameData(int id, GameData& value)
 	char data[sizeof(GameData)];
 	int returnCheck = recv(mClientConnections[id], data, sizeof(GameData), NULL);
 
-	DeserializeStruct(&value, data);
-
 	if (returnCheck == SOCKET_ERROR)
 		return false;
+
+	DeserializeStruct(&value, data);
 
 	return true;
 }
@@ -273,11 +273,12 @@ bool Server::SendGameData(int id, GameData value)
 	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
-	char data[sizeof(GameData)];
+	const int dataSize = 1;
+	char data[dataSize];
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(mClientConnections[id], data, sizeof(GameData), NULL);
+	int returnCheck = send(mClientConnections[id], data, sizeof(data), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -287,12 +288,7 @@ bool Server::SendGameData(int id, GameData value)
 void Server::SerializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
-	data[i] = '|';		//Starting point
-	i++;
 	data[i] = mData->mTurn;
-	i++;
-	data[i] = '/';
-	i++;
 
 	//int *q = (int *)data;
 	//*q = mData->mTurn;
@@ -311,11 +307,9 @@ void Server::SerializeStruct(GameData* mData, char *data)
 void Server::DeserializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
-	while (data[i] != '/' && i < sizeof(Turn))
-	{
-		mData->mTurn = (Turn)data[i];
-		i++;
-	}
+
+	mData->mTurn = (Turn)data[i];		//Gets first byte of char data, corresponds to int of Turn enum
+	i++;
 
 	//int *q = (int*)data;
 	//mData->mTurn = (Turn)*q;
