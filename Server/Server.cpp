@@ -257,8 +257,9 @@ bool Server::SendPlayerType(int id, int value)
 
 bool Server::GetGameData(int id, GameData& value)
 {
-	char data[sizeof(GameData)];
-	int returnCheck = recv(mClientConnections[id], data, sizeof(GameData), NULL);
+	const int dataSize = 4;
+	char data[dataSize];
+	int returnCheck = recv(mClientConnections[id], data, 4, NULL);
 
 	if (returnCheck == SOCKET_ERROR)
 		return false;
@@ -273,12 +274,12 @@ bool Server::SendGameData(int id, GameData value)
 	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
-	const int dataSize = 1;
+	const int dataSize = 4;
 	char data[dataSize];
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(mClientConnections[id], data, sizeof(data), NULL);
+	int returnCheck = send(mClientConnections[id], data, 4, NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -289,6 +290,17 @@ void Server::SerializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
 	data[i] = mData->mTurn;
+	i++;
+
+	if (mData->mTurn == 4)
+		exit(0);
+
+	data[i] = (int)mData->mLastMove.first;
+	i++;
+
+	data[i] = (int)mData->mLastMove.second;
+	i++;
+
 
 	//int *q = (int *)data;
 	//*q = mData->mTurn;
@@ -309,6 +321,12 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	int i = 0;
 
 	mData->mTurn = (Turn)data[i];		//Gets first byte of char data, corresponds to int of Turn enum
+	i++;
+
+	mData->mLastMove.first = (int)data[i];
+	i++;
+
+	mData->mLastMove.second = (int)data[i];
 	i++;
 
 	//int *q = (int*)data;

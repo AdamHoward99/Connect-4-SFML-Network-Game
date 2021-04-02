@@ -17,6 +17,7 @@ void PlayState::Initialize()
 	board.Initialize();
 	pieceToAdd = sf::CircleShape(30.f);
 	mGameData.mTurn = Turn::Player_1_Turn;
+	mGameData.mLastMove = { -1, -1 };
 
 	//Setup Functions
 	SetupTextures();

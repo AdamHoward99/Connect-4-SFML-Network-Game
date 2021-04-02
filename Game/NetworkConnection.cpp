@@ -180,8 +180,9 @@ bool NetworkConnection::SendMatch(const int& value)
 
 bool NetworkConnection::GetGameData(GameData& value)
 {
-	char data[sizeof(GameData)];
-	int returnCheck = recv(connectSocket, data, sizeof(GameData), NULL);
+	const int dataSize = 4;
+	char data[dataSize];
+	int returnCheck = recv(connectSocket, data, 4, NULL);
 
 	DeserializeStruct(&value, data);
 
@@ -202,12 +203,12 @@ bool NetworkConnection::SendGameData(GameData& value)
 	if (!SendPacketType(PACKET::mData))
 		return false;
 
-	const int dataSize = 1;
+	const int dataSize = 4;
 	char data[dataSize];
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(connectSocket, data, sizeof(data), NULL);
+	int returnCheck = send(connectSocket, data, 4, NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -302,6 +303,13 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 	//Serialize GameData struct
 	int i = 0;
 	data[i] = mPacket->mTurn;
+	i++;
+
+	data[i] = mPacket->mLastMove.first;
+	i++;
+
+	data[i] = (int)mPacket->mLastMove.second;
+	i++;
 
 	//while (i < mPacket->mMessage.size() + 1)
 	//{
@@ -328,6 +336,12 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	int i = 0;
 
 	mPacket->mTurn = (Turn)data[i];
+	i++;
+
+	mPacket->mLastMove.first = (int)data[i];
+	i++;
+
+	mPacket->mLastMove.second = (int)data[i];
 	i++;
 
 	//int *q = (int*)data;
