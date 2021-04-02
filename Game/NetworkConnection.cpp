@@ -180,9 +180,8 @@ bool NetworkConnection::SendMatch(const int& value)
 
 bool NetworkConnection::GetGameData(GameData& value)
 {
-	const int dataSize = 4;
-	char data[dataSize];
-	int returnCheck = recv(connectSocket, data, 4, NULL);
+	char data[GAMEDATA_SIZE];
+	int returnCheck = recv(connectSocket, (char *) &data, sizeof(data), NULL);
 
 	DeserializeStruct(&value, data);
 
@@ -203,12 +202,11 @@ bool NetworkConnection::SendGameData(GameData& value)
 	if (!SendPacketType(PACKET::mData))
 		return false;
 
-	const int dataSize = 4;
-	char data[dataSize];
+	char data[GAMEDATA_SIZE];
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(connectSocket, data, 4, NULL);
+	int returnCheck = send(connectSocket, (char *) &data, sizeof(data), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -247,7 +245,7 @@ bool NetworkConnection::SendPlayerType(const int& value)
 
 bool NetworkConnection::SendString(const std::string& message)
 {
-	if (!SendPacketType(PACKET::mChatMessage))
+	if (!SendPacketType(PACKET::mUsername))
 		return false;
 
 	int bufferLength = message.size();
@@ -305,30 +303,12 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 	data[i] = mPacket->mTurn;
 	i++;
 
-	data[i] = mPacket->mLastMove.first;
-	i++;
+	//Last move variable stuff
+	//data[i] = mPacket->mLastMove.first;
+	//i++;
 
-	data[i] = (int)mPacket->mLastMove.second;
-	i++;
-
-	//while (i < mPacket->mMessage.size() + 1)
-	//{
-	//	data[i] = mPacket->mMessage[i - 1];
-	//	i++;
-	//}
-
-	//int *q = (int *)data;
-	//*q = mPacket->mTurn;
-	//q++;
-
-	//char *p = data;
-	//int i = 1;
-	//while (i < mPacket->mMessage.size())
-	//{
-	//	*p = mPacket->mMessage[i];
-	//	p++;
-	//	i++;
-	//}
+	//data[i] = (int)mPacket->mLastMove.second;
+	//i++;
 }
 
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
@@ -338,24 +318,12 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	mPacket->mTurn = (Turn)data[i];
 	i++;
 
-	mPacket->mLastMove.first = (int)data[i];
-	i++;
+	//Last move variable stuff
+	//mPacket->mLastMove.first = (int)data[i];
+	//i++;
 
-	mPacket->mLastMove.second = (int)data[i];
-	i++;
-
-	//int *q = (int*)data;
-	//mPacket->mTurn = (Turn) *q;	
-	//q++;
-
-	//char *p = (char*)q;
-	//int i = 0;
-	//while (i < mPacket->mMessage.size())
-	//{
-	//	mPacket->mMessage[i] = *p;
-	//	p++;
-	//	i++;
-	//}
+	//mPacket->mLastMove.second = (int)data[i];
+	//i++;
 }
 
 bool NetworkConnection::SendPacketType(const PACKET& mPacket)

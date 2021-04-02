@@ -112,11 +112,6 @@ void Server::ClientHandler(int index)
 		if (!serverPtr->ProcessPacket(index, mPacketType))
 			break;
 
-		if (!serverPtr->mThreadActive[index])
-		{
-			printf("\nUser %d disconnected due to other client disconnection", index);		//In game, send bool to check if still connected, disconnect if not
-			break;
-		}
 	}
 
 	printf("\nLost Connection with User: %d", index);
@@ -124,29 +119,6 @@ void Server::ClientHandler(int index)
 	serverPtr->mConnectionThreads[index].detach();
 	serverPtr->mThreadActive[index] = false;
 
-	//serverPtr->mConnections--;
-	//serverPtr->usernames.erase(serverPtr->usernames.begin() + index);
-	//serverPtr->mClientConnections.erase(serverPtr->mClientConnections.begin() + index);
-	//serverPtr->mConnectionThreads[index].detach();
-	//serverPtr->mConnectionThreads.erase(serverPtr->mConnectionThreads.begin() + index);
-	//Delete from vector of booleans
-	//serverPtr->mClientAvailable.erase(serverPtr->mClientAvailable.begin() + index);
-	//Remove pair of int vectors, turn one that didnt connect to available
-	//for (size_t i = 0; i < serverPtr->mMatchups.size(); i++)
-	//{
-	//	if (serverPtr->mMatchups[i].first == index)
-	//	{
-	//		printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
-	//		serverPtr->mClientAvailable[serverPtr->mMatchups[i].second] = false;		//Makes other user available again
-	//		serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
-	//	}
-	//	else if (serverPtr->mMatchups[i].second == index)
-	//	{
-	//		printf("\nMatchup between %d and %d has been cancelled...", serverPtr->mMatchups[i].first, serverPtr->mMatchups[i].second);
-	//		serverPtr->mClientAvailable[serverPtr->mMatchups[i].first] = false;		//Makes other user available again
-	//		serverPtr->mMatchups.erase(serverPtr->mMatchups.begin() + i);			//Erases matchup
-	//	}
-	//}
 	//Debug out messages
 	printf("\nLifetime Connections on server: %d ", serverPtr->mConnections);
 }
@@ -180,9 +152,6 @@ bool Server::GetInt(int id, int& value)
 
 bool Server::SendString(int id, const std::string& message)
 {
-	if (!SendPacketType(id, PACKET::mChatMessage))
-		return false;
-
 	int bufferLength = message.size();
 	if (!SendInt(id, bufferLength))
 		return false;
@@ -257,9 +226,8 @@ bool Server::SendPlayerType(int id, int value)
 
 bool Server::GetGameData(int id, GameData& value)
 {
-	const int dataSize = 4;
-	char data[dataSize];
-	int returnCheck = recv(mClientConnections[id], data, 4, NULL);
+	char data[GAMEDATA_SIZE];
+	int returnCheck = recv(mClientConnections[id],(char *) &data, sizeof(data), NULL);
 
 	if (returnCheck == SOCKET_ERROR)
 		return false;
@@ -274,12 +242,11 @@ bool Server::SendGameData(int id, GameData value)
 	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
-	const int dataSize = 4;
-	char data[dataSize];
+	char data[GAMEDATA_SIZE];
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(mClientConnections[id], data, 4, NULL);
+	int returnCheck = send(mClientConnections[id], (char *) &data, sizeof(data), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -292,28 +259,12 @@ void Server::SerializeStruct(GameData* mData, char *data)
 	data[i] = mData->mTurn;
 	i++;
 
-	if (mData->mTurn == 4)
-		exit(0);
+	//Last move variable stuff
+	//data[i] = (int)mData->mLastMove.first;
+	//i++;
 
-	data[i] = (int)mData->mLastMove.first;
-	i++;
-
-	data[i] = (int)mData->mLastMove.second;
-	i++;
-
-
-	//int *q = (int *)data;
-	//*q = mData->mTurn;
-	//q++;
-
-	//char *p = (char*)q;
-	//int i = 0;
-	//while (i < mData->mMessage.size())
-	//{
-	//	*p = mData->mMessage[i];
-	//	p++;
-	//	i++;
-	//}
+	//data[i] = (int)mData->mLastMove.second;
+	//i++;
 }
 
 void Server::DeserializeStruct(GameData* mData, char *data)
@@ -323,24 +274,12 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	mData->mTurn = (Turn)data[i];		//Gets first byte of char data, corresponds to int of Turn enum
 	i++;
 
-	mData->mLastMove.first = (int)data[i];
-	i++;
+	//Last move variable stuff
+	//mData->mLastMove.first = (int)data[i];
+	//i++;
 
-	mData->mLastMove.second = (int)data[i];
-	i++;
-
-	//int *q = (int*)data;
-	//mData->mTurn = (Turn)*q;
-	//q++;
-
-	//char *p = (char *)q;
-	//int i = 0;
-	//while (i < mData->mMessage.size())
-	//{
-	//	mData->mMessage[i] = *p;
-	//	p++;
-	//	i++;
-	//}
+	//mData->mLastMove.second = (int)data[i];
+	//i++;
 }
 
 bool Server::SendPacketType(int id, const PACKET& mPacket)
@@ -366,33 +305,13 @@ bool Server::GetPacketType(int id, PACKET& mType)
 
 bool Server::ProcessPacket(int index, PACKET mType)
 {
-	std::string message;
 	bool matchmakingPossible = false;
 	int playerType;
 	GameData mData;
 
 	switch (mType)
 	{
-	case PACKET::mChatMessage:
-		if (!GetString(index, message))
-			return false;
-
-		for (int i = 0; i < mConnections; i++)		//For every client connected to the server, send the message
-		{
-			if (i == index)
-				continue;
-
-			//Add user to the start of the message, see in chat
-			std::string newMessage = usernames[index] + ": " + message;
-			if (!SendString(i, newMessage))
-				printf("\nFailed to send message...");
-		}
-
-		printf("\nMessage was sent across clients");
-		break;
-
 	case PACKET::mMatchmakingCheck:
-		//For now default is boolean packet value 
 		if (!GetMatch(index, matchmakingPossible))
 			return false;
 
@@ -435,7 +354,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetGameData(index, mData))
 			return false;
 
-		for (int i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
+		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
 		{
 			if (index == mMatchups[i].first)
 			{
@@ -461,7 +380,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		if (!GetPlayerType(index, playerType))
 			return false;
-
 
 		for (size_t i = 0; i < mMatchups.size(); i++)
 		{
@@ -489,8 +407,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		break;
 
 	default:
-		//printf("\nUnknown Packet type...");
-		//return false;
 		break;
 	}
 
@@ -508,9 +424,6 @@ void Server::GetUsername(int index)
 
 	if (!serverPtr->GetPacketType(index, mPacket))
 		printf("\nUnable to obtain client username...");
-
-	if (mPacket == PACKET::mMatchmakingCheck)
-		printf("\nObtaining username type not found...");
 
 	std::string username;
 	serverPtr->GetString(index, username);
