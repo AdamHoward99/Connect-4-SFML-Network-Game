@@ -106,10 +106,21 @@ void PlayState::Update()
 	}
 
 	//Update appearance of the game board to reflect other players turn
-	if (player == 1)
-		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].setFillColor(sf::Color::Yellow);
-	else
-		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].setFillColor(sf::Color::Red);
+	if (mGameData.mLastMove != std::pair<int, int>{-1, -1})
+	{
+		sf::CircleShape piece = sf::CircleShape(30.f);
+		piece.setPosition(board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].getPosition());
+
+		if (player == 1)
+			piece.setFillColor(sf::Color::Yellow);
+		else
+			piece.setFillColor(sf::Color::Red);
+
+		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second] = piece;
+		mGameData.mLastMove = { -1, -1 };
+	}
+
+
 
 	board.Update();
 

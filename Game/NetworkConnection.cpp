@@ -201,6 +201,12 @@ bool NetworkConnection::GetGameData(GameData& value)
 		value.mLastMove = { -1, -1 };
 	}
 
+	if (value.mTurn == 4)		//Dont know why this happens
+	{
+		value.mTurn = Turn::None;
+		value.mLastMove = { -1, -1 };
+	}
+
 	return true;
 }
 
