@@ -139,19 +139,25 @@ bool NetworkConnection::GetDataUpdate(GameData& mData)
 	if (!GetGameData(newData))
 		return false;
 
-	if (newData.mTurn != Turn::None)		//If is a valid turn value
-	{
-		OutputDebugStringA("\nA valid value for the turn has been found...");
-		mData.mTurn = newData.mTurn;
-	}
-
-	if (newData.mLastMove != std::pair<int, int>{-1, -1})
-	{
-		OutputDebugStringA("\nA valid vallue for the last move has been found...");
-		mData.mLastMove = newData.mLastMove;
-	}
+	VerifyData(newData, mData);
 
 	return true;
+}
+
+void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
+{
+	if (ServerData.mTurn != Turn::None && ServerData.mTurn < 3)
+	{
+		OutputDebugStringA("\nA valid value for the turn has been found...");
+		ClientData.mTurn = ServerData.mTurn;
+	}
+
+	if (ServerData.mLastMove != std::pair<int, int>{-1, -1} && ServerData.mLastMove != std::pair<int, int>{0, 0})
+	{
+		OutputDebugStringA("\nA valid vallue for the last move has been found...");
+		ClientData.mLastMove = ServerData.mLastMove;
+	}
+
 }
 
 bool NetworkConnection::GetMatch(bool& value)
@@ -187,7 +193,7 @@ bool NetworkConnection::SendMatch(const int& value)
 bool NetworkConnection::GetGameData(GameData& value)
 {
 	char data[GAMEDATA_SIZE];
-	int returnCheck = recv(connectSocket, (char *) &data, sizeof(data), NULL);
+	int returnCheck = recv(connectSocket, data, sizeof(data), NULL);
 
 	DeserializeStruct(&value, data);
 
@@ -201,11 +207,11 @@ bool NetworkConnection::GetGameData(GameData& value)
 		value.mLastMove = { -1, -1 };
 	}
 
-	if (value.mTurn == 4)		//Dont know why this happens
-	{
-		value.mTurn = Turn::None;
-		value.mLastMove = { -1, -1 };
-	}
+	//if (value.mTurn == 4)		//Dont know why this happens
+	//{
+	//	value.mTurn = Turn::None;
+	//	value.mLastMove = {-1, -1};
+	//}
 
 	return true;
 }

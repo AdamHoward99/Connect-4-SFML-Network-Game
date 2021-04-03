@@ -65,6 +65,9 @@ public:
 	//Packet Data Functions
 	bool SendPacketType(const PACKET& mType);
 
+	//Data Verification Functions
+	void VerifyData(GameData& mServerData, GameData& mClientData);
+
 private:
 	WSAData wsaData;
 	SOCKET connectSocket;
