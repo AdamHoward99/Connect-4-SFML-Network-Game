@@ -132,17 +132,17 @@ bool NetworkConnection::GetPlayer(int& playerType)
 	return true;
 }
 
-bool NetworkConnection::GetTurnUpdate(Turn& mTurn)
+bool NetworkConnection::GetDataUpdate(GameData& mData)
 {
-	GameData newTurn;
+	GameData newData;		//Assign data from server to local variable to check results before applying to the game
 
-	if (!GetGameData(newTurn))
+	if (!GetGameData(newData))
 		return false;
 
-	if (newTurn.mTurn != Turn::None)		//If is a valid turn value
+	if (newData.mTurn != Turn::None)		//If is a valid turn value
 	{
 		OutputDebugStringA("\nA valid value for the turn has been found...");
-		mTurn = newTurn.mTurn;
+		mData.mTurn = newData.mTurn;
 	}
 
 	return true;
@@ -339,6 +339,6 @@ void NetworkConnection::CloseConnection()
 {
 	closesocket(connectSocket);
 	WSACleanup();
-	exit(0);
+	exit(0);		//Debug only
 
 }

@@ -36,7 +36,7 @@ public:
 
 	bool Matchmake();		//Returns true if opponent is found
 	bool GetPlayer(int& playerType);		//Returns true if type is 1 or 2
-	bool GetTurnUpdate(Turn& mCurrentTurn);		//Checks with server for the current turn of the game
+	bool GetDataUpdate(GameData& mCurrentData);		//Checks with server for the current situation of the game
 
 	//Match up Functions (bool value determining if other clients are on the server)
 	bool GetMatch(bool &foo);

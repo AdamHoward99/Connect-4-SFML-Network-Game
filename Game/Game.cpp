@@ -106,6 +106,7 @@ void Game::Update()
 		if(!mConnection.SendPlayerName(mPlayerName))
 		{
 			mStates = States::Start_Menu;
+			mConnection.CloseConnection();
 			break;
 		}
 		

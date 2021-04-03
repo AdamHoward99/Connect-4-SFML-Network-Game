@@ -98,16 +98,15 @@ void PlayState::Update()
 {
 	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
 
-	if (!mServer.GetTurnUpdate(mGameData.mTurn))
+	//Update variables of the game, turn, board update, chat
+	if (!mServer.GetDataUpdate(mGameData))
 	{
 		mServer.CloseConnection();
 		return;
 	}
 
-
 	board.Update();
 
-	//Put this in its own function?
 	if (IsPlayersTurn())
 	{
 		UpdateTurnTimer();
