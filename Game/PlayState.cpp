@@ -105,6 +105,12 @@ void PlayState::Update()
 		return;
 	}
 
+	//Update appearance of the game board to reflect other players turn
+	if (player == 1)
+		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].setFillColor(sf::Color::Yellow);
+	else
+		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].setFillColor(sf::Color::Red);
+
 	board.Update();
 
 	if (IsPlayersTurn())
@@ -145,6 +151,8 @@ void PlayState::Update()
 		else
 			mGameData.mTurn = Turn::Player_1_Turn;
 
+		mGameData.mLastMove = {lastMove.x, lastMove.y};
+
 		//Send turn changes to server
 		if (!mServer.SendGameData(mGameData))
 		{
@@ -152,6 +160,7 @@ void PlayState::Update()
 			return;
 		}
 
+		mGameData.mLastMove = { -1, -1 };
 		turnEnd = false;
 	}
 

@@ -260,11 +260,11 @@ void Server::SerializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Last move variable stuff
-	//data[i] = (int)mData->mLastMove.first;
-	//i++;
+	data[i] = mData->mLastMove.first;
+	i++;
 
-	//data[i] = (int)mData->mLastMove.second;
-	//i++;
+	data[i] = mData->mLastMove.second;
+	i++;
 }
 
 void Server::DeserializeStruct(GameData* mData, char *data)
@@ -275,11 +275,11 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Last move variable stuff
-	//mData->mLastMove.first = (int)data[i];
-	//i++;
+	mData->mLastMove.first = (int)data[i];
+	i++;
 
-	//mData->mLastMove.second = (int)data[i];
-	//i++;
+	mData->mLastMove.second = (int)data[i];
+	i++;
 }
 
 bool Server::SendPacketType(int id, const PACKET& mPacket)

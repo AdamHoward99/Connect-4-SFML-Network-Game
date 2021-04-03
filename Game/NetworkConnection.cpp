@@ -145,6 +145,12 @@ bool NetworkConnection::GetDataUpdate(GameData& mData)
 		mData.mTurn = newData.mTurn;
 	}
 
+	if (newData.mLastMove != std::pair<int, int>{-1, -1})
+	{
+		OutputDebugStringA("\nA valid vallue for the last move has been found...");
+		mData.mLastMove = newData.mLastMove;
+	}
+
 	return true;
 }
 
@@ -192,6 +198,7 @@ bool NetworkConnection::GetGameData(GameData& value)
 
 		OutputDebugStringA("\nGamedata has returned null...");
 		value.mTurn = Turn::None;
+		value.mLastMove = { -1, -1 };
 	}
 
 	return true;
@@ -304,11 +311,11 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 	i++;
 
 	//Last move variable stuff
-	//data[i] = mPacket->mLastMove.first;
-	//i++;
+	data[i] = mPacket->mLastMove.first;
+	i++;
 
-	//data[i] = (int)mPacket->mLastMove.second;
-	//i++;
+	data[i] = mPacket->mLastMove.second;
+	i++;
 }
 
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
@@ -319,11 +326,11 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	i++;
 
 	//Last move variable stuff
-	//mPacket->mLastMove.first = (int)data[i];
-	//i++;
+	mPacket->mLastMove.first = (int)data[i];
+	i++;
 
-	//mPacket->mLastMove.second = (int)data[i];
-	//i++;
+	mPacket->mLastMove.second = (int)data[i];
+	i++;
 }
 
 bool NetworkConnection::SendPacketType(const PACKET& mPacket)
