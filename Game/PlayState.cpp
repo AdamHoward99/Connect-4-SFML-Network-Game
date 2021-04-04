@@ -207,9 +207,9 @@ bool PlayState::IsBoardFull()
 {
 	//See if all slots are filled, tie in this case
 	bool boardIsFull;
-	for (int y = 0; y < BOARD_WIDTH; y++)
+	for (int y = 1; y < BOARD_WIDTH; y++)
 	{
-		if (board.pieces[0][y].getFillColor() == sf::Color::White)		//Checks if all top slots are filled
+		if (board.pieces[1][y].getFillColor() == sf::Color::White)		//Checks if all top slots are filled
 		{
 			boardIsFull = false;
 			break;
@@ -236,7 +236,7 @@ bool PlayState::HasConnected4()
 	//Could separate into different functions
 	//Horizontal checks
 	int y = lastMove.y;
-	while (y >= 0 && board.pieces[lastMove.x][y].getFillColor() == c)		//Horizontal Left searching
+	while (y >= 1 && board.pieces[lastMove.x][y].getFillColor() == c)		//Horizontal Left searching
 	{
 		y--;
 		connected++;
@@ -257,7 +257,7 @@ bool PlayState::HasConnected4()
 	//Vertical checks
 	connected = 0;
 	int x = lastMove.x;
-	while (x >= 0 && board.pieces[x][lastMove.y].getFillColor() == c)			//Vertical searching
+	while (x >= 1 && board.pieces[x][lastMove.y].getFillColor() == c)			//Vertical searching
 	{
 		x++;
 		connected++;
@@ -269,7 +269,7 @@ bool PlayState::HasConnected4()
 	connected = 0;
 	x = lastMove.x;
 	y = lastMove.y;
-	while (x >= 0 && y < BOARD_WIDTH && board.pieces[x][y].getFillColor() == c)		//North-east movement
+	while (x >= 1 && y < BOARD_WIDTH && board.pieces[x][y].getFillColor() == c)		//North-east movement
 	{
 		x--;
 		y++;
@@ -281,7 +281,7 @@ bool PlayState::HasConnected4()
 	connected--;
 	x = lastMove.x;
 	y = lastMove.y;
-	while (x < BOARD_HEIGHT && y >= 0 && board.pieces[x][y].getFillColor() == c)	//South-west movement
+	while (x < BOARD_HEIGHT && y >= 1 && board.pieces[x][y].getFillColor() == c)	//South-west movement
 	{
 		x++;
 		y--;
@@ -305,7 +305,7 @@ bool PlayState::HasConnected4()
 	connected--;
 	x = lastMove.x;
 	y = lastMove.y;
-	while (x >= 0 && y >= 0 && board.pieces[x][y].getFillColor() == c)		//North-west searching
+	while (x >= 1 && y >= 1 && board.pieces[x][y].getFillColor() == c)		//North-west searching
 	{
 		x--;
 		y--;
@@ -321,21 +321,21 @@ void PlayState::PlacePiece()
 {
 	int col;
 	if (xColumnPosition == 50.f)
-		col = 0;
-	else if (xColumnPosition == 150.f)
 		col = 1;
-	else if (xColumnPosition == 250.f)
+	else if (xColumnPosition == 150.f)
 		col = 2;
-	else if (xColumnPosition == 350.f)
+	else if (xColumnPosition == 250.f)
 		col = 3;
-	else if (xColumnPosition == 450.f)
+	else if (xColumnPosition == 350.f)
 		col = 4;
-	else if (xColumnPosition == 550.f)
+	else if (xColumnPosition == 450.f)
 		col = 5;
-	else
+	else if (xColumnPosition == 550.f)
 		col = 6;
+	else
+		col = 7;
 
-	for (int i = BOARD_HEIGHT - 1; i >= 0; i--)
+	for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
 	{
 		if (board.pieces[i][col].getFillColor() == sf::Color::White)		//Finds an empty piece
 		{
@@ -401,9 +401,9 @@ void PlayState::UpdateTurnTimer()
 
 void PlayState::AutomaticPiecePlacement()
 {
-	for (int y = 0; y < BOARD_WIDTH; y++)
+	for (int y = 1; y < BOARD_WIDTH; y++)
 	{
-		for (int i = BOARD_HEIGHT - 1; i >= 0; i--)
+		for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
 		{
 			if (board.pieces[i][y].getFillColor() == sf::Color::White)		//Finds an empty piece
 			{

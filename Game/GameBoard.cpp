@@ -15,9 +15,9 @@ void GameBoard::Initialize()
 {
 	float xPosition = 50.f;
 	float yPosition = 150.f;
-	for (int x = 0; x < BOARD_HEIGHT; x++)
+	for (int x = 1; x < BOARD_HEIGHT; x++)
 	{
-		for (int y = 0; y < BOARD_WIDTH; y++)
+		for (int y = 1; y < BOARD_WIDTH; y++)
 		{
 			sf::CircleShape pieceSlot = sf::CircleShape(30.f);
 			pieceSlot.setFillColor(sf::Color::White);
@@ -54,14 +54,14 @@ void GameBoard::Draw()
 	window.draw(backgroundSpr);
 	window.draw(board_Background);
 
-	for (int x = 0; x < BOARD_HEIGHT; x++)
-		for (int y = 0; y < BOARD_WIDTH; y++)
+	for (int x = 1; x < BOARD_HEIGHT; x++)
+		for (int y = 1; y < BOARD_WIDTH; y++)
 			window.draw(pieces[x][y]);
 }
 
 void GameBoard::ResetBoard()
 {
-	for (int x = 0; x < BOARD_HEIGHT; x++)
-		for (int y = 0; y < BOARD_WIDTH; y++)
+	for (int x = 1; x < BOARD_HEIGHT; x++)
+		for (int y = 1; y < BOARD_WIDTH; y++)
 			pieces[x][y].setFillColor(sf::Color::White);
 }

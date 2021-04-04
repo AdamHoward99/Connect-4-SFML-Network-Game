@@ -3,8 +3,8 @@
 #include "SFML/Graphics.hpp"
 #include <cassert>
 
-#define BOARD_HEIGHT 6
-#define BOARD_WIDTH 7
+#define BOARD_HEIGHT 7
+#define BOARD_WIDTH 8
 
 class GameBoard
 {
