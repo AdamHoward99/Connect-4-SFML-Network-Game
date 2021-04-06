@@ -229,6 +229,8 @@ bool Server::GetGameData(int id, GameData& value)
 	char data[GAMEDATA_SIZE];
 	int returnCheck = recv(mClientConnections[id], data, sizeof(data), NULL);
 
+	printf("\nObtained %d bytes from game", returnCheck);
+
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -246,7 +248,10 @@ bool Server::SendGameData(int id, GameData value)
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(mClientConnections[id], data, sizeof(data), NULL);
+	int returnCheck = send(mClientConnections[id], (char *) data, sizeof(data), NULL);
+
+	printf("\nSending %d bytes to game", returnCheck);
+
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
