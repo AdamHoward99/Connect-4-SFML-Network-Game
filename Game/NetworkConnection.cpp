@@ -159,6 +159,12 @@ void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 		ClientData.mLastMove = ServerData.mLastMove;
 	}
 
+	if (ServerData.mMessage != "Test" && ServerData.mMessage[0] > NULL)
+	{
+		OutputDebugStringA("\nA valid message has been received from the other client...");
+		ClientData.mMessage = ServerData.mMessage;
+	}
+
 }
 
 bool NetworkConnection::GetMatch(bool& value)
@@ -349,11 +355,11 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	i++;
 
 	//Chat Variable
-	std::string newMessage(23, NULL);
+	std::string newMessage;
 	int j = 0;
-	while (data[i] != NULL && j < newMessage.size())
+	while (data[i] != NULL)
 	{
-		newMessage[j] = data[i];
+		newMessage.push_back(data[i]);
 		i++;
 		j++;
 	}

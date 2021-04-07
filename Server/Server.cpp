@@ -298,11 +298,11 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Chat Variable
-	std::string newMessage(23, NULL);
+	std::string newMessage;
 	int j = 0;
-	while (data[i] != NULL && j < newMessage.size())
+	while (data[i] != NULL)
 	{
-		newMessage[j] = data[i];
+		newMessage.push_back(data[i]);
 		i++;
 		j++;
 	}

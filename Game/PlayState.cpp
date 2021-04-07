@@ -120,6 +120,39 @@ void PlayState::Update()
 		mGameData.mLastMove = { -1, -1 };
 	}
 
+	//Update chat log
+	if (mGameData.mMessage != "Test")
+	{
+		if (mChatLog.size() <= 23)
+		{
+			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
+			sf::Text t;
+			mChatLogText.push_back(t);
+		}
+		else
+		{
+			mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
+			mChatLogText.erase(mChatLogText.begin() + 0);
+
+			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
+			sf::Text t;
+			mChatLogText.push_back(t);
+		}
+
+		mGameData.mMessage = "Test";
+
+		//Outputs all chat log messages
+		float yOffset = 520.f;
+		for (int i = mChatLog.size() - 1; i >= 0; i--)
+		{
+			mChatLogText.at(i).setString(mChatLog.at(i));
+			mChatLogText.at(i).setFillColor(sf::Color::Black);
+			mChatLogText.at(i).setFont(mFont);
+			mChatLogText.at(i).setCharacterSize(15);
+			mChatLogText.at(i).setPosition(620.f, yOffset);
+			yOffset -= 20.f;
+		}
+	}
 
 
 	board.Update();
@@ -493,14 +526,19 @@ void PlayState::UpdateChatLog()
 		mChatLogText.push_back(t);
 	}
 
+	mGameData.mMessage = mName + ": " + mChatInput += "\n";
+
+	//Send Chat message to server
+	if (!mServer.SendGameData(mGameData))
+	{
+		mServer.CloseConnection();
+		return;
+	}
+
+	mGameData.mMessage = "Test";
+
 	mChatInput.clear();
 	mChatInputText.setString(mChatInput);
-
-	//Send chat log over server
-
-
-
-
 
 	//Outputs all chat log messages
 	float yOffset = 520.f;
