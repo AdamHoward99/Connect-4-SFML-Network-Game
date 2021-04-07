@@ -121,7 +121,7 @@ void PlayState::Update()
 	}
 
 	//Update chat log
-	if (mGameData.mMessage != "Test")
+	if (mGameData.mMessage != "")
 	{
 		if (mChatLog.size() <= 23)
 		{
@@ -139,7 +139,7 @@ void PlayState::Update()
 			mChatLogText.push_back(t);
 		}
 
-		mGameData.mMessage = "Test";
+		mGameData.mMessage = "";
 
 		//Outputs all chat log messages
 		float yOffset = 520.f;
@@ -535,7 +535,7 @@ void PlayState::UpdateChatLog()
 		return;
 	}
 
-	mGameData.mMessage = "Test";
+	mGameData.mMessage = "";
 
 	mChatInput.clear();
 	mChatInputText.setString(mChatInput);

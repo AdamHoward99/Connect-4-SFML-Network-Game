@@ -30,6 +30,9 @@ public:
 	void MouseReleased(sf::Event ev);
 	void KeyPressed(sf::Event ev);
 
+	//Network Connection
+	NetworkConnection mConnection;
+
 private:
 	sf::RenderWindow& window;
 
@@ -53,8 +56,8 @@ private:
 	sf::Text mPauseTimerTxt;
 	sf::Font mTextFont;
 
-	//Network Connection
-	NetworkConnection mConnection;
+	////Network Connection
+	//NetworkConnection mConnection;
 
 	void InitializeMatchmakingScreen();
 	void DrawMatchmakingScreen();

@@ -8,7 +8,7 @@ struct GameData			//Gets information for the game from the server in a single re
 	//turn, board update, chat
 	Turn mTurn;
 	std::pair<int, int> mLastMove;
-	std::string mMessage = "Test";		//Chat Variable
+	std::string mMessage = "";		//Chat Variable
 	//std::pair<int, int> mLastMove;
 
 };

@@ -33,7 +33,10 @@ int main()
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
+			{
+				mGame.mConnection.CloseConnection();
 				window.close();
+			}
 			else if (event.type == sf::Event::MouseButtonReleased)
 				mGame.MouseReleased(event);
 			else if (event.type == sf::Event::TextEntered)

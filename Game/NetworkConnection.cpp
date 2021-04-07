@@ -159,7 +159,7 @@ void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 		ClientData.mLastMove = ServerData.mLastMove;
 	}
 
-	if (ServerData.mMessage != "Test" && ServerData.mMessage[0] > NULL)
+	if (ServerData.mMessage != "" && ServerData.mMessage[0] > NULL)
 	{
 		OutputDebugStringA("\nA valid message has been received from the other client...");
 		ClientData.mMessage = ServerData.mMessage;
