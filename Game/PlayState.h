@@ -64,6 +64,10 @@ private:
 	void SetupText();
 	void SetupAudio();
 
+	//Server Data Functions
+	void BoardUpdateServer();
+	void ChatUpdateServer();
+
 	//Chat Log Functions
 	void UpdateChatLog();
 

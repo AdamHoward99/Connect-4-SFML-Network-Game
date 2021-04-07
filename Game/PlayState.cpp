@@ -105,57 +105,9 @@ void PlayState::Update()
 		return;
 	}
 
-	//Update appearance of the game board to reflect other players turn
-	if (mGameData.mLastMove != std::pair<int, int>{-1, -1})
-	{
-		sf::CircleShape piece = sf::CircleShape(30.f);
-		piece.setPosition(board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].getPosition());
+	BoardUpdateServer();	//Updates board if other client placed a piece
 
-		if (player == 1)
-			piece.setFillColor(sf::Color::Yellow);
-		else
-			piece.setFillColor(sf::Color::Red);
-
-		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second] = piece;
-		mGameData.mLastMove = { -1, -1 };
-	}
-
-	//Update chat log
-	if (mGameData.mMessage != "")
-	{
-		if (mChatLog.size() <= 23)
-		{
-			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
-			sf::Text t;
-			mChatLogText.push_back(t);
-		}
-		else
-		{
-			mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
-			mChatLogText.erase(mChatLogText.begin() + 0);
-
-			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
-			sf::Text t;
-			mChatLogText.push_back(t);
-		}
-
-		mGameData.mMessage = "";
-
-		//Outputs all chat log messages
-		float yOffset = 520.f;
-		for (int i = mChatLog.size() - 1; i >= 0; i--)
-		{
-			mChatLogText.at(i).setString(mChatLog.at(i));
-			mChatLogText.at(i).setFillColor(sf::Color::Black);
-			mChatLogText.at(i).setFont(mFont);
-			mChatLogText.at(i).setCharacterSize(15);
-			mChatLogText.at(i).setPosition(620.f, yOffset);
-			yOffset -= 20.f;
-		}
-	}
-
-
-	board.Update();
+	ChatUpdateServer();		//Updates chat if any information has been received from the server
 
 	if (IsPlayersTurn())
 	{
@@ -581,4 +533,59 @@ void PlayState::SetPlayer(int p)
 bool PlayState::IsPlayersTurn()
 {
 	return mGameData.mTurn == player;
+}
+
+void PlayState::BoardUpdateServer()
+{
+	//Update appearance of the game board to reflect other players turn
+	if (mGameData.mLastMove != std::pair<int, int>{-1, -1})
+	{
+		sf::CircleShape piece = sf::CircleShape(30.f);
+		piece.setPosition(board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].getPosition());
+
+		if (player == 1)
+			piece.setFillColor(sf::Color::Yellow);
+		else
+			piece.setFillColor(sf::Color::Red);
+
+		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second] = piece;
+		mGameData.mLastMove = { -1, -1 };
+	}
+}
+
+void PlayState::ChatUpdateServer()
+{
+	//Update chat log if any message was received from the server
+	if (mGameData.mMessage != "")
+	{
+		if (mChatLog.size() <= 23)
+		{
+			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
+			sf::Text t;
+			mChatLogText.push_back(t);
+		}
+		else
+		{
+			mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
+			mChatLogText.erase(mChatLogText.begin() + 0);
+
+			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
+			sf::Text t;
+			mChatLogText.push_back(t);
+		}
+
+		mGameData.mMessage = "";
+
+		//Outputs all chat log messages
+		float yOffset = 520.f;
+		for (int i = mChatLog.size() - 1; i >= 0; i--)
+		{
+			mChatLogText.at(i).setString(mChatLog.at(i));
+			mChatLogText.at(i).setFillColor(sf::Color::Black);
+			mChatLogText.at(i).setFont(mFont);
+			mChatLogText.at(i).setCharacterSize(15);
+			mChatLogText.at(i).setPosition(620.f, yOffset);
+			yOffset -= 20.f;
+		}
+	}
 }
