@@ -146,7 +146,7 @@ bool NetworkConnection::GetDataUpdate(GameData& mData)
 
 void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 {
-	if (ServerData.mTurn > Turn::None/* && ServerData.mTurn < 3*/)
+	if (ServerData.mTurn > Turn::None && ServerData.mTurn < 3)
 	{
 		OutputDebugStringA("\nA valid value for the turn has been found...");
 		ClientData.mTurn = ServerData.mTurn;
@@ -194,9 +194,7 @@ bool NetworkConnection::SendMatch(const int& value)
 bool NetworkConnection::GetGameData(GameData& value)
 {
 	char data[GAMEDATA_SIZE];
-	int returnCheck = recv(connectSocket, (char *) &data, sizeof(data), NULL);
-
-	DeserializeStruct(&value, data);
+	int returnCheck = recv(connectSocket, data, GAMEDATA_SIZE, NULL);
 
 	if (returnCheck == SOCKET_ERROR)
 	{
@@ -204,9 +202,9 @@ bool NetworkConnection::GetGameData(GameData& value)
 			return false;
 
 		OutputDebugStringA("\nGamedata has returned null...");
-		value.mTurn = Turn::None;
-		value.mLastMove = { -1, -1 };
 	}
+	else
+		DeserializeStruct(&value, data);
 
 	return true;
 }
@@ -220,7 +218,7 @@ bool NetworkConnection::SendGameData(GameData& value)
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(connectSocket, (char *) &data, sizeof(data), NULL);
+	int returnCheck = send(connectSocket, (char *) &data, GAMEDATA_SIZE, NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -323,11 +321,13 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 
 	data[i] = mPacket->mLastMove.second;
 	i++;
+
+	data[i] = NULL;		//End of data
 }
 
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 {
-	int i = 0;
+	int i = 4;		//Offset of 4 due to first values always being 4,0,0,0 maybe an issue with a previous packet?
 
 	mPacket->mTurn = (Turn)data[i];
 	i++;

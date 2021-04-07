@@ -227,7 +227,7 @@ bool Server::SendPlayerType(int id, int value)
 bool Server::GetGameData(int id, GameData& value)
 {
 	char data[GAMEDATA_SIZE];
-	int returnCheck = recv(mClientConnections[id], data, sizeof(data), NULL);
+	int returnCheck = recv(mClientConnections[id], data, GAMEDATA_SIZE, NULL);
 
 	printf("\nObtained %d bytes from game", returnCheck);
 
@@ -248,7 +248,7 @@ bool Server::SendGameData(int id, GameData value)
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(mClientConnections[id], (char *) data, sizeof(data), NULL);
+	int returnCheck = send(mClientConnections[id], (char *) &data, GAMEDATA_SIZE, NULL);
 
 	printf("\nSending %d bytes to game", returnCheck);
 
@@ -270,6 +270,8 @@ void Server::SerializeStruct(GameData* mData, char *data)
 
 	data[i] = mData->mLastMove.second;
 	i++;
+
+	data[i] = NULL;
 }
 
 void Server::DeserializeStruct(GameData* mData, char *data)
