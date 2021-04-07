@@ -271,6 +271,15 @@ void Server::SerializeStruct(GameData* mData, char *data)
 	data[i] = mData->mLastMove.second;
 	i++;
 
+	//Chat Message Variable
+	int j = 0;
+	while (j < mData->mMessage.size() && mData->mMessage[j] != NULL)
+	{
+		data[i] = mData->mMessage[j];
+		i++;
+		j++;
+	}
+
 	data[i] = NULL;
 }
 
@@ -287,6 +296,18 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 
 	mData->mLastMove.second = (int)data[i];
 	i++;
+
+	//Chat Variable
+	std::string newMessage(23, NULL);
+	int j = 0;
+	while (data[i] != NULL && j < newMessage.size())
+	{
+		newMessage[j] = data[i];
+		i++;
+		j++;
+	}
+
+	mData->mMessage = newMessage;
 }
 
 bool Server::SendPacketType(int id, const PACKET& mPacket)
