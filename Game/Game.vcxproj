@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ControlMenu.cpp" />
+    <ClCompile Include="DisconnectMenu.cpp" />
     <ClCompile Include="EnterNameMenu.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameBoard.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ControlMenu.h" />
+    <ClInclude Include="DisconnectMenu.h" />
     <ClInclude Include="EnterNameMenu.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBoard.h" />

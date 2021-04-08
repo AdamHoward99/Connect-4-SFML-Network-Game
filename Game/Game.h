@@ -9,6 +9,7 @@
 #include "LeaderboardMenu.h"
 #include "PauseMenu.h"
 #include "EnterNameMenu.h"
+#include "DisconnectMenu.h"
 #include "NetworkConnection.h"
 
 #include <cassert>
@@ -55,9 +56,6 @@ private:
 	//Show timer
 	sf::Text mPauseTimerTxt;
 	sf::Font mTextFont;
-
-	////Network Connection
-	//NetworkConnection mConnection;
 
 	void InitializeMatchmakingScreen();
 	void DrawMatchmakingScreen();

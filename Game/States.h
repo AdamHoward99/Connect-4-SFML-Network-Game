@@ -10,5 +10,6 @@ enum States
 	Play,
 	Leaderboard,
 	Control_Menu,
+	Disconnect_Menu,
 	Quit
 };

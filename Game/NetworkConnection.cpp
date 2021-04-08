@@ -397,6 +397,4 @@ void NetworkConnection::CloseConnection()
 
 	closesocket(connectSocket);
 	WSACleanup();
-	exit(0);		//Debug only
-
 }

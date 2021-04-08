@@ -9,6 +9,7 @@ Game::Game(sf::RenderWindow& w)
 	mMenus["EnterNameMenu"] = std::make_unique<EnterNameMenu>(w);
 	mMenus["PauseMenu"] = std::make_unique<PauseMenu>(w);
 	mMenus["WinMenu"] = std::make_unique<WinMenu>(w);
+	mMenus["DisconnectMenu"] = std::make_unique<DisconnectMenu>(w);
 
 	//Setup elements of game
 	Initialize();
@@ -25,6 +26,7 @@ Game::~Game()
 	mMenus["EnterNameMenu"].reset();
 	mMenus["PauseMenu"].reset();
 	mMenus["WinMenu"].reset();
+	mMenus["DisconnectMenu"].reset();
 
 }
 
@@ -84,6 +86,9 @@ void Game::Update()
 	case States::Play:
 		mPlayState.Update();
 
+		if (mPlayState.GetData().mDisconnected)		//If disconnection has happened
+			mStates = States::Disconnect_Menu;
+
 		if (mPlayState.GetIfGameWon())
 		{
 			mStates = States::Win_Menu;
@@ -133,7 +138,10 @@ void Game::Update()
 
 			//Send Which player will be going first, is obtained from server in PlayState::Update
 			if (!mConnection.SendGameData(mPlayState.GetData()))
+			{
 				mConnection.CloseConnection();
+				mStates = States::Start_Menu;
+			}
 
 		}
 
@@ -163,6 +171,10 @@ void Game::Update()
 
 	case States::Win_Menu:
 		mMenus["WinMenu"].get()->Update();
+		break;
+
+	case States::Disconnect_Menu:
+		mMenus["DisconnectMenu"].get()->Update();
 		break;
 
 	case States::Quit:
@@ -231,6 +243,11 @@ void Game::Draw()
 		mMenus["WinMenu"].get()->Draw();
 		break;
 
+	case States::Disconnect_Menu:
+		mPlayState.Draw();
+		mMenus["DisconnectMenu"].get()->Draw();
+		break;
+
 	default:
 		assert(mStates);
 		break;
@@ -288,6 +305,10 @@ void Game::MouseReleased(sf::Event ev)
 		case States::Win_Menu:
 			ChangeState(mMenus["WinMenu"].get()->DetectButtonPress());
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
+			break;
+
+		case States::Disconnect_Menu:
+			ChangeState(mMenus["DisconnectMenu"].get()->DetectButtonPress());
 			break;
 
 		default:

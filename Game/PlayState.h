@@ -5,6 +5,7 @@
 #include "GameBoard.h"
 #include "NetworkConnection.h"
 #include "GameData.h"
+#include "States.h"
 #include <chrono>
 
 #define BACKSPACE_KEY 8

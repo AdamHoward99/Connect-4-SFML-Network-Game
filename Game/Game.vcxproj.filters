@@ -57,6 +57,9 @@
     <ClCompile Include="EnterNameMenu.cpp">
       <Filter>Source Files\Menus</Filter>
     </ClCompile>
+    <ClCompile Include="DisconnectMenu.cpp">
+      <Filter>Source Files\Menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameBoard.h">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="GameData.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DisconnectMenu.h">
+      <Filter>Header Files\Menus</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

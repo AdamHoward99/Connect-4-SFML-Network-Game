@@ -40,6 +40,7 @@ void PlayState::SetupTextures()
 		assert(!mChatPanelTex.loadFromFile("bin/Textures/ChatPanel.png"));
 
 	mChatPanelTex.setSmooth(true);
+
 }
 
 void PlayState::SetupSprites()
@@ -53,6 +54,7 @@ void PlayState::SetupSprites()
 	mChatPanelSpr.setTexture(mChatPanelTex);
 	mChatPanelSpr.setPosition(900.f, 50.f);
 	mChatPanelSpr.setScale(1.f, 1.f);
+
 }
 
 void PlayState::SetupFonts()
@@ -96,8 +98,6 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
-	//Check to make sure that the other player hasnt lost connection, if so, disconnect this player as well
-
 	//Update variables of the game, turn, board update, chat
 	if (!mServer.GetDataUpdate(mGameData))
 	{
@@ -108,6 +108,7 @@ void PlayState::Update()
 	if (mGameData.mDisconnected == 1)		//Disconnection on other clients end
 	{
 		mServer.CloseConnection();
+		return;
 	}
 
 	BoardUpdateServer();	//Updates board if other client placed a piece
