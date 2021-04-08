@@ -99,27 +99,31 @@ private:
 	std::string winMessage;
 
 	//Timer Variables
-	sf::Text mTimerText;
 	void UpdateTurnTimer();
 	void AutomaticPiecePlacement();
 
 	//Chat Button Variables
-	sf::Text mChatButtonText;
-	sf::Sprite mChatButton;
 	sf::Texture mButtonTex;
 
 	//Chat Input Variables
 	sf::String mChatInput;
-	sf::Text mChatInputText;
 	const unsigned int ChatLogCharacterLimit = 25;
 
 	//Chat Log Panel Variables
 	sf::Texture mChatPanelTex;
-	sf::Sprite mChatPanelSpr;
 	bool isChatOpen = false;
 
 	//Player Name
 	sf::String mName;
 
 	int player = 0;
+
+	//Text Variables
+	std::vector<sf::Text> mText;
+	int TextAmount;
+
+	//Sprite Variables
+	std::vector<sf::Sprite> mSprites;
+	int SpriteAmount;
+
 };

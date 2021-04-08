@@ -63,19 +63,11 @@ void Game::InitializeMatchmakingScreen()
 		assert(!mFont.loadFromFile("bin/Fonts/Komica_display.ttf"));
 
 	//Loading Text
-	mLoadingText = std::vector<sf::Text>(2);
-
-	float yOffset = 300.f;
-	for (size_t i = 0; i < mLoadingText.size(); i++)
-	{
-		mLoadingText.at(i).setFillColor(sf::Color::White);
-		mLoadingText.at(i).setFont(mFont);
-		mLoadingText.at(i).setCharacterSize(25);
-		mLoadingText.at(i).setPosition(320.f, yOffset);
-		yOffset += 100.f;
-	}
-
-	mLoadingText.at(0).setString("Finding an Opponent...");
+	mLoadingText.setFillColor(sf::Color::White);
+	mLoadingText.setFont(mFont);
+	mLoadingText.setCharacterSize(25);
+	mLoadingText.setPosition(320.f, 300.f);
+	mLoadingText.setString("Finding an Opponent...");
 }
 
 void Game::Update()
@@ -102,7 +94,6 @@ void Game::Update()
 		//Connect to the server
 		if (!mConnection.ConnectToServer())
 		{
-			mLoadingText.at(1).setString("Cannot connect to server...");
 			mStates = States::Start_Menu;
 			break;
 		}
@@ -257,9 +248,7 @@ void Game::Draw()
 void Game::DrawMatchmakingScreen()
 {
 	window.draw(mBackgroundSpr);
-
-	for (auto t : mLoadingText)
-		window.draw(t);
+	window.draw(mLoadingText);
 }
 
 void Game::MouseReleased(sf::Event ev)

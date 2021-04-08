@@ -64,7 +64,8 @@ private:
 	sf::Sprite mBackgroundSpr;
 
 	sf::Font mFont;
-	std::vector<sf::Text> mLoadingText;
+
+	sf::Text mLoadingText;
 
 	//Username of player
 	sf::String mPlayerName;

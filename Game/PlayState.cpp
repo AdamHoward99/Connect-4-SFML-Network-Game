@@ -19,6 +19,12 @@ void PlayState::Initialize()
 	mGameData.mTurn = Turn::Player_1_Turn;
 	mGameData.mLastMove = { -1, -1 };
 
+	TextAmount = 3;
+	mText = std::vector<sf::Text>(TextAmount);
+
+	SpriteAmount = 2;
+	mSprites = std::vector<sf::Sprite>(SpriteAmount);
+
 	//Setup Functions
 	SetupTextures();
 	SetupSprites();
@@ -46,15 +52,14 @@ void PlayState::SetupTextures()
 void PlayState::SetupSprites()
 {
 	//Chat Button
-	mChatButton.setTexture(mButtonTex);
-	mChatButton.setPosition(750.f, 670.f);
-	mChatButton.setScale(0.4f, 0.75f);
+	mSprites.at(0).setTexture(mButtonTex);
+	mSprites.at(0).setPosition(750.f, 670.f);
+	mSprites.at(0).setScale(0.4f, 0.75f);
 
 	//Chat Panel
-	mChatPanelSpr.setTexture(mChatPanelTex);
-	mChatPanelSpr.setPosition(900.f, 50.f);
-	mChatPanelSpr.setScale(1.f, 1.f);
-
+	mSprites.at(1).setTexture(mChatPanelTex);
+	mSprites.at(1).setPosition(900.f, 50.f);
+	mSprites.at(1).setScale(1.f, 1.f);
 }
 
 void PlayState::SetupFonts()
@@ -66,24 +71,25 @@ void PlayState::SetupFonts()
 
 void PlayState::SetupText()
 {
+	for (int i = 0; i < mText.size(); i++)
+	{
+		mText.at(i).setFillColor(sf::Color::White);
+		mText.at(i).setFont(mFont);
+	}
+
 	//Pause Text
-	mTimerText.setFillColor(sf::Color::White);
-	mTimerText.setCharacterSize(35);
-	mTimerText.setFont(mFont);
-	mTimerText.setPosition(40.f, 740.f);
+	mText.at(0).setCharacterSize(35);
+	mText.at(0).setPosition(40.f, 740.f);
 
 	//Chat Button Text
-	mChatButtonText.setString("Chat");
-	mChatButtonText.setFillColor(sf::Color::White);
-	mChatButtonText.setCharacterSize(25);
-	mChatButtonText.setFont(mFont);
-	mChatButtonText.setPosition(780.f, 680.f);
+	mText.at(1).setString("Chat");
+	mText.at(1).setCharacterSize(25);
+	mText.at(1).setPosition(780.f, 680.f);
 
 	//Chat Input Text
-	mChatInputText.setFillColor(sf::Color::Black);
-	mChatInputText.setFont(mFont);
-	mChatInputText.setPosition(620.f, 600.f);
-	mChatInputText.setCharacterSize(15);
+	mText.at(2).setFillColor(sf::Color::Black);
+	mText.at(2).setPosition(620.f, 600.f);
+	mText.at(2).setCharacterSize(15);
 }
 
 void PlayState::SetupAudio()
@@ -344,19 +350,19 @@ void PlayState::PlacePiece()
 void PlayState::Draw()
 {
 	board.Draw();
-	window.draw(mChatButton);
-	window.draw(mChatButtonText);
+	window.draw(mSprites.at(0));
+	window.draw(mText.at(1));
 
 	if (IsPlayersTurn())
 	{
 		window.draw(pieceToAdd);
-		window.draw(mTimerText);
+		window.draw(mText.at(0));
 	}
 
 	if (isChatOpen)
 	{
-		window.draw(mChatPanelSpr);
-		window.draw(mChatInputText);
+		window.draw(mSprites.at(1));
+		window.draw(mText.at(2));
 		for (auto t : mChatLogText)
 			window.draw(t);
 	}
@@ -374,7 +380,7 @@ void PlayState::Reset()
 
 	//Reset chat
 	mChatInput.clear();
-	mChatInputText.setString(mChatInput);
+	mText.at(2).setString(mChatInput);
 }
 
 void PlayState::UpdateTurnTimer()
@@ -382,7 +388,7 @@ void PlayState::UpdateTurnTimer()
 	mTurnTimer.second = std::chrono::steady_clock::now();
 	auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mTurnTimer.second - mTurnTimer.first).count() / 1000000.f;
 
-	mTimerText.setString(std::to_string(static_cast<int>(30 - elapsedTime)));		//Shows player how long they have left on the pause menu
+	mText.at(0).setString(std::to_string(static_cast<int>(30 - elapsedTime)));		//Shows player how long they have left on the pause menu
 
 	if (elapsedTime > 30.f)
 	{
@@ -413,21 +419,21 @@ void PlayState::AutomaticPiecePlacement()
 
 void PlayState::ButtonPress()
 {
-	if (mChatButton.getGlobalBounds().contains(mousePos))
+	if (mSprites.at(0).getGlobalBounds().contains(mousePos))
 	{
 		if (!isChatOpen) 
 		{
-			mChatPanelSpr.setPosition(600.f, 50.f);		//Make chat panel visible
+			mSprites.at(1).setPosition(600.f, 50.f);		//Make chat panel visible
 			isChatOpen = true;
 		}
 		else
 		{
-			mChatPanelSpr.setPosition(900.f, 50.f);		//Make chat panel not visible
+			mSprites.at(1).setPosition(900.f, 50.f);		//Make chat panel not visible
 			isChatOpen = false;
 		}
 	}
 	else
-		if(!mChatPanelSpr.getGlobalBounds().contains(mousePos) && IsPlayersTurn())
+		if(!mSprites.at(1).getGlobalBounds().contains(mousePos) && IsPlayersTurn())
 			PlacePiece();
 }
 
@@ -449,7 +455,7 @@ void PlayState::ChatInput(sf::Event ev)
 			if (mChatInput.getSize() > 0)
 			{
 				mChatInput.erase(mChatInput.getSize() - 1);
-				mChatInputText.setString(mChatInput);
+				mText.at(2).setString(mChatInput);
 			}
 
 		}
@@ -459,7 +465,7 @@ void PlayState::ChatInput(sf::Event ev)
 			if (mChatInput.getSize() < ChatLogCharacterLimit)		//Prevents typing over 25 characters
 			{
 				mChatInput += ev.text.unicode;
-				mChatInputText.setString(mChatInput);
+				mText.at(2).setString(mChatInput);
 			}
 		}
 	}
@@ -496,7 +502,7 @@ void PlayState::UpdateChatLog()
 	mGameData.mMessage = "";
 
 	mChatInput.clear();
-	mChatInputText.setString(mChatInput);
+	mText.at(2).setString(mChatInput);
 
 	//Outputs all chat log messages
 	float yOffset = 520.f;
