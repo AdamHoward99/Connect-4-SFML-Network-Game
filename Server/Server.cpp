@@ -118,6 +118,7 @@ void Server::ClientHandler(int index)
 	serverPtr->CloseConnection(index);
 	serverPtr->mConnectionThreads[index].detach();
 	serverPtr->mThreadActive[index] = false;
+	serverPtr->DeleteMatchup(index);		//Delete matchup letting other client go back to start menu
 
 	//Debug out messages
 	printf("\nLifetime Connections on server: %d ", serverPtr->mConnections);
@@ -382,6 +383,9 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetGameData(index, mData))
 			return false;
 
+		if (!MatchupExists(index))		//If matchup still exists, opponent hasnt quit
+			return false;
+
 		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
 		{
 			if (index == mMatchups[i].first)
@@ -460,3 +464,37 @@ void Server::GetUsername(int index)
 
 	std::cout << "\nUsername of client is: " << username.c_str() << "\n";
 }
+
+bool Server::MatchupExists(int index)
+{
+	for (size_t i = 0; i < mMatchups.size(); i++)
+	{
+		if (index == mMatchups[i].first)
+			return true;
+
+		else if (index == mMatchups[i].second)
+			return true;
+	}
+
+	return false;
+}
+
+void Server::DeleteMatchup(int index)
+{
+	for (size_t i = 0; i < mMatchups.size(); i++)
+	{
+		if (index == mMatchups[i].first)
+		{
+			mMatchups.erase(mMatchups.begin() + i);
+			break;
+		}
+
+		else if (index == mMatchups[i].second)
+		{
+			mMatchups.erase(mMatchups.begin() + i);
+			break;
+		}
+	}
+
+}
+

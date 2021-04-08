@@ -54,6 +54,10 @@ public:
 	void SerializeStruct(GameData* mData, char *data);
 	void DeserializeStruct(GameData* mData, char *data);
 
+	//Opponent Disconnect Functions
+	bool MatchupExists(int id);
+	void DeleteMatchup(int id);
+
 	//bool functions, replaced by match functions above
 
 	void GetUsername(int id);
