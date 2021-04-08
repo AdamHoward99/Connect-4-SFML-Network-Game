@@ -146,6 +146,12 @@ bool NetworkConnection::GetDataUpdate(GameData& mData)
 
 void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 {
+	if (ServerData.mDisconnected == 1)
+	{
+		OutputDebugStringA("\nA valud value for disconnection has been found...");
+		ClientData.mDisconnected = ServerData.mDisconnected;
+	}
+
 	if (ServerData.mTurn > Turn::None && ServerData.mTurn < 3)
 	{
 		OutputDebugStringA("\nA valid value for the turn has been found...");
@@ -155,7 +161,7 @@ void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 	if ((ServerData.mLastMove.first > 0 && ServerData.mLastMove.first < 7) &&
 		(ServerData.mLastMove.second > 0 && ServerData.mLastMove.second < 8))
 	{
-		OutputDebugStringA("\nA valid vallue for the last move has been found...");
+		OutputDebugStringA("\nA valid value for the last move has been found...");
 		ClientData.mLastMove = ServerData.mLastMove;
 	}
 
@@ -384,6 +390,11 @@ bool NetworkConnection::SendPacketType(const PACKET& mPacket)
 
 void NetworkConnection::CloseConnection()
 {
+	//Let server know this client is disconnecting
+	GameData closingData;
+	closingData.mDisconnected = true;
+	SendGameData(closingData);
+
 	closesocket(connectSocket);
 	WSACleanup();
 	exit(0);		//Debug only

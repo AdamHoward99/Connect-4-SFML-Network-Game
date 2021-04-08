@@ -389,6 +389,12 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetGameData(index, mData))
 			return false;
 
+		if (mData.mDisconnected)		//Client is disconnecting from the server
+		{
+			DeleteMatchup(index);
+			return false;
+		}
+
 		if (!MatchupExists(index))		//If matchup still exists, opponent hasnt quit
 			return false;
 
@@ -487,16 +493,21 @@ bool Server::MatchupExists(int index)
 
 void Server::DeleteMatchup(int index)
 {
+	GameData closingData;
+	closingData.mDisconnected = 1;
+
 	for (size_t i = 0; i < mMatchups.size(); i++)
 	{
 		if (index == mMatchups[i].first)
 		{
+			SendGameData(mMatchups[i].second, closingData);
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
 		}
 
 		else if (index == mMatchups[i].second)
 		{
+			SendGameData(mMatchups[i].first, closingData);
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
 		}

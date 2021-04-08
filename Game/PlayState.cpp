@@ -105,6 +105,11 @@ void PlayState::Update()
 		return;
 	}
 
+	if (mGameData.mDisconnected == 1)		//Disconnection on other clients end
+	{
+		mServer.CloseConnection();
+	}
+
 	BoardUpdateServer();	//Updates board if other client placed a piece
 
 	ChatUpdateServer();		//Updates chat if any information has been received from the server
