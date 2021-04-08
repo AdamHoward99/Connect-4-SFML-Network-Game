@@ -318,6 +318,9 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 {
 	//Serialize GameData struct
 	int i = 0;
+	data[i] = mPacket->mDisconnected;
+	i++;
+
 	data[i] = mPacket->mTurn;
 	i++;
 
@@ -343,6 +346,9 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 {
 	int i = 4;		//Offset of 4 due to first values always being 4,0,0,0 maybe an issue with a previous packet?
+
+	mPacket->mDisconnected = data[i];
+	i++;
 
 	mPacket->mTurn = (Turn)data[i];
 	i++;

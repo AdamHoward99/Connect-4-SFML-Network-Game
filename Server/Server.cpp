@@ -262,6 +262,9 @@ bool Server::SendGameData(int id, GameData value)
 void Server::SerializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
+	data[i] = mData->mDisconnected;
+	i++;
+
 	data[i] = mData->mTurn;
 	i++;
 
@@ -287,6 +290,9 @@ void Server::SerializeStruct(GameData* mData, char *data)
 void Server::DeserializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
+
+	mData->mDisconnected = data[i];
+	i++;
 
 	mData->mTurn = (Turn)data[i];		//Gets first byte of char data, corresponds to int of Turn enum
 	i++;
