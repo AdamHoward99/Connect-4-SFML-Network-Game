@@ -377,6 +377,11 @@ void PlayState::Reset()
 	gameWon = false;
 	isChatOpen = false;
 
+	//Reset Server Data
+	mGameData.mDisconnected = 0;
+	mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
+	mGameData.mMessage = "";
+
 	//Reset chat
 	mChatInput.clear();
 	mText.at(2).setString(mChatInput);
@@ -532,7 +537,6 @@ void PlayState::SetPlayer(int p)
 	default:
 		OutputDebugStringA("\nGets default, no value, closes the connection...");
 		mServer.CloseConnection();
-		exit(0);
 		break;
 	}
 

@@ -70,7 +70,6 @@ private:
 	int mConnections = 0;
 
 	std::vector<std::pair<int, int>> mMatchups;
-	std::vector<bool> mClientAvailable;
 	std::vector<bool> mThreadActive;
 
 	SOCKET listen_socket;

@@ -87,7 +87,6 @@ void Server::ListenForNewConnections()
 	{
 		printf("\nA client has been connected...");
 		mClientConnections.push_back(client_socket);
-		mClientAvailable.push_back(true);
 		mThreadActive.push_back(true);
 		//Tell new client if there are 2 (or more) clients on the server, allowing matchmaking
 		GetUsername(mConnections);
@@ -118,7 +117,6 @@ void Server::ClientHandler(int index)
 	serverPtr->CloseConnection(index);
 	serverPtr->mConnectionThreads[index].detach();
 	serverPtr->mThreadActive[index] = false;
-	serverPtr->DeleteMatchup(index);		//Delete matchup letting other client go back to start menu
 
 	//Debug out messages
 	printf("\nLifetime Connections on server: %d ", serverPtr->mConnections);
@@ -359,12 +357,10 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				if (i == index)
 					continue;
 
-				if (mClientAvailable.at(i) == true)
+				if (!MatchupExists(i))			//Other client is not currently in another match
 				{
 					matchmakingPossible = true;
 					mMatchups.push_back({ index, i });
-					mClientAvailable.at(i) = false;
-					mClientAvailable.at(index) = false;
 
 					if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))
 					{
@@ -501,6 +497,7 @@ void Server::DeleteMatchup(int index)
 		if (index == mMatchups[i].first)
 		{
 			SendGameData(mMatchups[i].second, closingData);
+			mThreadActive.at(mMatchups[i].second) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
 		}
@@ -508,6 +505,7 @@ void Server::DeleteMatchup(int index)
 		else if (index == mMatchups[i].second)
 		{
 			SendGameData(mMatchups[i].first, closingData);
+			mThreadActive.at(mMatchups[i].first) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
 		}
