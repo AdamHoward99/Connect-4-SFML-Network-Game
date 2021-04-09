@@ -123,9 +123,10 @@ void Game::Update()
 			//Find from server which player this is (only returns either 1 or 2)
 			int player = 0;
 			
-			if (!mConnection.GetPlayer(player))			
+			if (!mConnection.GetPlayer(player))	
 			{
 				mConnection.CloseConnection();
+				mStates = States::Start_Menu;
 				break;
 			}
 			mPlayState.SetPlayer(player);

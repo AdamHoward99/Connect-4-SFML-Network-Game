@@ -416,7 +416,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		break;
 
-	case PACKET::mPlayerType:				//Error when sending this, rarely both exes are set as player 1, no explanation for this
+	case PACKET::mPlayerType:
 
 		if (!GetPlayerType(index, playerType))
 			return false;

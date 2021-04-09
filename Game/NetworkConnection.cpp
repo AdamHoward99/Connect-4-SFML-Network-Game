@@ -105,7 +105,7 @@ bool NetworkConnection::Matchmake()
 	return result == 0;
 }
 
-bool NetworkConnection::GetPlayer(int& playerType)
+bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 {
 	//Find which player is which (player 1 or 2)
 	int result = 0;
@@ -115,6 +115,9 @@ bool NetworkConnection::GetPlayer(int& playerType)
 		CloseConnection();
 		return false;
 	}
+
+	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point current;
 
 	do
 	{
@@ -126,6 +129,14 @@ bool NetworkConnection::GetPlayer(int& playerType)
 
 		if (playerType == 1 || playerType == 2)			//Found result from server
 			result = 1;
+
+		current = std::chrono::steady_clock::now();		//Gets the current time
+		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 4)		//Connection time out
+		{
+			OutputDebugStringA("\nConnection Timed Out...");
+			CloseConnection();
+			return false;
+		}
 
 	} while (result == 0);
 
@@ -247,6 +258,9 @@ bool NetworkConnection::GetPlayerType(int& value)
 		if (WSAGetLastError() != WSAEWOULDBLOCK)
 			return false;
 
+		if (value > 3)
+			OutputDebugStringA("\nAn incorrect value for the player has been obtained...");			//Only happens when doesnt get correct value from server the first time
+
 		value = 0;
 	}
 
@@ -338,7 +352,7 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 	i++;
 
 	//Chat Message Variable
-	int j = 0;
+	size_t j = 0;
 	while (j < mPacket->mMessage.size())
 	{
 		data[i] = mPacket->mMessage[j];

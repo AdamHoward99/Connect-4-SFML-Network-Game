@@ -381,6 +381,9 @@ void PlayState::Reset()
 	mGameData.mDisconnected = 0;
 	mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
 	mGameData.mMessage = "";
+	mGameData.mTurn = Turn::Player_1_Turn;
+
+	player = 0;
 
 	//Reset chat
 	mChatInput.clear();
