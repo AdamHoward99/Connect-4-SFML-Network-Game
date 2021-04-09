@@ -71,7 +71,7 @@ void PlayState::SetupFonts()
 
 void PlayState::SetupText()
 {
-	for (int i = 0; i < mText.size(); i++)
+	for (size_t i = 0; i < mText.size(); i++)
 	{
 		mText.at(i).setFillColor(sf::Color::White);
 		mText.at(i).setFont(mFont);

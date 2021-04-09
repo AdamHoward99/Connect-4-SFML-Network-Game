@@ -276,7 +276,7 @@ void Server::SerializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Chat Message Variable
-	int j = 0;
+	size_t j = 0;
 	while (j < mData->mMessage.size() && mData->mMessage[j] != NULL)
 	{
 		data[i] = mData->mMessage[j];
