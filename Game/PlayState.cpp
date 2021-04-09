@@ -118,7 +118,6 @@ void PlayState::Update()
 	}
 
 	BoardUpdateServer();	//Updates board if other client placed a piece
-
 	ChatUpdateServer();		//Updates chat if any information has been received from the server
 
 	if (IsPlayersTurn())
@@ -445,9 +444,6 @@ void PlayState::ChatInput(sf::Event ev)
 		{
 			if (mChatInput.getSize() > 0)
 				UpdateChatLog();
-
-			//Send information to server, string from chat
-			//Receive information from server, string from chat
 		}
 
 		else if (ev.text.unicode == BACKSPACE_KEY)

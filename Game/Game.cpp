@@ -264,12 +264,13 @@ void Game::MouseReleased(sf::Event ev)
 		case States::Pause_Menu:
 			ChangeState(mMenus["PauseMenu"].get()->DetectButtonPress());
 
-			//Send information to server that this player has unpaused.
-
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 
-			if(mMenus["PauseMenu"].get()->GetIfForfeiting())		//Reset game when quitting out from pause menu
+			if (mMenus["PauseMenu"].get()->GetIfForfeiting())		//Reset game when quitting out from pause menu
+			{
+				mConnection.CloseConnection();
 				mPlayState.Reset();
+			}
 			break;
 
 		case States::Enter_Name:
@@ -312,7 +313,7 @@ void Game::KeyPressed(sf::Event ev)
 	switch (mStates)
 	{
 	case States::Play:
-		if (ev.text.unicode == PAUSE_KEY && !mPlayState.GetIfChatIsOpen())
+		if (ev.text.unicode == PAUSE_KEY && !mPlayState.GetIfChatIsOpen() && mPlayState.IsPlayersTurn())
 		{
 			//Send information to server that this player has paused the game
 			mStates = States::Pause_Menu;
