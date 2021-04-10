@@ -260,9 +260,16 @@ bool Server::SendGameData(int id, GameData value)
 void Server::SerializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
+
+	//Disconnection Variable
 	data[i] = mData->mDisconnected;
 	i++;
 
+	//Game Ended Variable
+	data[i] = mData->gameEnded;
+	i++;
+
+	//Turn Variable
 	data[i] = mData->mTurn;
 	i++;
 
@@ -288,10 +295,15 @@ void Server::SerializeStruct(GameData* mData, char *data)
 void Server::DeserializeStruct(GameData* mData, char *data)
 {
 	int i = 0;
-
+	//Disconnection Variable
 	mData->mDisconnected = data[i];
 	i++;
 
+	//Game Ended Variable
+	mData->gameEnded = data[i];
+	i++;
+
+	//Turn Variable
 	mData->mTurn = (Turn)data[i];		//Gets first byte of char data, corresponds to int of Turn enum
 	i++;
 
