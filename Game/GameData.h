@@ -11,5 +11,5 @@ struct GameData			//Gets information for the game from the server in a single re
 	Turn mTurn;
 	std::pair<int, int> mLastMove;
 	std::string mMessage = "";		//Chat Variable
-
+	//Variable for win message which is displayed on the win screen, same for all clients
 };

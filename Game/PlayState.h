@@ -29,9 +29,6 @@ public:
 	//Chat Functions
 	bool GetIfChatIsOpen() { return isChatOpen; }
 
-	//Win Message Function
-	std::string GetWinMessage() { return winMessage; }
-
 	//Turn Timer Variable
 	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mTurnTimer;
 
@@ -89,9 +86,6 @@ private:
 
 	//Font Variables
 	sf::Font mFont;
-
-	//Win Message Variables
-	std::string winMessage;
 
 	//Timer Variables
 	void UpdateTurnTimer();

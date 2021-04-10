@@ -401,6 +401,9 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			return false;
 		}
 
+		if (mData.gameEnded)		//Detect that the game is over
+			printf("\nThe game has ended, client %d has won...", index);
+
 		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn information to other client in the match
 		{
 			if (index == mMatchups[i].first)
