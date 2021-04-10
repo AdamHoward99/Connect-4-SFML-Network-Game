@@ -110,17 +110,17 @@ bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 	//Find which player is which (player 1 or 2)
 	int result = 0;
 
-	if (!SendPlayerType(playerType))		//Finds which player they are in the game (1 or 2)
-	{
-		CloseConnection();
-		return false;
-	}
-
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 	std::chrono::steady_clock::time_point current;
 
 	do
 	{
+		if (!SendPlayerType(playerType))		//Finds which player they are in the game (1 or 2)
+		{
+			CloseConnection();
+			return false;
+		}
+
 		if (!GetPlayerType(playerType))		//Connection error with server, break out
 		{
 			CloseConnection();
@@ -131,7 +131,7 @@ bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 			result = 1;
 
 		current = std::chrono::steady_clock::now();		//Gets the current time
-		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 4)		//Connection time out
+		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 20)		//Connection time out
 		{
 			OutputDebugStringA("\nConnection Timed Out...");
 			CloseConnection();
@@ -157,7 +157,7 @@ bool NetworkConnection::GetDataUpdate(GameData& mData)
 
 void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 {
-	if (ServerData.mDisconnected == 1)
+	if (ServerData.mDisconnected == -1)
 	{
 		OutputDebugStringA("\nA valud value for disconnection has been found...");
 		ClientData.mDisconnected = ServerData.mDisconnected;
@@ -176,7 +176,7 @@ void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 		ClientData.mLastMove = ServerData.mLastMove;
 	}
 
-	if (ServerData.mMessage != "" && ServerData.mMessage[0] > NULL)
+	if (ServerData.mMessage.size() > 3 && ServerData.mMessage[0] > NULL)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
 	{
 		OutputDebugStringA("\nA valid message has been received from the other client...");
 		ClientData.mMessage = ServerData.mMessage;
@@ -406,7 +406,7 @@ void NetworkConnection::CloseConnection()
 {
 	//Let server know this client is disconnecting
 	GameData closingData;
-	closingData.mDisconnected = true;
+	closingData.mDisconnected = -1;
 	SendGameData(closingData);
 
 	closesocket(connectSocket);

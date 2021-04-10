@@ -111,7 +111,7 @@ void PlayState::Update()
 		return;
 	}
 
-	if (mGameData.mDisconnected == 1)		//Disconnection on other clients end
+	if (mGameData.mDisconnected == -1)		//Disconnection on other clients end
 	{
 		mServer.CloseConnection();
 		return;
@@ -378,7 +378,7 @@ void PlayState::Reset()
 	isChatOpen = false;
 
 	//Reset Server Data
-	mGameData.mDisconnected = 0;
+	mGameData.mDisconnected = 1;
 	mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
 	mGameData.mMessage = "";
 	mGameData.mTurn = Turn::Player_1_Turn;

@@ -78,7 +78,7 @@ void Game::Update()
 	case States::Play:
 		mPlayState.Update();
 
-		if (mPlayState.GetData().mDisconnected)		//If disconnection has happened
+		if (mPlayState.GetData().mDisconnected == -1)		//If disconnection has happened
 		{
 			mPlayState.Reset();
 			mStates = States::Disconnect_Menu;

@@ -350,6 +350,16 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		printf("\nGetMatch function returned...");
 
+		//If client is already in a match
+		for (size_t i = 0; i < mMatchups.size(); i++)
+		{
+			if (index == mMatchups[i].first || index == mMatchups[i].second)
+			{
+				//SendMatch(index, true);
+				return true;
+			}
+		}
+
 		for (size_t i = 0; i < mClientConnections.size(); i++)
 		{
 			if (mThreadActive[i] == true)			//Only way to 'disable' removed threads since deleting gives errors
@@ -385,7 +395,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetGameData(index, mData))
 			return false;
 
-		if (mData.mDisconnected)		//Client is disconnecting from the server
+		if (mData.mDisconnected == -1)		//Client is disconnecting from the server
 		{
 			DeleteMatchup(index);
 			return false;
@@ -421,6 +431,13 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetPlayerType(index, playerType))
 			return false;
 
+		if (playerType == 1 || playerType == 2)
+		{
+			printf("\nThis client already has obtained a valid player type...");
+			SendPlayerType(index, playerType);
+			return true;
+		}
+
 		for (size_t i = 0; i < mMatchups.size(); i++)
 		{
 			if (index == mMatchups[i].first)
@@ -441,7 +458,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				i = mMatchups.size();		//break out of loop
 			}
 
-			printf("\nThe matchup vector for %d is <%d,%d>...", index, mMatchups[0].first, mMatchups[0].second);
+			//printf("\nThe matchup vector for %d is <%d,%d>...", index, mMatchups[0].first, mMatchups[0].second);
 		}
 
 		break;
@@ -490,7 +507,7 @@ bool Server::MatchupExists(int index)
 void Server::DeleteMatchup(int index)
 {
 	GameData closingData;
-	closingData.mDisconnected = 1;
+	closingData.mDisconnected = -1;
 
 	for (size_t i = 0; i < mMatchups.size(); i++)
 	{
