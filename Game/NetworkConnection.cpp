@@ -379,7 +379,9 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	i++;
 
 	//Game End Variable
-	mPacket->gameEnded = data[i];
+	if (data[i] != 1)
+		mPacket->gameEnded = false;
+
 	i++;
 
 	//Turn Variable
