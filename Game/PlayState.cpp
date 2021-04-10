@@ -464,6 +464,9 @@ void PlayState::ChatInput(sf::Event ev)
 
 		}
 
+		else if (ev.text.unicode == SPACE_KEY && mChatInput.getSize() < 1)		//Prevents empty messages from being added to chat log
+			return;
+
 		else
 		{
 			if (mChatInput.getSize() < ChatLogCharacterLimit)		//Prevents typing over 25 characters
