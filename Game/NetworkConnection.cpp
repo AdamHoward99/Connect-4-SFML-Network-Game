@@ -163,6 +163,9 @@ void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 		ClientData.mDisconnected = ServerData.mDisconnected;
 	}
 
+	if (ServerData.gameEnded)
+		ClientData.gameEnded = ServerData.gameEnded;
+
 	if (ServerData.mTurn > Turn::None && ServerData.mTurn < 3)
 	{
 		OutputDebugStringA("\nA valid value for the turn has been found...");
@@ -381,6 +384,8 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	//Game End Variable
 	if (data[i] != 1)
 		mPacket->gameEnded = false;
+	else
+		mPacket->gameEnded = true;
 
 	i++;
 

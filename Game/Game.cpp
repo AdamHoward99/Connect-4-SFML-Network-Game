@@ -84,7 +84,7 @@ void Game::Update()
 			mStates = States::Disconnect_Menu;
 		}
 
-		if (mPlayState.GetIfGameWon())
+		if (mPlayState.GetData().gameEnded)
 		{
 			mStates = States::Win_Menu;
 			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetWinMessage());

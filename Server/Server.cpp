@@ -401,7 +401,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			return false;
 		}
 
-		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
+		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn information to other client in the match
 		{
 			if (index == mMatchups[i].first)
 			{

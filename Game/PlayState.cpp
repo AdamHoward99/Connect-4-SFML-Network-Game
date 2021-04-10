@@ -136,7 +136,7 @@ void PlayState::Update()
 		if (HasConnected4())
 		{
 			//Pass information that this player has won to the server, returns win screen string
-			gameWon = true;
+			mGameData.gameEnded = true;
 
 			if (mGameData.mTurn == Turn::Player_1_Turn)
 				winMessage = "Player 1 Wins";
@@ -148,7 +148,7 @@ void PlayState::Update()
 		if (IsBoardFull())
 		{
 			//Pass information that no player has won to the server,returns win screen string
-			gameWon = true;
+			mGameData.gameEnded = true;
 			winMessage = " It's a Tie";
 		}
 
@@ -374,7 +374,6 @@ void PlayState::Reset()
 	board.ResetBoard();
 
 	//Reset bools
-	gameWon = false;
 	isChatOpen = false;
 
 	//Reset Server Data
@@ -382,6 +381,7 @@ void PlayState::Reset()
 	mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
 	mGameData.mMessage = "";
 	mGameData.mTurn = Turn::Player_1_Turn;
+	mGameData.gameEnded = false;
 
 	player = 0;
 

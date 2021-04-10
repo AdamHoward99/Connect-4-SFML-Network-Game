@@ -26,10 +26,6 @@ public:
 
 	void ButtonPress();		//Detects if over the chat button, if not, place's piece
 
-	//Game Won Variable Functions
-	void SetIfGameWon(bool foo) { gameWon = foo; }
-	bool GetIfGameWon() { return gameWon; }
-
 	//Chat Functions
 	bool GetIfChatIsOpen() { return isChatOpen; }
 
@@ -87,8 +83,6 @@ private:
 	sf::Vector2f mousePos;
 	float xColumnPosition = 0.f;
 	sf::Vector2i lastMove;		//Stores position of last move on board to easier check for a win
-
-	bool gameWon = false;
 
 	//Sound Variables
 	std::pair<sf::SoundBuffer, sf::Sound> mPieceSfx;
