@@ -348,18 +348,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetMatch(index, matchmakingPossible))
 			return false;
 
-		printf("\nGetMatch function returned...");
-
-		//If client is already in a match
-		for (size_t i = 0; i < mMatchups.size(); i++)
-		{
-			if (index == mMatchups[i].first || index == mMatchups[i].second)
-			{
-				//SendMatch(index, true);
-				return true;
-			}
-		}
-
 		for (size_t i = 0; i < mClientConnections.size(); i++)
 		{
 			if (mThreadActive[i] == true)			//Only way to 'disable' removed threads since deleting gives errors
@@ -401,9 +389,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			return false;
 		}
 
-		if (!MatchupExists(index))		//If matchup still exists, opponent hasnt quit
-			return false;
-
 		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn information to both clients in the match
 		{
 			if (index == mMatchups[i].first)
@@ -434,7 +419,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (playerType == 1 || playerType == 2)
 		{
 			printf("\nThis client already has obtained a valid player type...");
-			SendPlayerType(index, playerType);
+			SendPlayerType(index, playerType);	
 			return true;
 		}
 
@@ -458,7 +443,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				i = mMatchups.size();		//break out of loop
 			}
 
-			//printf("\nThe matchup vector for %d is <%d,%d>...", index, mMatchups[0].first, mMatchups[0].second);
 		}
 
 		break;

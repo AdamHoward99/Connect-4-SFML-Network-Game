@@ -131,7 +131,7 @@ bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 			result = 1;
 
 		current = std::chrono::steady_clock::now();		//Gets the current time
-		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 20)		//Connection time out
+		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 4)		//Connection time out
 		{
 			OutputDebugStringA("\nConnection Timed Out...");
 			CloseConnection();
