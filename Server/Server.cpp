@@ -290,6 +290,20 @@ void Server::SerializeStruct(GameData* mData, char *data)
 	}
 
 	data[i] = NULL;
+	i++;
+
+	//Win Message Variable
+	j = 0;
+	while (j < mData->mWinMessage.size() && mData->mWinMessage[j] != NULL)
+	{
+		data[i] = mData->mWinMessage[j];
+		i++;
+		j++;
+	}
+
+	data[i] = NULL;
+	i++;
+
 }
 
 void Server::DeserializeStruct(GameData* mData, char *data)
@@ -325,6 +339,20 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	}
 
 	mData->mMessage = newMessage;
+	i++;
+
+	//Win Message Variable
+	std::string newWinMessage;
+	j = 0;
+	while (data[i] != NULL && data != "" && j < 15)		//15 max maybe, need to check this
+	{
+		newWinMessage.push_back(data[i]);
+		i++;
+		j++;
+	}
+
+	mData->mWinMessage = newWinMessage;
+	i++;
 }
 
 bool Server::SendPacketType(int id, const PACKET& mPacket)

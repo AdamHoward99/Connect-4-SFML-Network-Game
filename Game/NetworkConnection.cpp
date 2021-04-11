@@ -370,7 +370,19 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 		j++;
 	}
 
-	data[i] = NULL;		//End of data
+	data[i] = NULL;		//End of chat message data
+	i++;
+
+	//Win Message Variable
+	j = 0;
+	while (j < mPacket->mWinMessage.size())
+	{
+		data[i] = mPacket->mWinMessage[j];
+		i++;
+		j++;
+	}
+
+	data[i] = NULL;		//End of win message data
 }
 
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
@@ -411,6 +423,19 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	}
 
 	mPacket->mMessage = newMessage;
+	i++;
+
+	//Win Message Variable
+	std::string newWinMessage;
+	j = 0;
+	while (data[i] != NULL)
+	{
+		newWinMessage.push_back(data[i]);
+		i++;
+		j++;
+	}
+
+	mPacket->mWinMessage = newWinMessage;
 }
 
 bool NetworkConnection::SendPacketType(const PACKET& mPacket)
