@@ -185,6 +185,12 @@ void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
 		ClientData.mMessage = ServerData.mMessage;
 	}
 
+	if (ServerData.mWinMessage.size() > 1 && ServerData.mWinMessage[0] > NULL)		//Prevents null messages from being shown
+	{
+		OutputDebugStringA("\nA valid string has been received for the win message...");
+		ClientData.mWinMessage = ServerData.mWinMessage;
+	}
+
 }
 
 bool NetworkConnection::GetMatch(bool& value)

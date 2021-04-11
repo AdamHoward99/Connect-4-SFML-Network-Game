@@ -87,7 +87,7 @@ void Game::Update()
 		if (mPlayState.GetData().gameEnded)
 		{
 			mStates = States::Win_Menu;
-			//Pass the win message into the win menu? or have the server be passed into this class too
+			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetData().mWinMessage);
 			mPlayState.Reset();
 		}
 		break;

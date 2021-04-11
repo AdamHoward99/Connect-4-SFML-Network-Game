@@ -139,6 +139,10 @@ void PlayState::Update()
 			mGameData.gameEnded = true;
 
 			//Set win message based on which player this is
+			if (player == 1)
+				mGameData.mWinMessage = "Player 1 Wins";
+			else if (player == 2)
+				mGameData.mWinMessage = "Player 2 Wins";
 		}
 
 		//Function to see if there is a winner
@@ -146,7 +150,7 @@ void PlayState::Update()
 		{
 			//Pass information that no player has won to the server,returns win screen string
 			mGameData.gameEnded = true;
-			//Set win message as tie
+			mGameData.mWinMessage = "Its a Tie";
 		}
 
 		//Swaps turns, passes this to server to relay to other clients, put all this in its own function?
