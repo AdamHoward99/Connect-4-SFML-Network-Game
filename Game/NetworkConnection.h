@@ -61,8 +61,8 @@ public:
 	bool SendGameData(GameData& value);
 
 	//Rematch Functions
-	bool SendRematch(const bool value);
-	bool GetRematch(bool& value);
+	bool SendRematch(const int value);
+	bool GetRematch(int& value);
 
 	//Serialize and Deserialize Struct Functions
 	void SerializeStruct(GameData* mDataPacket, char *data);

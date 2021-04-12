@@ -223,21 +223,21 @@ bool Server::SendPlayerType(int id, int value)
 	return true;
 }
 
-bool Server::GetRematch(int id, bool& value)
+bool Server::GetRematch(int id, int& value)
 {
-	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
+	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(int), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
 	return true;
 }
 
-bool Server::SendRematch(int id, bool value)
+bool Server::SendRematch(int id, int value)
 {
 	if (!SendPacketType(id, PACKET::mRematch))
 		return false;
 
-	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
+	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(int), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -402,6 +402,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	bool matchmakingPossible = false;
 	int playerType;
 	GameData mData;
+	int rematchPossible = 0;
 
 	switch (mType)
 	{
@@ -513,6 +514,28 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 	case PACKET::mRematch:
 		
+		if (!GetRematch(index, rematchPossible))
+			return false;
+
+		for (size_t i = 0; i < mMatchups.size(); i++)
+		{
+			if (index == mMatchups[i].first)
+			{
+				if (!SendRematch(mMatchups[i].second, rematchPossible))
+					return false;
+
+				i = mMatchups.size();
+			}
+
+			else if (index == mMatchups[i].second)
+			{
+				if (!SendRematch(mMatchups[i].first, rematchPossible))
+					return false;
+
+				i = mMatchups.size();		//break out of loop
+			}
+
+		}
 		break;
 
 	default:

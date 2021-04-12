@@ -52,8 +52,8 @@ public:
 	bool GetGameData(int id, GameData& value);
 
 	//Rematch Functions
-	bool SendRematch(int id, bool value);
-	bool GetRematch(int id, bool& value);
+	bool SendRematch(int id, int value);
+	bool GetRematch(int id, int& value);
 
 	//Serialize and Deserialize Functions
 	void SerializeStruct(GameData* mData, char *data);
