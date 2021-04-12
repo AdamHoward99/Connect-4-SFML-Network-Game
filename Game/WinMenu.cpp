@@ -1,7 +1,7 @@
 #include "WinMenu.h"
 
-WinMenu::WinMenu(sf::RenderWindow& w)
-	:window(w)
+WinMenu::WinMenu(sf::RenderWindow& w, NetworkConnection& mConnect)
+	:window(w), mServer(mConnect)
 {
 	buttonAmount = 3;
 	textAmount = 4;
@@ -100,6 +100,7 @@ States WinMenu::DetectButtonPress()
 	if (mButtons.at(2).getGlobalBounds().contains(mousePos))
 	{
 		mButtonClickSfx.second.play();
+		mServer.CloseConnection();
 		return States::Start_Menu;
 	}
 

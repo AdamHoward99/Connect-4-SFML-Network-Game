@@ -8,7 +8,7 @@ Game::Game(sf::RenderWindow& w)
 	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w);
 	mMenus["EnterNameMenu"] = std::make_unique<EnterNameMenu>(w);
 	mMenus["PauseMenu"] = std::make_unique<PauseMenu>(w);
-	mMenus["WinMenu"] = std::make_unique<WinMenu>(w);
+	mMenus["WinMenu"] = std::make_unique<WinMenu>(w, mConnection);
 	mMenus["DisconnectMenu"] = std::make_unique<DisconnectMenu>(w);
 
 	//Setup elements of game
@@ -87,7 +87,7 @@ void Game::Update()
 		if (mPlayState.GetData().gameEnded)
 		{
 			mStates = States::Win_Menu;
-			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetData().mWinMessage);
+			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetData().mWinMessage);		//Might not need if networkconnection is being added to winmenu anyway
 			mPlayState.Reset();
 		}
 		break;

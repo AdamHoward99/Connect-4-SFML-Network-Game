@@ -1,11 +1,12 @@
 #pragma once
 #include "Menu.h"
+#include "NetworkConnection.h"
 #include <cassert>
 
 class WinMenu : public Menu
 {
 public:
-	WinMenu(sf::RenderWindow& mApp);		//Default Constructor
+	WinMenu(sf::RenderWindow& mApp, NetworkConnection& mConnection);		//Default Constructor
 	~WinMenu();		//Default destructor
 
 	void Initialize() override;
@@ -17,6 +18,7 @@ public:
 	void SetWinScreenTitle(std::string) override;
 private:
 	sf::RenderWindow& window;
+	NetworkConnection& mServer;
 
 	void SetupSprites() override;
 	void SetupText() override;
