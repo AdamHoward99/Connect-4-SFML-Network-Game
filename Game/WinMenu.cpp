@@ -90,7 +90,6 @@ States WinMenu::DetectButtonPress()
 		mButtonClickSfx.second.play();
 		if (mServer.CheckForRematch())
 		{
-			exit(0);
 			return States::Play;		//Rematch
 		}
 		else

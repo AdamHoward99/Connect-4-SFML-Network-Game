@@ -112,16 +112,28 @@ bool NetworkConnection::CheckForRematch()
 	//If other client did press rematch, returns true and goes back to play state to start game again
 	int value = 0;
 
-	if (!SendRematch(1))
-		return false;
+		if (!SendRematch(1))
+			return false;
 
-	if (!GetRematch(value))
-		return false;
+	//Setup timer variables used for while loop
+	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point current;
 
-	if (value != 1)
-		return false;
+	do
+	{
+		current = std::chrono::steady_clock::now();			//Get current time
 
-	return true;
+		if (!GetRematch(value))
+			return false;
+
+		if (value == 1)
+			return true;
+
+	} while (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f < 8);		//Time out
+
+
+	SendRematch(0);
+	return false;
 }
 
 bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here

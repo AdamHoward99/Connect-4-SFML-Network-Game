@@ -225,7 +225,7 @@ bool Server::SendPlayerType(int id, int value)
 
 bool Server::GetRematch(int id, int& value)
 {
-	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(int), NULL);
+	int returnCheck = recv(mClientConnections[id], (char *)&value, sizeof(int), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -402,7 +402,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	bool matchmakingPossible = false;
 	int playerType;
 	GameData mData;
-	int rematchPossible = 0;
+	int rematchPossible = 5;
 
 	switch (mType)
 	{
@@ -516,6 +516,8 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		
 		if (!GetRematch(index, rematchPossible))
 			return false;
+
+		printf("\nThe client at %d has sent a value of %d", index, rematchPossible);
 
 		for (size_t i = 0; i < mMatchups.size(); i++)
 		{
