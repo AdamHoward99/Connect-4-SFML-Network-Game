@@ -42,7 +42,7 @@ public:
 
 	//Match up Functions (bool value determining if other clients are on the server)
 	bool GetMatch(bool &foo);
-	bool SendMatch(const int& value);
+	bool SendMatch(const bool& value);
 
 	//Getting Player Type Functions (int value returning 1 or 2)
 	bool GetPlayerType(int& value);
@@ -56,9 +56,13 @@ public:
 	bool GetInt(int& value);
 	bool SendInt(const int& value) const;
 
-	//Turn Functions
+	//Game Data Functions
 	bool GetGameData(GameData& value);
 	bool SendGameData(GameData& value);
+
+	//Rematch Functions
+	bool SendRematch(const bool value);
+	bool GetRematch(bool& value);
 
 	//Serialize and Deserialize Struct Functions
 	void SerializeStruct(GameData* mDataPacket, char *data);

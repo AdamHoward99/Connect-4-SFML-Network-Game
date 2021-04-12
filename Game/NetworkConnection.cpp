@@ -107,6 +107,12 @@ bool NetworkConnection::Matchmake()
 
 bool NetworkConnection::CheckForRematch()
 {
+	//Send variable to server, wait until it receives false
+	//Have timer go off around 30 secs, returning false when this happens
+	//If other client did press rematch, returns true and goes back to play state to start game again
+
+
+
 	return true;
 }
 
@@ -214,7 +220,7 @@ bool NetworkConnection::GetMatch(bool& value)
 	return true;
 }
 
-bool NetworkConnection::SendMatch(const int& value)
+bool NetworkConnection::SendMatch(const bool& value)
 {
 	if (!SendPacketType(PACKET::mMatchmakingCheck))
 		return false;
@@ -224,6 +230,32 @@ bool NetworkConnection::SendMatch(const int& value)
 		return false;
 
 	OutputDebugStringA("\nSent searching for match to the server");
+
+	return true;
+}
+
+bool NetworkConnection::GetRematch(bool& value)
+{
+	int returnCheck = recv(connectSocket, (char *)&value, sizeof(bool), NULL);
+	if (returnCheck == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() != WSAEWOULDBLOCK)
+			return false;
+
+		value = false;
+	}
+
+	return true;
+}
+
+bool NetworkConnection::SendRematch(const bool value)
+{
+	if (!SendPacketType(PACKET::mRematch))
+		return false;
+
+	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
 
 	return true;
 }

@@ -223,6 +223,27 @@ bool Server::SendPlayerType(int id, int value)
 	return true;
 }
 
+bool Server::GetRematch(int id, bool& value)
+{
+	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool Server::SendRematch(int id, bool value)
+{
+	if (!SendPacketType(id, PACKET::mRematch))
+		return false;
+
+	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
 bool Server::GetGameData(int id, GameData& value)
 {
 	char data[GAMEDATA_SIZE];
@@ -488,6 +509,10 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		}
 
+		break;
+
+	case PACKET::mRematch:
+		
 		break;
 
 	default:

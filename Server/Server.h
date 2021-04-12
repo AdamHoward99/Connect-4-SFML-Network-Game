@@ -39,6 +39,7 @@ public:
 	bool SendString(int id, const std::string& message);
 	bool GetString(int id, std::string& message);
 
+	//Matchmaking Functions
 	bool SendMatch(int id, bool value);
 	bool GetMatch(int id, bool& value);
 
@@ -46,9 +47,13 @@ public:
 	bool SendPlayerType(int id, int value);
 	bool GetPlayerType(int id, int& value);
 
-	//Player Turn Functions
+	//GameData Functions
 	bool SendGameData(int id, GameData value);
 	bool GetGameData(int id, GameData& value);
+
+	//Rematch Functions
+	bool SendRematch(int id, bool value);
+	bool GetRematch(int id, bool& value);
 
 	//Serialize and Deserialize Functions
 	void SerializeStruct(GameData* mData, char *data);

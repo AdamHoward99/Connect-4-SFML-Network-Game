@@ -6,4 +6,5 @@ enum PACKET
 	mUsername,
 	mPlayerType,
 	mData,
+	mRematch,
 };
