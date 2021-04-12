@@ -16,8 +16,8 @@ void PlayState::Initialize()
 {
 	board.Initialize();
 	pieceToAdd = sf::CircleShape(30.f);
-	mGameData.mTurn = Turn::Player_1_Turn;
-	mGameData.mLastMove = { -1, -1 };
+	mServer.mGameData.mTurn = Turn::Player_1_Turn;
+	mServer.mGameData.mLastMove = { -1, -1 };
 
 	TextAmount = 3;
 	mText = std::vector<sf::Text>(TextAmount);
@@ -105,13 +105,13 @@ void PlayState::SetupAudio()
 void PlayState::Update()
 {
 	//Update variables of the game, turn, board update, chat
-	if (!mServer.GetDataUpdate(mGameData))
+	if (!mServer.GetDataUpdate())
 	{
 		mServer.CloseConnection();
 		return;
 	}
 
-	if (mGameData.mDisconnected == -1)		//Disconnection on other clients end
+	if (mServer.mGameData.mDisconnected == -1)		//Disconnection on other clients end
 	{
 		mServer.CloseConnection();
 		return;
@@ -136,39 +136,39 @@ void PlayState::Update()
 		if (HasConnected4())
 		{
 			//Pass information that this player has won to the server, returns win screen string
-			mGameData.gameEnded = true;
+			mServer.mGameData.gameEnded = true;
 
 			//Set win message based on which player this is
 			if (player == 1)
-				mGameData.mWinMessage = "Player 1 Wins";
+				mServer.mGameData.mWinMessage = "Player 1 Wins";
 			else if (player == 2)
-				mGameData.mWinMessage = "Player 2 Wins";
+				mServer.mGameData.mWinMessage = "Player 2 Wins";
 		}
 
 		//Function to see if there is a winner
 		if (IsBoardFull())
 		{
 			//Pass information that no player has won to the server,returns win screen string
-			mGameData.gameEnded = true;
-			mGameData.mWinMessage = "Its a Tie";
+			mServer.mGameData.gameEnded = true;
+			mServer.mGameData.mWinMessage = "Its a Tie";
 		}
 
 		//Swaps turns, passes this to server to relay to other clients, put all this in its own function?
-		if (mGameData.mTurn == Turn::Player_1_Turn)
-			mGameData.mTurn = Turn::Player_2_Turn;
+		if (mServer.mGameData.mTurn == Turn::Player_1_Turn)
+			mServer.mGameData.mTurn = Turn::Player_2_Turn;
 		else
-			mGameData.mTurn = Turn::Player_1_Turn;
+			mServer.mGameData.mTurn = Turn::Player_1_Turn;
 
-		mGameData.mLastMove = {lastMove.x, lastMove.y};
+		mServer.mGameData.mLastMove = {lastMove.x, lastMove.y};
 
 		//Send turn changes to server
-		if (!mServer.SendGameData(mGameData))
+		if (!mServer.SendGameData(mServer.mGameData))
 		{
 			mServer.CloseConnection();
 			return;
 		}
 
-		mGameData.mLastMove = { -1, -1 };
+		mServer.mGameData.mLastMove = { -1, -1 };
 		turnEnd = false;
 	}
 
@@ -225,7 +225,7 @@ bool PlayState::HasConnected4()
 
 	sf::Color c;
 
-	if (mGameData.mTurn == Turn::Player_1_Turn)
+	if (mServer.mGameData.mTurn == Turn::Player_1_Turn)
 		c = sf::Color::Red;
 	else
 		c = sf::Color::Yellow;
@@ -378,11 +378,11 @@ void PlayState::Reset()
 	isChatOpen = false;
 
 	//Reset Server Data
-	mGameData.mDisconnected = 1;
-	mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
-	mGameData.mMessage = "";
-	mGameData.mTurn = Turn::Player_1_Turn;
-	mGameData.gameEnded = false;
+	mServer.mGameData.mDisconnected = 1;
+	mServer.mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
+	mServer.mGameData.mMessage = "";
+	mServer.mGameData.mTurn = Turn::Player_1_Turn;
+	mServer.mGameData.gameEnded = false;
 
 	player = 0;
 
@@ -498,16 +498,16 @@ void PlayState::UpdateChatLog()
 		mChatLogText.push_back(t);
 	}
 
-	mGameData.mMessage = mName + ": " + mChatInput += "\n";
+	mServer.mGameData.mMessage = mName + ": " + mChatInput += "\n";
 
 	//Send Chat message to server
-	if (!mServer.SendGameData(mGameData))
+	if (!mServer.SendGameData(mServer.mGameData))
 	{
 		mServer.CloseConnection();
 		return;
 	}
 
-	mGameData.mMessage = "";
+	mServer.mGameData.mMessage = "";
 
 	mChatInput.clear();
 	mText.at(2).setString(mChatInput);
@@ -551,35 +551,35 @@ void PlayState::SetPlayer(int p)
 
 bool PlayState::IsPlayersTurn()
 {
-	return mGameData.mTurn == player;
+	return mServer.mGameData.mTurn == player;
 }
 
 void PlayState::BoardUpdateServer()
 {
 	//Update appearance of the game board to reflect other players turn
-	if (mGameData.mLastMove != std::pair<int, int>{-1, -1})
+	if (mServer.mGameData.mLastMove != std::pair<int, int>{-1, -1})
 	{
 		sf::CircleShape piece = sf::CircleShape(30.f);
-		piece.setPosition(board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second].getPosition());
+		piece.setPosition(board.pieces[mServer.mGameData.mLastMove.first][mServer.mGameData.mLastMove.second].getPosition());
 
 		if (player == 1)
 			piece.setFillColor(sf::Color::Yellow);
 		else
 			piece.setFillColor(sf::Color::Red);
 
-		board.pieces[mGameData.mLastMove.first][mGameData.mLastMove.second] = piece;
-		mGameData.mLastMove = { -1, -1 };
+		board.pieces[mServer.mGameData.mLastMove.first][mServer.mGameData.mLastMove.second] = piece;
+		mServer.mGameData.mLastMove = { -1, -1 };
 	}
 }
 
 void PlayState::ChatUpdateServer()
 {
 	//Update chat log if any message was received from the server
-	if (mGameData.mMessage != "")
+	if (mServer.mGameData.mMessage != "")
 	{
 		if (mChatLog.size() <= 23)
 		{
-			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
+			mChatLog.push_back(mServer.mGameData.mMessage);		//Add entered line into the string
 			sf::Text t;
 			mChatLogText.push_back(t);
 		}
@@ -588,12 +588,12 @@ void PlayState::ChatUpdateServer()
 			mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
 			mChatLogText.erase(mChatLogText.begin() + 0);
 
-			mChatLog.push_back(mGameData.mMessage);		//Add entered line into the string
+			mChatLog.push_back(mServer.mGameData.mMessage);		//Add entered line into the string
 			sf::Text t;
 			mChatLogText.push_back(t);
 		}
 
-		mGameData.mMessage = "";
+		mServer.mGameData.mMessage = "";
 
 		//Outputs all chat log messages
 		float yOffset = 520.f;

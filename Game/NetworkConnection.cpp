@@ -105,6 +105,11 @@ bool NetworkConnection::Matchmake()
 	return result == 0;
 }
 
+bool NetworkConnection::CheckForRematch()
+{
+	return true;
+}
+
 bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 {
 	//Find which player is which (player 1 or 2)
@@ -143,52 +148,52 @@ bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 	return true;
 }
 
-bool NetworkConnection::GetDataUpdate(GameData& mData)
+bool NetworkConnection::GetDataUpdate()
 {
 	GameData newData;		//Assign data from server to local variable to check results before applying to the game
 
 	if (!GetGameData(newData))
 		return false;
 
-	VerifyData(newData, mData);
+	VerifyData(newData);
 
 	return true;
 }
 
-void NetworkConnection::VerifyData(GameData& ServerData, GameData& ClientData)
+void NetworkConnection::VerifyData(GameData& ServerData)
 {
 	if (ServerData.mDisconnected == -1)
 	{
 		OutputDebugStringA("\nA valud value for disconnection has been found...");
-		ClientData.mDisconnected = ServerData.mDisconnected;
+		mGameData.mDisconnected = ServerData.mDisconnected;
 	}
 
 	if (ServerData.gameEnded)
-		ClientData.gameEnded = ServerData.gameEnded;
+		mGameData.gameEnded = ServerData.gameEnded;
 
 	if (ServerData.mTurn > Turn::None && ServerData.mTurn < 3)
 	{
 		OutputDebugStringA("\nA valid value for the turn has been found...");
-		ClientData.mTurn = ServerData.mTurn;
+		mGameData.mTurn = ServerData.mTurn;
 	}
 
 	if ((ServerData.mLastMove.first > 0 && ServerData.mLastMove.first < 7) &&
 		(ServerData.mLastMove.second > 0 && ServerData.mLastMove.second < 8))
 	{
 		OutputDebugStringA("\nA valid value for the last move has been found...");
-		ClientData.mLastMove = ServerData.mLastMove;
+		mGameData.mLastMove = ServerData.mLastMove;
 	}
 
 	if (ServerData.mMessage.size() > 3 && ServerData.mMessage[0] > NULL)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
 	{
 		OutputDebugStringA("\nA valid message has been received from the other client...");
-		ClientData.mMessage = ServerData.mMessage;
+		mGameData.mMessage = ServerData.mMessage;
 	}
 
 	if (ServerData.mWinMessage.size() > 1 && ServerData.mWinMessage[0] > NULL)		//Prevents null messages from being shown
 	{
 		OutputDebugStringA("\nA valid string has been received for the win message...");
-		ClientData.mWinMessage = ServerData.mWinMessage;
+		mGameData.mWinMessage = ServerData.mWinMessage;
 	}
 
 }

@@ -88,6 +88,7 @@ States WinMenu::DetectButtonPress()
 	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
 	{
 		mButtonClickSfx.second.play();
+
 		return States::Play;		//Rematch
 	}
 

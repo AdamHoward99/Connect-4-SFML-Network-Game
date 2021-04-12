@@ -36,7 +36,9 @@ public:
 
 	bool Matchmake();		//Returns true if opponent is found
 	bool GetPlayer(int& playerType);		//Returns true if type is 1 or 2
-	bool GetDataUpdate(GameData& mCurrentData);		//Checks with server for the current situation of the game
+	bool GetDataUpdate();		//Checks with server for the current situation of the game
+
+	bool CheckForRematch();
 
 	//Match up Functions (bool value determining if other clients are on the server)
 	bool GetMatch(bool &foo);
@@ -66,7 +68,9 @@ public:
 	bool SendPacketType(const PACKET& mType);
 
 	//Data Verification Functions
-	void VerifyData(GameData& mServerData, GameData& mClientData);
+	void VerifyData(GameData& mServerData);
+
+	GameData mGameData;
 
 private:
 	WSAData wsaData;

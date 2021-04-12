@@ -41,7 +41,7 @@ public:
 
 	bool IsPlayersTurn();		//Returns if the player can go
 
-	GameData& GetData() { return mGameData; }
+	GameData& GetData() { return mServer.mGameData; }
 
 private:
 	sf::RenderWindow& window;
@@ -71,7 +71,6 @@ private:
 	std::vector<sf::Text> mChatLogText;
 
 	//Turn Variables
-	GameData mGameData;
 	bool turnEnd = false;
 
 	//Board & Piece Variables
