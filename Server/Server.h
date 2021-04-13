@@ -77,6 +77,8 @@ private:
 	std::vector<std::pair<int, int>> mMatchups;
 	std::vector<bool> mThreadActive;
 
+	std::pair<int, int> rematchAccepted = { 0,0 };
+
 	SOCKET listen_socket;
 	addrinfo* info;
 	addrinfo hints;

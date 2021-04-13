@@ -523,16 +523,24 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		{
 			if (index == mMatchups[i].first)
 			{
-				if (!SendRematch(mMatchups[i].second, rematchPossible))
-					return false;
+				rematchAccepted.first = rematchPossible;
+				if (rematchAccepted.second == 1)
+				{
+					if (!SendRematch(mMatchups[i].second, rematchPossible) || !SendRematch(index, rematchPossible))
+						return false;
+				}
 
 				i = mMatchups.size();
 			}
 
 			else if (index == mMatchups[i].second)
 			{
-				if (!SendRematch(mMatchups[i].first, rematchPossible))
-					return false;
+				rematchAccepted.second = rematchPossible;
+				if (rematchAccepted.first == 1)
+				{
+					if (!SendRematch(mMatchups[i].first, rematchPossible) || !SendRematch(index, rematchPossible))
+						return false;
+				}
 
 				i = mMatchups.size();		//break out of loop
 			}
