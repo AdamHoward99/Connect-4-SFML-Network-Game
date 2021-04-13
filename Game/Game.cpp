@@ -157,6 +157,7 @@ void Game::Update()
 		break;
 
 	case States::Start_Menu:
+		mPlayState.SetPlayer(0);
 		mMenus["StartMenu"].get()->Update();
 		break;
 

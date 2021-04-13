@@ -510,6 +510,8 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				{
 					if (!SendRematch(mMatchups[i].second, rematchPossible) || !SendRematch(index, rematchPossible))
 						return false;
+
+					rematchAccepted = { 0,0 };	//Reset for future rematches if any
 				}
 
 				i = mMatchups.size();
@@ -522,6 +524,8 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				{
 					if (!SendRematch(mMatchups[i].first, rematchPossible) || !SendRematch(index, rematchPossible))
 						return false;
+
+					rematchAccepted = { 0,0 };	//Reset for future rematches if any
 				}
 
 				i = mMatchups.size();		//break out of loop

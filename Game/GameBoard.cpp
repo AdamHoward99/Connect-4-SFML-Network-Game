@@ -63,5 +63,9 @@ void GameBoard::ResetBoard()
 {
 	for (int x = 1; x < BOARD_HEIGHT; x++)
 		for (int y = 1; y < BOARD_WIDTH; y++)
+		{
 			pieces[x][y].setFillColor(sf::Color::White);
+			pieces[x][y].setOutlineColor(sf::Color::Color(70, 96, 239));
+			pieces[x][y].setOutlineThickness(5);
+		}
 }

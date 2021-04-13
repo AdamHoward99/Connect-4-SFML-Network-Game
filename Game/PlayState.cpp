@@ -384,11 +384,11 @@ void PlayState::Reset()
 	mServer.mGameData.mTurn = Turn::Player_1_Turn;
 	mServer.mGameData.gameEnded = false;
 
-	player = 0;
-
 	//Reset chat
 	mChatInput.clear();
 	mText.at(2).setString(mChatInput);
+	mChatLog.clear();
+	mChatLogText.clear();
 }
 
 void PlayState::UpdateTurnTimer()
