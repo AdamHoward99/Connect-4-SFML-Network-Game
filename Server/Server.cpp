@@ -183,7 +183,7 @@ bool Server::GetString(int id, std::string& message)
 
 bool Server::GetMatch(int id, bool& value)
 {
-	int returnCheck = send(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
+	int returnCheck = recv(mClientConnections[id], (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -202,30 +202,12 @@ bool Server::SendMatch(int id, bool value)
 	return true;
 }
 
-bool Server::GetPlayerType(int id, int& value)
-{
-	int returnCheck = recv(mClientConnections[id], (char *)& value, sizeof(int), NULL);
-	if (returnCheck == SOCKET_ERROR)
-		return false;
-
-	return true;
-}
-
 bool Server::SendPlayerType(int id, int value)
 {
 	if (!SendPacketType(id, PACKET::mPlayerType))
 		return false;
 
 	int returnCheck = send(mClientConnections[id], (char *)& value, sizeof(int), NULL);
-	if (returnCheck == SOCKET_ERROR)
-		return false;
-
-	return true;
-}
-
-bool Server::GetRematch(int id, int& value)
-{
-	int returnCheck = recv(mClientConnections[id], (char *)&value, sizeof(int), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -478,7 +460,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 	case PACKET::mPlayerType:
 
-		if (!GetPlayerType(index, playerType))
+		if (!GetInt(index, playerType))
 			return false;
 
 		if (playerType == 1 || playerType == 2)
@@ -514,7 +496,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 	case PACKET::mRematch:
 		
-		if (!GetRematch(index, rematchPossible))
+		if (!GetInt(index, rematchPossible))
 			return false;
 
 		printf("\nThe client at %d has sent a value of %d", index, rematchPossible);

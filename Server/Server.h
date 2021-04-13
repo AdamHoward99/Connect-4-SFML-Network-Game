@@ -43,17 +43,15 @@ public:
 	bool SendMatch(int id, bool value);
 	bool GetMatch(int id, bool& value);
 
-	//Player Type Functions
+	//Player Type Function
 	bool SendPlayerType(int id, int value);
-	bool GetPlayerType(int id, int& value);
 
 	//GameData Functions
 	bool SendGameData(int id, GameData value);
 	bool GetGameData(int id, GameData& value);
 
-	//Rematch Functions
+	//Rematch Function
 	bool SendRematch(int id, int value);
-	bool GetRematch(int id, int& value);
 
 	//Serialize and Deserialize Functions
 	void SerializeStruct(GameData* mData, char *data);
