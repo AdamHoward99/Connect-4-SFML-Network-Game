@@ -87,7 +87,7 @@ void Game::Update()
 		if (mPlayState.GetData().gameEnded)
 		{
 			mStates = States::Win_Menu;
-			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetData().mWinMessage);		//Might not need if networkconnection is being added to winmenu anyway
+			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetData().mWinMessage);
 			mPlayState.Reset();
 		}
 		break;
@@ -157,7 +157,7 @@ void Game::Update()
 		break;
 
 	case States::Start_Menu:
-		mPlayState.SetPlayer(0);
+		mPlayState.SetPlayer(0);		//Resets player type back to null until it reconnects to the server
 		mMenus["StartMenu"].get()->Update();
 		break;
 

@@ -89,6 +89,7 @@ States WinMenu::DetectButtonPress()
 	{
 		mousePos = { 0.f, 0.f };		//Prevents multiple presses of the button
 		mButtonClickSfx.second.play();
+
 		if (mServer.CheckForRematch())
 			return States::Play;		//Rematch
 		else
