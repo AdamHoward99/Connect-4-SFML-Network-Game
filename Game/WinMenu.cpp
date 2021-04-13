@@ -87,15 +87,12 @@ States WinMenu::DetectButtonPress()
 {
 	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
 	{
+		mousePos = { 0.f, 0.f };		//Prevents multiple presses of the button
 		mButtonClickSfx.second.play();
 		if (mServer.CheckForRematch())
-		{
 			return States::Play;		//Rematch
-		}
 		else
-		{
 			return States::Win_Menu;
-		}
 	}
 
 	if (mButtons.at(1).getGlobalBounds().contains(mousePos))
