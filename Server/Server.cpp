@@ -406,7 +406,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 					if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))
 					{
-						printf("\nFailed to send bool message");
+						printf("\nFailed to send match message");
 						return false;
 					}
 
@@ -463,9 +463,8 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetInt(index, playerType))
 			return false;
 
-		if (playerType == 1 || playerType == 2)
+		if (playerType == 1 || playerType == 2)		//Already have a valid playertype value
 		{
-			printf("\nThis client already has obtained a valid player type...");
 			SendPlayerType(index, playerType);	
 			return true;
 		}
@@ -498,8 +497,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		
 		if (!GetInt(index, rematchPossible))
 			return false;
-
-		printf("\nThe client at %d has sent a value of %d", index, rematchPossible);
 
 		for (size_t i = 0; i < mMatchups.size(); i++)
 		{

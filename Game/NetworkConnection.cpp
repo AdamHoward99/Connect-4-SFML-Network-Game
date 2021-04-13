@@ -107,13 +107,10 @@ bool NetworkConnection::Matchmake()
 
 bool NetworkConnection::CheckForRematch()
 {
-	//Send variable to server, wait until it receives false
-	//Have timer go off around 30 secs, returning false when this happens
-	//If other client did press rematch, returns true and goes back to play state to start game again
 	int value = 0;
 
-		if (!SendRematch(1))
-			return false;
+	if (!SendRematch(1))
+		return false;
 
 	//Setup timer variables used for while loop
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -130,7 +127,6 @@ bool NetworkConnection::CheckForRematch()
 			return true;
 
 	} while (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f < 8);		//Time out
-
 
 	SendRematch(0);
 	return false;
@@ -189,24 +185,17 @@ bool NetworkConnection::GetDataUpdate()
 void NetworkConnection::VerifyData(GameData& ServerData)
 {
 	if (ServerData.mDisconnected == -1)
-	{
-		OutputDebugStringA("\nA valud value for disconnection has been found...");
 		mGameData.mDisconnected = ServerData.mDisconnected;
-	}
 
 	if (ServerData.gameEnded)
 		mGameData.gameEnded = ServerData.gameEnded;
 
 	if (ServerData.mTurn > Turn::None && ServerData.mTurn < 3)
-	{
-		OutputDebugStringA("\nA valid value for the turn has been found...");
 		mGameData.mTurn = ServerData.mTurn;
-	}
 
 	if ((ServerData.mLastMove.first > 0 && ServerData.mLastMove.first < 7) &&
 		(ServerData.mLastMove.second > 0 && ServerData.mLastMove.second < 8))
 	{
-		OutputDebugStringA("\nA valid value for the last move has been found...");
 		mGameData.mLastMove = ServerData.mLastMove;
 	}
 
@@ -235,8 +224,6 @@ bool NetworkConnection::GetMatch(bool& value)
 		value = false;
 	}
 
-	OutputDebugStringA("\nGetting the match from the server happened...");
-
 	return true;
 }
 
@@ -248,8 +235,6 @@ bool NetworkConnection::SendMatch(const bool& value)
 	int returnCheck = send(connectSocket, (char *)&value, sizeof(bool), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
-
-	OutputDebugStringA("\nSent searching for match to the server");
 
 	return true;
 }
