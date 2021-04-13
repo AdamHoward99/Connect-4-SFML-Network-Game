@@ -95,7 +95,7 @@ private:
 
 	//Chat Input Variables
 	sf::String mChatInput;
-	const unsigned int ChatLogCharacterLimit = 25;
+	const unsigned int ChatLogCharacterLimit = 20;
 
 	//Chat Log Panel Variables
 	sf::Texture mChatPanelTex;

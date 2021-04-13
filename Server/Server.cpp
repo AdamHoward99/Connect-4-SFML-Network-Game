@@ -334,7 +334,7 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	//Chat Variable
 	std::string newMessage;
 	int j = 0;
-	while (data[i] != NULL && data != "" && j < 23)		//23 is max message size (6 for username, 15 for message), prevents stack cookie error
+	while (data[i] != NULL && data != "" && j < 30)		//30 is max message size (6 for username, 20 for message), prevents stack cookie error
 	{
 		newMessage.push_back(data[i]);
 		i++;
@@ -347,7 +347,7 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	//Win Message Variable
 	std::string newWinMessage;
 	j = 0;
-	while (data[i] != NULL && data != "" && j < 15)		//15 max maybe, need to check this
+	while (data[i] != NULL && data != "" && j < 15)
 	{
 		newWinMessage.push_back(data[i]);
 		i++;

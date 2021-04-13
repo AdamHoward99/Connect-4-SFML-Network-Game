@@ -478,7 +478,7 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	//Chat Variable
 	std::string newMessage;
 	int j = 0;
-	while (data[i] != NULL)
+	while (data[i] != NULL && j < 30)
 	{
 		newMessage.push_back(data[i]);
 		i++;
@@ -491,7 +491,7 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	//Win Message Variable
 	std::string newWinMessage;
 	j = 0;
-	while (data[i] != NULL)
+	while (data[i] != NULL && data != "" && j < 15)
 	{
 		newWinMessage.push_back(data[i]);
 		i++;

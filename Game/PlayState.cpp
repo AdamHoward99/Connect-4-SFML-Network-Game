@@ -470,7 +470,7 @@ void PlayState::ChatInput(sf::Event ev)
 
 		else
 		{
-			if (mChatInput.getSize() < ChatLogCharacterLimit)		//Prevents typing over 25 characters
+			if (mChatInput.getSize() < ChatLogCharacterLimit)		//Prevents typing over 20 characters
 			{
 				mChatInput += ev.text.unicode;
 				mText.at(2).setString(mChatInput);
@@ -484,7 +484,7 @@ void PlayState::UpdateChatLog()
 	//Prevents chat log going above chat panel sprite
 	if (mChatLog.size() <= 23)
 	{
-		mChatLog.push_back(mName + ": " + mChatInput += "\n");		//Add entered line into the string
+		mChatLog.push_back(mName + ": " + mChatInput);		//Add entered line into the string
 		sf::Text t;
 		mChatLogText.push_back(t);
 	}
@@ -493,12 +493,12 @@ void PlayState::UpdateChatLog()
 		mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
 		mChatLogText.erase(mChatLogText.begin() + 0);
 
-		mChatLog.push_back(mChatInput += "\n");		//Add entered line into the string
+		mChatLog.push_back(mName + ": " + mChatInput);		//Add entered line into the string
 		sf::Text t;
 		mChatLogText.push_back(t);
 	}
 
-	mServer.mGameData.mMessage = mName + ": " + mChatInput += "\n";
+	mServer.mGameData.mMessage = mName + ": " + mChatInput;
 
 	//Send Chat message to server
 	if (!mServer.SendGameData(mServer.mGameData))
