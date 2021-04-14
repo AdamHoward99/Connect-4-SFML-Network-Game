@@ -139,10 +139,7 @@ void PlayState::Update()
 			mServer.mGameData.gameEnded = true;
 
 			//Set win message based on which player this is
-			if (player == 1)
-				mServer.mGameData.mWinMessage = "Player 1 Wins";
-			else if (player == 2)
-				mServer.mGameData.mWinMessage = "Player 2 Wins";
+			mServer.mGameData.mWinMessage = mName + " Wins";
 		}
 
 		//Function to see if there is a winner
