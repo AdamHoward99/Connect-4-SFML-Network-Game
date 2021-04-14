@@ -384,7 +384,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 	bool matchmakingPossible = false;
 	int playerType;
 	GameData mData;
-	int rematchPossible = 5;
+	int rematchPossible = 1;
 
 	switch (mType)
 	{
@@ -403,6 +403,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				{
 					matchmakingPossible = true;
 					mMatchups.push_back({ index, i });
+					mRematchAccepted.push_back({ 0,0 });
 
 					if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))
 					{
@@ -502,13 +503,13 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		{
 			if (index == mMatchups[i].first)
 			{
-				rematchAccepted.first = rematchPossible;
-				if (rematchAccepted.second == 1)
+				mRematchAccepted[i].first = rematchPossible;
+				if (mRematchAccepted[i].second == 1)
 				{
 					if (!SendRematch(mMatchups[i].second, rematchPossible) || !SendRematch(index, rematchPossible))
 						return false;
 
-					rematchAccepted = { 0,0 };	//Reset for future rematches if any
+					mRematchAccepted[i] = { 0,0 };		//Reset for future rematches if any
 				}
 
 				i = mMatchups.size();
@@ -516,13 +517,13 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 			else if (index == mMatchups[i].second)
 			{
-				rematchAccepted.second = rematchPossible;
-				if (rematchAccepted.first == 1)
+				mRematchAccepted[i].second = rematchPossible;
+				if (mRematchAccepted[i].first == 1)
 				{
 					if (!SendRematch(mMatchups[i].first, rematchPossible) || !SendRematch(index, rematchPossible))
 						return false;
 
-					rematchAccepted = { 0,0 };	//Reset for future rematches if any
+					mRematchAccepted[i] = { 0,0 };	//Reset for future rematches if any
 				}
 
 				i = mMatchups.size();		//break out of loop

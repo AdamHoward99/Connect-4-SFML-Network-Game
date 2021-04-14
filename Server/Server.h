@@ -61,21 +61,19 @@ public:
 	bool MatchupExists(int id);
 	void DeleteMatchup(int id);
 
-	//bool functions, replaced by match functions above
-
 	void GetUsername(int id);
 
-	std::vector<std::string> usernames = {};
+	std::vector<std::string> usernames = {};		//Stores all usernames of clients connecting to the server
 
 private:
 	std::vector<SOCKET> mClientConnections;
 	std::vector<std::thread> mConnectionThreads;
 	int mConnections = 0;
 
-	std::vector<std::pair<int, int>> mMatchups;
-	std::vector<bool> mThreadActive;
+	std::vector<std::pair<int, int>> mMatchups;		//Stores indexes for client matches, deletes when one of the clients disconnects
+	std::vector<bool> mThreadActive;				//Easier way to detect a disconnection without removing the thread, misaligning the vectors
 
-	std::pair<int, int> rematchAccepted = { 0,0 };
+	std::vector<std::pair<int, int>> mRematchAccepted;		//Stores values which change to 1 when that client is requesting a rematch, aligns with matchup vector
 
 	SOCKET listen_socket;
 	addrinfo* info;
