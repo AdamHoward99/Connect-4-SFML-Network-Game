@@ -5,7 +5,7 @@ Game::Game(sf::RenderWindow& w)
 {
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
 	mMenus["ControlMenu"] = std::make_unique<ControlMenu>(w);
-	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w);
+	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w, mConnection);
 	mMenus["EnterNameMenu"] = std::make_unique<EnterNameMenu>(w);
 	mMenus["PauseMenu"] = std::make_unique<PauseMenu>(w);
 	mMenus["WinMenu"] = std::make_unique<WinMenu>(w, mConnection);

@@ -385,6 +385,25 @@ bool NetworkConnection::SendInt(const int& value) const
 	return true;
 }
 
+bool NetworkConnection::GetLeaderboard(char* buffer)
+{
+	char mLeaderboardData[100];
+	int returnCheck = recv(connectSocket, mLeaderboardData, sizeof(mLeaderboardData), NULL);
+
+	if (returnCheck == SOCKET_ERROR)
+		return false;
+
+	return true;
+}
+
+bool NetworkConnection::SendLeaderboard()
+{
+	if (!SendPacketType(PACKET::mLeaderboard))
+		return false;
+
+	return true;
+}
+
 void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 {
 	//Serialize GameData struct

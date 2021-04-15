@@ -64,6 +64,10 @@ public:
 	bool SendRematch(const int value);
 	bool GetRematch(int& value);
 
+	//Leaderboard Functions
+	bool SendLeaderboard();
+	bool GetLeaderboard(char* buffer);
+
 	//Serialize and Deserialize Struct Functions
 	void SerializeStruct(GameData* mDataPacket, char *data);
 	void DeserializeStruct(GameData* mDataPacket, char *data);

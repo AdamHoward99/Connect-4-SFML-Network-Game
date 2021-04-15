@@ -7,4 +7,5 @@ enum PACKET
 	mPlayerType,
 	mData,
 	mRematch,
+	mLeaderboard,
 };

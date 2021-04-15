@@ -226,6 +226,26 @@ bool Server::SendRematch(int id, int value)
 	return true;
 }
 
+bool Server::GetLeaderboard(int index, char* buffer)
+{
+	printf("\nServer is obtaining the leaderboard for client %d...", index);
+
+	//Function to obtain the leaderboard text from the txt file, stored in char []
+
+	return true;
+}
+
+bool Server::SendLeaderboard(int index, char buffer[])
+{
+	printf("\nThe server is sending leaderboard to client %d...", index);
+
+	//Send packet type
+	//return check send
+	//socket error check
+
+	return true;
+}
+
 bool Server::GetGameData(int id, GameData& value)
 {
 	char data[GAMEDATA_SIZE];
@@ -530,6 +550,17 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			}
 
 		}
+		break;
+
+	case PACKET::mLeaderboard:
+
+		char leaderboardData[100];		//Size needs to be changed
+		if (!GetLeaderboard(index, leaderboardData))
+			return false;
+
+		if (!SendLeaderboard(index, leaderboardData))
+			return false;
+
 		break;
 
 	default:

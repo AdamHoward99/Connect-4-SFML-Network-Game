@@ -1,7 +1,7 @@
 #include "LeaderboardMenu.h"
 
-LeaderboardMenu::LeaderboardMenu(sf::RenderWindow& mApp)
-	:window(mApp)
+LeaderboardMenu::LeaderboardMenu(sf::RenderWindow& mApp, NetworkConnection& mCon)
+	:window(mApp), mServer(mCon)
 {
 	buttonAmount = 2;
 	textAmount = 3;
@@ -68,6 +68,10 @@ void LeaderboardMenu::Update()
 	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
 	HoverOnButton();
+
+	if (!mServer.SendLeaderboard())
+		exit(0);
+
 }
 
 void LeaderboardMenu::Draw()

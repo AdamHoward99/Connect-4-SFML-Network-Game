@@ -61,6 +61,9 @@ public:
 	bool MatchupExists(int id);
 	void DeleteMatchup(int id);
 
+	bool GetLeaderboard(int id, char* buffer);
+	bool SendLeaderboard(int id, char buffer[]);
+
 	void GetUsername(int id);
 
 	std::vector<std::string> usernames = {};		//Stores all usernames of clients connecting to the server
