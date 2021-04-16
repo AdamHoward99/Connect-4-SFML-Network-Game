@@ -25,7 +25,7 @@ public:
 
 	virtual sf::String GetName() { return mName; }
 
-	virtual bool GetIfForfeiting() { return leftGame; }
+	virtual bool GetIfForfeiting() { return mLeftGame; }
 
 	virtual void SetWinScreenTitle(std::string);		//Network stuff might be changing this
 
@@ -63,20 +63,20 @@ protected:
 	//Music Variables
 	sf::Music mBackgroundMusic;		//Jazz
 
-	int buttonAmount = 0;
-	int textAmount = 0;
+	int mButtonAmount = 0;
+	int mTextAmount = 0;
 
-	sf::Vector2f mousePos;
+	sf::Vector2f mMousePos;
 
-	const int TitleFontSize = 35;
-	const int BodyFontSize = 25;
+	const int mTitleFontSize = 35;
+	const int mBodyFontSize = 25;
 
-	const float GameHeight = 800.f;
-	const float GameWidth = 900.f;
+	const float mGameHeight = 800.f;
+	const float mGameWidth = 900.f;
 
 	sf::String mName;
 
-	bool leftGame;
+	bool mLeftGame;
 
 private:
 

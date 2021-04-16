@@ -1,13 +1,13 @@
 #include "StartMenu.h"
 
 StartMenu::StartMenu(sf::RenderWindow& w)
-	:window(w)
+	:mWindow(w)
 {
-	buttonAmount = 3;
-	textAmount = 3;
+	mButtonAmount = 3;
+	mTextAmount = 3;
 
-	mButtons = std::vector<sf::Sprite>(buttonAmount);
-	mText = std::vector<sf::Text>(textAmount);
+	mButtons = std::vector<sf::Sprite>(mButtonAmount);
+	mText = std::vector<sf::Text>(mTextAmount);
 
 	Initialize();
 }
@@ -69,7 +69,7 @@ void StartMenu::SetupSprites()
 
 	//Button Sprites
 	float yOffset = 300.f;
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
 		mButtons.at(i).setTexture(mButtonTex);
 		mButtons.at(i).setPosition(350.f, yOffset);
@@ -92,12 +92,12 @@ void StartMenu::SetupSprites()
 void StartMenu::SetupText()
 {
 	float yOffset = 310.f;
-	for (int i = 0; i < textAmount; i++)
+	for (int i = 0; i < mTextAmount; i++)
 	{
 		mText.at(i).setFillColor(sf::Color::White);
 		mText.at(i).setPosition(sf::Vector2f(400.f, yOffset));
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(BodyFontSize);
+		mText.at(i).setCharacterSize(mBodyFontSize);
 		yOffset += 140.f;
 	}
 
@@ -132,42 +132,42 @@ void StartMenu::SetupAudio()
 
 void StartMenu::Update()
 {
-	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
 
 	HoverOnButton();
 }
 
 void StartMenu::Draw()
 {
-	window.draw(mBackgroundSpr);
-	window.draw(mMuteButtonSpr);
-	window.draw(mLogoSpr);
+	mWindow.draw(mBackgroundSpr);
+	mWindow.draw(mMuteButtonSpr);
+	mWindow.draw(mLogoSpr);
 
 	for (auto b : mButtons)
-		window.draw(b);
+		mWindow.draw(b);
 
 	for (auto t : mText)
-		window.draw(t);
+		mWindow.draw(t);
 }
 
 States StartMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Enter_Name;
 	}
-	else if (mButtons.at(1).getGlobalBounds().contains(mousePos))
+	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Control_Menu;
 	}
-	else if (mButtons.at(2).getGlobalBounds().contains(mousePos))
+	else if (mButtons.at(2).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Quit;		//Maybe just close the window instead?
 	}
-	else if (mMuteButtonSpr.getGlobalBounds().contains(mousePos))
+	else if (mMuteButtonSpr.getGlobalBounds().contains(mMousePos))
 	{
 		if (mBackgroundMusic.getVolume() > 0)
 		{
@@ -187,9 +187,9 @@ States StartMenu::DetectButtonPress()
 
 void StartMenu::HoverOnButton()
 {
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
-		if (mButtons.at(i).getGlobalBounds().contains(mousePos))
+		if (mButtons.at(i).getGlobalBounds().contains(mMousePos))
 			mText.at(i).setFillColor(sf::Color::Black);
 		else
 			mText.at(i).setFillColor(sf::Color::White);

@@ -1,13 +1,13 @@
 #include "ControlMenu.h"
 
 ControlMenu::ControlMenu(sf::RenderWindow& mApp)
-	:window(mApp)
+	:mWindow(mApp)
 {
-	buttonAmount = 1;
-	textAmount = 3;
+	mButtonAmount = 1;
+	mTextAmount = 3;
 
-	mButtons = std::vector<sf::Sprite>(buttonAmount);
-	mText = std::vector<sf::Text>(textAmount);
+	mButtons = std::vector<sf::Sprite>(mButtonAmount);
+	mText = std::vector<sf::Text>(mTextAmount);
 
 	Initialize();
 }
@@ -39,7 +39,7 @@ void ControlMenu::SetupSprites()
 
 void ControlMenu::SetupText()
 {
-	for (int i = 0; i < textAmount; i++)
+	for (int i = 0; i < mTextAmount; i++)
 	{
 		mText.at(i).setFillColor(sf::Color::White);
 		mText.at(i).setFont(mFont);
@@ -47,7 +47,7 @@ void ControlMenu::SetupText()
 
 	mText.at(0).setString("Controls");
 	mText.at(0).setPosition(sf::Vector2f(380.f, 100.f));
-	mText.at(0).setCharacterSize(TitleFontSize);
+	mText.at(0).setCharacterSize(mTitleFontSize);
 
 	mText.at(1).setString("Two players alternate turns dropping pieces into unfilled columns,\n"
 		"When a player connects 4 of their pieces in a row, they win.\n"
@@ -62,30 +62,30 @@ void ControlMenu::SetupText()
 
 	mText.at(2).setString("Back");
 	mText.at(2).setPosition(sf::Vector2f(430.f, 610.f));
-	mText.at(2).setCharacterSize(BodyFontSize);
+	mText.at(2).setCharacterSize(mBodyFontSize);
 }
 
 void ControlMenu::Update()
 {
-	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
 
 	HoverOnButton();
 }
 
 void ControlMenu::Draw()
 {
-	window.draw(mBackgroundSpr);
+	mWindow.draw(mBackgroundSpr);
 
 	for (auto b : mButtons)
-		window.draw(b);
+		mWindow.draw(b);
 
 	for (auto t : mText)
-		window.draw(t);
+		mWindow.draw(t);
 }
 
 States ControlMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
@@ -96,9 +96,9 @@ States ControlMenu::DetectButtonPress()
 
 void ControlMenu::HoverOnButton()
 {
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
-		if (mButtons.at(i).getGlobalBounds().contains(mousePos))
+		if (mButtons.at(i).getGlobalBounds().contains(mMousePos))
 			mText.at(2).setFillColor(sf::Color::Black);
 		else
 			mText.at(2).setFillColor(sf::Color::White);

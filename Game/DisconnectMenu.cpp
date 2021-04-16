@@ -1,13 +1,13 @@
 #include "DisconnectMenu.h"
 
 DisconnectMenu::DisconnectMenu(sf::RenderWindow& mApp)
-	:window(mApp)
+	:mWindow(mApp)
 {
-	buttonAmount = 1;
-	textAmount = 2;
+	mButtonAmount = 1;
+	mTextAmount = 2;
 
-	mButtons = std::vector<sf::Sprite>(buttonAmount);
-	mText = std::vector<sf::Text>(textAmount);
+	mButtons = std::vector<sf::Sprite>(mButtonAmount);
+	mText = std::vector<sf::Text>(mTextAmount);
 
 	Initialize();
 }
@@ -57,10 +57,10 @@ void DisconnectMenu::SetupSprites()
 void DisconnectMenu::SetupText()
 {
 	//Panel Description Text
-	for (int i = 0; i < textAmount; i++)
+	for (int i = 0; i < mTextAmount; i++)
 	{
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(BodyFontSize);
+		mText.at(i).setCharacterSize(mBodyFontSize);
 	}
 
 	mText.at(0).setString("Opponent has disconnected");
@@ -75,25 +75,25 @@ void DisconnectMenu::SetupText()
 
 void DisconnectMenu::Update()
 {
-	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
 
 	HoverOnButton();
 }
 
 void DisconnectMenu::Draw()
 {
-	window.draw(mDisconnectPanelSpr);
+	mWindow.draw(mDisconnectPanelSpr);
 	
-	window.draw(mButtons.at(0));
+	mWindow.draw(mButtons.at(0));
 
 	for (auto t : mText)
-		window.draw(t);
+		mWindow.draw(t);
 
 }
 
 States DisconnectMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
@@ -104,7 +104,7 @@ States DisconnectMenu::DetectButtonPress()
 
 void DisconnectMenu::HoverOnButton()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 		mText.at(1).setFillColor(sf::Color::Black);
 	else
 		mText.at(1).setFillColor(sf::Color::White);

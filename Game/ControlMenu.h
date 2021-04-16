@@ -5,7 +5,7 @@ class ControlMenu : public Menu
 {
 public:
 	ControlMenu(sf::RenderWindow& mApp);		//Default Constructor
-	~ControlMenu();		//Default Destructor
+	~ControlMenu();								//Default Destructor
 
 	void Initialize() override;
 	void Update() override;
@@ -14,7 +14,7 @@ public:
 	States DetectButtonPress() override;
 
 private:
-	sf::RenderWindow& window;
+	sf::RenderWindow& mWindow;
 
 	void SetupSprites() override;
 	void SetupText() override;

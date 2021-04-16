@@ -14,13 +14,13 @@ public:
 	States DetectButtonPress() override;
 
 private:
-	sf::RenderWindow& window;
-
-	sf::Texture mDisconnectPanelTex;
-	sf::Sprite mDisconnectPanelSpr;
+	sf::RenderWindow& mWindow;
 
 	void SetupTextures() override;
 	void SetupSprites() override;
 	void SetupText() override;
 	void HoverOnButton() override;
+
+	sf::Texture mDisconnectPanelTex;
+	sf::Sprite mDisconnectPanelSpr;
 };

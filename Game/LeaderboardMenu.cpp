@@ -1,13 +1,13 @@
 #include "LeaderboardMenu.h"
 
 LeaderboardMenu::LeaderboardMenu(sf::RenderWindow& mApp)
-	:window(mApp)
+	:mWindow(mApp)
 {
-	buttonAmount = 2;
-	textAmount = 3;
+	mButtonAmount = 2;
+	mTextAmount = 3;
 
-	mButtons = std::vector<sf::Sprite>(buttonAmount);
-	mText = std::vector<sf::Text>(textAmount);
+	mButtons = std::vector<sf::Sprite>(mButtonAmount);
+	mText = std::vector<sf::Text>(mTextAmount);
 
 	Initialize();
 }
@@ -33,7 +33,7 @@ void LeaderboardMenu::SetupSprites()
 
 	//Button Sprite
 	float xOffset = 100.f;
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
 		mButtons.at(i).setTexture(mButtonTex);
 		mButtons.at(i).setScale(0.75f, 0.75f);
@@ -48,13 +48,13 @@ void LeaderboardMenu::SetupText()
 	mText.at(0).setString("Leaderboard");
 	mText.at(0).setFont(mFont);
 	mText.at(0).setPosition(350.f, 100.f);
-	mText.at(0).setCharacterSize(TitleFontSize);
+	mText.at(0).setCharacterSize(mTitleFontSize);
 
 	float xOffset = 180.f;
-	for (int i = 1; i < textAmount; i++)
+	for (int i = 1; i < mTextAmount; i++)
 	{
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(BodyFontSize);
+		mText.at(i).setCharacterSize(mBodyFontSize);
 		mText.at(i).setPosition(xOffset, 610.f);
 		xOffset += 470.f;
 	}
@@ -65,30 +65,30 @@ void LeaderboardMenu::SetupText()
 
 void LeaderboardMenu::Update()
 {
-	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
 
 	HoverOnButton();
 }
 
 void LeaderboardMenu::Draw()
 {
-	window.draw(mBackgroundSpr);
+	mWindow.draw(mBackgroundSpr);
 
 	for (auto b : mButtons)
-		window.draw(b);
+		mWindow.draw(b);
 
 	for (auto t : mText)
-		window.draw(t);
+		mWindow.draw(t);
 }
 
 States LeaderboardMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Win_Menu;
 	}
-	else if (mButtons.at(1).getGlobalBounds().contains(mousePos))
+	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
@@ -99,8 +99,8 @@ States LeaderboardMenu::DetectButtonPress()
 
 void LeaderboardMenu::HoverOnButton()
 {
-	for (int i = 0; i < buttonAmount; i++)
-		if (mButtons.at(i).getGlobalBounds().contains(mousePos))
+	for (int i = 0; i < mButtonAmount; i++)
+		if (mButtons.at(i).getGlobalBounds().contains(mMousePos))
 			mText.at(i + 1).setFillColor(sf::Color::Black);
 		else
 			mText.at(i + 1).setFillColor(sf::Color::White);

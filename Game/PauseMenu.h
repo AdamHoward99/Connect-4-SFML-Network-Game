@@ -14,7 +14,7 @@ public:
 	States DetectButtonPress() override;
 
 private:
-	sf::RenderWindow& window;
+	sf::RenderWindow& mWindow;
 
 	sf::Texture mPauseTex;
 	sf::Sprite mPauseSpr;

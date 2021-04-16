@@ -16,7 +16,7 @@ public:
 
 	void SetWinScreenTitle(std::string) override;
 private:
-	sf::RenderWindow& window;
+	sf::RenderWindow& mWindow;
 	NetworkConnection& mServer;
 
 	void SetupSprites() override;

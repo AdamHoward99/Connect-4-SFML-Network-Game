@@ -1,13 +1,13 @@
 #include "EnterNameMenu.h"
 
 EnterNameMenu::EnterNameMenu(sf::RenderWindow& mApp)
-	:window(mApp)
+	:mWindow(mApp)
 {
-	buttonAmount = 2;
-	textAmount = 4;
+	mButtonAmount = 2;
+	mTextAmount = 4;
 
-	mButtons = std::vector<sf::Sprite>(buttonAmount);
-	mText = std::vector<sf::Text>(textAmount);
+	mButtons = std::vector<sf::Sprite>(mButtonAmount);
+	mText = std::vector<sf::Text>(mTextAmount);
 
 	Initialize();
 }
@@ -54,7 +54,7 @@ void EnterNameMenu::SetupSprites()
 
 	//Button Sprites
 	float xOffset = 150.f;
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
 		mButtons.at(i).setTexture(mButtonTex);
 		mButtons.at(i).setPosition(xOffset, 600.f);
@@ -72,18 +72,18 @@ void EnterNameMenu::SetupText()
 {
 	//Text for Buttons
 	float xOffset = 200.f;
-	for (int i = 0; i < textAmount; i++)
+	for (int i = 0; i < mTextAmount; i++)
 	{
 		mText.at(i).setFillColor(sf::Color::White);
 		mText.at(i).setPosition(xOffset, 610.f);
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(BodyFontSize);
+		mText.at(i).setCharacterSize(mBodyFontSize);
 		xOffset += 430.f;
 	}
 
 	//Text for title
 	mText.at(2).setPosition(370.f, 150.f);
-	mText.at(2).setCharacterSize(TitleFontSize);
+	mText.at(2).setCharacterSize(mTitleFontSize);
 	mText.at(2).setString("Enter Name");
 
 	//Text for name input
@@ -96,26 +96,26 @@ void EnterNameMenu::SetupText()
 
 void EnterNameMenu::Update()
 {
-	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
 
 	HoverOnButton();
 }
 
 void EnterNameMenu::Draw()
 {
-	window.draw(mBackgroundSpr);
-	window.draw(mTextboxSpr);
+	mWindow.draw(mBackgroundSpr);
+	mWindow.draw(mTextboxSpr);
 	
 	for (auto b : mButtons)
-		window.draw(b);
+		mWindow.draw(b);
 
 	for (auto t : mText)
-		window.draw(t);
+		mWindow.draw(t);
 }
 
 States EnterNameMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 
@@ -127,7 +127,7 @@ States EnterNameMenu::DetectButtonPress()
 		else
 			return States::Enter_Name;
 	}
-	else if (mButtons.at(1).getGlobalBounds().contains(mousePos))
+	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
@@ -138,9 +138,9 @@ States EnterNameMenu::DetectButtonPress()
 
 void EnterNameMenu::HoverOnButton()
 {
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
-		if (mButtons.at(i).getGlobalBounds().contains(mousePos))
+		if (mButtons.at(i).getGlobalBounds().contains(mMousePos))
 			mText.at(i).setFillColor(sf::Color::Black);
 		else
 			mText.at(i).setFillColor(sf::Color::White);

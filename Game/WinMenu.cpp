@@ -1,13 +1,13 @@
 #include "WinMenu.h"
 
 WinMenu::WinMenu(sf::RenderWindow& w, NetworkConnection& mConnect)
-	:window(w), mServer(mConnect)
+	:mWindow(w), mServer(mConnect)
 {
-	buttonAmount = 3;
-	textAmount = 4;
+	mButtonAmount = 3;
+	mTextAmount = 4;
 
-	mButtons = std::vector<sf::Sprite>(buttonAmount);
-	mText = std::vector<sf::Text>(textAmount);
+	mButtons = std::vector<sf::Sprite>(mButtonAmount);
+	mText = std::vector<sf::Text>(mTextAmount);
 
 	Initialize();
 }
@@ -33,7 +33,7 @@ void WinMenu::SetupSprites()
 
 	//Button Sprites
 	float xOffset = 30.f;
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
 		mButtons.at(i).setTexture(mButtonTex);
 		mButtons.at(i).setScale(sf::Vector2f(0.75f, 0.75f));
@@ -45,17 +45,17 @@ void WinMenu::SetupSprites()
 void WinMenu::SetupText()
 {
 	float xOffset = 90.f;
-	for (int i = 1; i < textAmount; i++)
+	for (int i = 1; i < mTextAmount; i++)
 	{
 		mText.at(i).setFillColor(sf::Color::White);
 		mText.at(i).setFont(mFont);
-		mText.at(i).setCharacterSize(BodyFontSize);
+		mText.at(i).setCharacterSize(mBodyFontSize);
 		mText.at(i).setPosition(xOffset, 610.f);
 		xOffset += 295.f;
 	}
 
 	mText.at(0).setPosition(350.f, 200.f);
-	mText.at(0).setCharacterSize(TitleFontSize);
+	mText.at(0).setCharacterSize(mTitleFontSize);
 	mText.at(0).setFillColor(sf::Color::White);
 	mText.at(0).setFont(mFont);
 
@@ -67,27 +67,27 @@ void WinMenu::SetupText()
 
 void WinMenu::Update()
 {
-	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
 
 	HoverOnButton();
 }
 
 void WinMenu::Draw()
 {
-	window.draw(mBackgroundSpr);
+	mWindow.draw(mBackgroundSpr);
 
 	for (auto b : mButtons)
-		window.draw(b);
+		mWindow.draw(b);
 
 	for (auto t : mText)
-		window.draw(t);
+		mWindow.draw(t);
 }
 
 States WinMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 	{
-		mousePos = { 0.f, 0.f };		//Prevents multiple presses of the button
+		mMousePos = { 0.f, 0.f };		//Prevents multiple presses of the button
 		mButtonClickSfx.second.play();
 
 		if (mServer.CheckForRematch())
@@ -96,13 +96,13 @@ States WinMenu::DetectButtonPress()
 			return States::Win_Menu;
 	}
 
-	if (mButtons.at(1).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Leaderboard;
 	}
 
-	if (mButtons.at(2).getGlobalBounds().contains(mousePos))
+	if (mButtons.at(2).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		mServer.CloseConnection();
@@ -114,9 +114,9 @@ States WinMenu::DetectButtonPress()
 
 void WinMenu::HoverOnButton()
 {
-	for (int i = 0; i < buttonAmount; i++)
+	for (int i = 0; i < mButtonAmount; i++)
 	{
-		if (mButtons.at(i).getGlobalBounds().contains(mousePos))
+		if (mButtons.at(i).getGlobalBounds().contains(mMousePos))
 			mText.at(i+1).setFillColor(sf::Color::Black);
 		else
 			mText.at(i+1).setFillColor(sf::Color::White);
