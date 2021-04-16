@@ -110,7 +110,10 @@ bool NetworkConnection::CheckForRematch()
 	int value = 0;
 
 	if (!SendRematch(1))
+	{
+		CloseConnection();
 		return false;
+	}
 
 	//Setup timer variables used for while loop
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -121,7 +124,10 @@ bool NetworkConnection::CheckForRematch()
 		current = std::chrono::steady_clock::now();			//Get current time
 
 		if (!GetRematch(value))
+		{
+			CloseConnection();
 			return false;
+		}
 
 		if (value == 1)
 			return true;

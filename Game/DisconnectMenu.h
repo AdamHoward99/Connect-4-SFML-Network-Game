@@ -21,6 +21,7 @@ private:
 	void SetupText() override;
 	void HoverOnButton() override;
 
+	//Disconnect Notification Panel
 	sf::Texture mDisconnectPanelTex;
 	sf::Sprite mDisconnectPanelSpr;
 };

@@ -87,7 +87,6 @@ void Game::Update()
 		if (mPlayState.GetData().gameEnded)
 		{
 			mStates = States::Win_Menu;
-			mMenus["WinMenu"].get()->SetWinScreenTitle(mPlayState.GetData().mWinMessage);
 			mPlayState.Reset();
 		}
 		break;

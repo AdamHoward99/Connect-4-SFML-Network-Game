@@ -20,7 +20,6 @@ private:
 	void SetupSprites() override;
 	void SetupText() override;
 	void SetupAudio() override;
-
 	void HoverOnButton() override;
 
 	sf::Sprite mMuteButtonSpr;

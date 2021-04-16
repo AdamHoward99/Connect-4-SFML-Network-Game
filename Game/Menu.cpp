@@ -24,16 +24,14 @@ void Menu::SetupTextures()
 {
 	//Background Texture
 	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
-	{
 		assert(!mBackgroundTex.loadFromFile("menuBackground.png"));
-	}
+
 	mBackgroundTex.setSmooth(true);
 
 	//Button Texture
 	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
-	{
 		assert(!mButtonTex.loadFromFile("MenuButton.png"));
-	}
+
 	mButtonTex.setSmooth(true);
 
 	//Logo Texture
@@ -47,9 +45,8 @@ void Menu::SetupFonts()
 {
 	//Font for button text
 	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
-	{
 		assert(!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
-	}
+
 }
 
 void Menu::SetupAudio()
@@ -66,7 +63,7 @@ void Menu::SetupAudio()
 
 States Menu::DetectButtonPress()
 {
-	return States::Start_Menu;
+	return States::Start_Menu;		//Default Value
 }
 
 void Menu::KeyboardInput(sf::Event ev)
@@ -74,7 +71,12 @@ void Menu::KeyboardInput(sf::Event ev)
 
 }
 
-void Menu::SetWinScreenTitle(std::string)
+sf::String Menu::GetName()
 {
+	return mName;
+}
 
+bool Menu::GetIfForfeiting()
+{
+	return mLeftGame;
 }

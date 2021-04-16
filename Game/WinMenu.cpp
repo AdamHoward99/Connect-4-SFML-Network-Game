@@ -3,6 +3,7 @@
 WinMenu::WinMenu(sf::RenderWindow& w, NetworkConnection& mConnect)
 	:mWindow(w), mServer(mConnect)
 {
+	//Set amount of buttons and text on menu
 	mButtonAmount = 3;
 	mTextAmount = 4;
 
@@ -36,7 +37,7 @@ void WinMenu::SetupSprites()
 	for (int i = 0; i < mButtonAmount; i++)
 	{
 		mButtons.at(i).setTexture(mButtonTex);
-		mButtons.at(i).setScale(sf::Vector2f(0.75f, 0.75f));
+		mButtons.at(i).setScale(0.75f, 0.75f);
 		mButtons.at(i).setPosition(xOffset, 600.f);
 		xOffset += 300.f;
 	}
@@ -54,6 +55,7 @@ void WinMenu::SetupText()
 		xOffset += 295.f;
 	}
 
+	//Win message, obtained from server, says name of player who won
 	mText.at(0).setPosition(350.f, 200.f);
 	mText.at(0).setCharacterSize(mTitleFontSize);
 	mText.at(0).setFillColor(sf::Color::White);
@@ -68,7 +70,7 @@ void WinMenu::SetupText()
 void WinMenu::Update()
 {
 	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-
+	mText.at(0).setString(mServer.mGameData.mWinMessage);		//Gets win message based on who won the game
 	HoverOnButton();
 }
 
@@ -90,19 +92,20 @@ States WinMenu::DetectButtonPress()
 		mMousePos = { 0.f, 0.f };		//Prevents multiple presses of the button
 		mButtonClickSfx.second.play();
 
-		if (mServer.CheckForRematch())
-			return States::Play;		//Rematch
+		if (mServer.CheckForRematch())	//Checks if opponent has also opted for a rematch
+			return States::Play;
+
 		else
 			return States::Win_Menu;
 	}
 
-	if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
+	if (mButtons.at(1).getGlobalBounds().contains(mMousePos))	//Leaderboard button
 	{
 		mButtonClickSfx.second.play();
 		return States::Leaderboard;
 	}
 
-	if (mButtons.at(2).getGlobalBounds().contains(mMousePos))
+	if (mButtons.at(2).getGlobalBounds().contains(mMousePos))	//Back to main menu button
 	{
 		mButtonClickSfx.second.play();
 		mServer.CloseConnection();
@@ -121,9 +124,4 @@ void WinMenu::HoverOnButton()
 		else
 			mText.at(i+1).setFillColor(sf::Color::White);
 	}
-}
-
-void WinMenu::SetWinScreenTitle(std::string str)
-{
-	mText.at(0).setString(str);
 }

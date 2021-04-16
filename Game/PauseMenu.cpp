@@ -3,6 +3,7 @@
 PauseMenu::PauseMenu(sf::RenderWindow& w)
 	:mWindow(w)
 {
+	//Set amount of buttons and text on the menu
 	mButtonAmount = 2;
 	mTextAmount = 3;
 
@@ -30,22 +31,20 @@ void PauseMenu::SetupTextures()
 {
 	//Background Texture
 	if (!mPauseTex.loadFromFile("bin/Textures/PauseMenuUI.png"))
-	{
 		assert(!mPauseTex.loadFromFile("bin/Textures/PauseMenuUI.png"));
-	}
+	
 	mPauseTex.setSmooth(true);
 
 	//Button Texture
 	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
-	{
 		assert(!mButtonTex.loadFromFile("MenuButton.png"));
-	}
+
 	mButtonTex.setSmooth(true);
 }
 
 void PauseMenu::SetupSprites()
 {
-	//Background Sprite		//Change into a panel instead
+	//Panel Sprite
 	mPauseSpr.setTexture(mPauseTex);
 	mPauseSpr.setPosition(300.f, 200.f);
 
@@ -84,7 +83,6 @@ void PauseMenu::SetupText()
 void PauseMenu::Update()
 {
 	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-
 	HoverOnButton();
 }
 
@@ -101,12 +99,12 @@ void PauseMenu::Draw()
 
 States PauseMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))		//Resume button
 	{
 		mButtonClickSfx.second.play();
 		return States::Play;
 	}
-	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
+	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))	//Forfeit button
 	{
 		mButtonClickSfx.second.play();
 		mLeftGame = true;

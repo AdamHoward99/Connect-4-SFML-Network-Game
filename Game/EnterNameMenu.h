@@ -19,13 +19,12 @@ private:
 	void SetupTextures() override;
 	void SetupSprites() override;
 	void SetupText() override;
-
 	void HoverOnButton() override;
-
 	void KeyboardInput(sf::Event ev) override;
 
+	//Enter Name TextBox
 	sf::Texture mTextBoxTex;
-	sf::Sprite mTextboxSpr;
+	sf::Sprite mTextBoxSpr;
 
 	sf::String mNameString;
 	const unsigned int mNameSize = 6;

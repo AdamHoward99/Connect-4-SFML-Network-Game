@@ -3,6 +3,7 @@
 ControlMenu::ControlMenu(sf::RenderWindow& mApp)
 	:mWindow(mApp)
 {
+	//Set amount of buttons and text on menu
 	mButtonAmount = 1;
 	mTextAmount = 3;
 
@@ -33,7 +34,7 @@ void ControlMenu::SetupSprites()
 
 	//Button Sprite
 	mButtons.at(0).setTexture(mButtonTex);
-	mButtons.at(0).setScale(sf::Vector2f(0.75f, 0.75f));
+	mButtons.at(0).setScale(0.75f, 0.75f);
 	mButtons.at(0).setPosition(350.f, 600.f);
 }
 
@@ -46,7 +47,7 @@ void ControlMenu::SetupText()
 	}
 
 	mText.at(0).setString("Controls");
-	mText.at(0).setPosition(sf::Vector2f(380.f, 100.f));
+	mText.at(0).setPosition(380.f, 100.f);
 	mText.at(0).setCharacterSize(mTitleFontSize);
 
 	mText.at(1).setString("Two players alternate turns dropping pieces into unfilled columns,\n"
@@ -58,17 +59,16 @@ void ControlMenu::SetupText()
 		"Press 'P' to pause the game.");
 
 	mText.at(1).setCharacterSize(20);
-	mText.at(1).setPosition(sf::Vector2f(150.f, 200.f));
+	mText.at(1).setPosition(150.f, 200.f);
 
 	mText.at(2).setString("Back");
-	mText.at(2).setPosition(sf::Vector2f(430.f, 610.f));
+	mText.at(2).setPosition(430.f, 610.f);
 	mText.at(2).setCharacterSize(mBodyFontSize);
 }
 
 void ControlMenu::Update()
 {
 	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-
 	HoverOnButton();
 }
 
@@ -85,7 +85,7 @@ void ControlMenu::Draw()
 
 States ControlMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))		//Back Button
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
@@ -96,11 +96,10 @@ States ControlMenu::DetectButtonPress()
 
 void ControlMenu::HoverOnButton()
 {
-	for (int i = 0; i < mButtonAmount; i++)
-	{
-		if (mButtons.at(i).getGlobalBounds().contains(mMousePos))
-			mText.at(2).setFillColor(sf::Color::Black);
-		else
-			mText.at(2).setFillColor(sf::Color::White);
-	}
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))		//Change text of Back button when hovering over
+		mText.at(2).setFillColor(sf::Color::Black);
+
+	else
+		mText.at(2).setFillColor(sf::Color::White);
+
 }

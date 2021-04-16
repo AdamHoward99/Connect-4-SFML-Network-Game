@@ -3,6 +3,7 @@
 LeaderboardMenu::LeaderboardMenu(sf::RenderWindow& mApp)
 	:mWindow(mApp)
 {
+	//Set amount of buttons and text on the menu
 	mButtonAmount = 2;
 	mTextAmount = 3;
 
@@ -66,7 +67,6 @@ void LeaderboardMenu::SetupText()
 void LeaderboardMenu::Update()
 {
 	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-
 	HoverOnButton();
 }
 
@@ -83,12 +83,12 @@ void LeaderboardMenu::Draw()
 
 States LeaderboardMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))		//Back Button
 	{
 		mButtonClickSfx.second.play();
 		return States::Win_Menu;
 	}
-	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
+	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))	//Main Menu Button
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;

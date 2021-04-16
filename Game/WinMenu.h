@@ -14,13 +14,11 @@ public:
 
 	States DetectButtonPress() override;
 
-	void SetWinScreenTitle(std::string) override;
 private:
 	sf::RenderWindow& mWindow;
 	NetworkConnection& mServer;
 
 	void SetupSprites() override;
 	void SetupText() override;
-
 	void HoverOnButton() override;
 };

@@ -3,6 +3,7 @@
 DisconnectMenu::DisconnectMenu(sf::RenderWindow& mApp)
 	:mWindow(mApp)
 {
+	//Set amount of buttons and text on menu
 	mButtonAmount = 1;
 	mTextAmount = 2;
 
@@ -76,15 +77,15 @@ void DisconnectMenu::SetupText()
 void DisconnectMenu::Update()
 {
 	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-
 	HoverOnButton();
 }
 
 void DisconnectMenu::Draw()
 {
 	mWindow.draw(mDisconnectPanelSpr);
-	
-	mWindow.draw(mButtons.at(0));
+
+	for (auto b : mButtons)
+		mWindow.draw(b);
 
 	for (auto t : mText)
 		mWindow.draw(t);
@@ -93,7 +94,7 @@ void DisconnectMenu::Draw()
 
 States DisconnectMenu::DetectButtonPress()
 {
-	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
+	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))		//Back to Menu button
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
@@ -106,6 +107,7 @@ void DisconnectMenu::HoverOnButton()
 {
 	if (mButtons.at(0).getGlobalBounds().contains(mMousePos))
 		mText.at(1).setFillColor(sf::Color::Black);
+
 	else
 		mText.at(1).setFillColor(sf::Color::White);
 

@@ -3,6 +3,7 @@
 EnterNameMenu::EnterNameMenu(sf::RenderWindow& mApp)
 	:mWindow(mApp)
 {
+	//Set amount of buttons and text on menu
 	mButtonAmount = 2;
 	mTextAmount = 4;
 
@@ -63,9 +64,9 @@ void EnterNameMenu::SetupSprites()
 	}
 
 	//Textbox Sprite
-	mTextboxSpr.setTexture(mTextBoxTex);
-	mTextboxSpr.setPosition(320.f, 360.f);
-	mTextboxSpr.setScale(0.5f, 0.15f);
+	mTextBoxSpr.setTexture(mTextBoxTex);
+	mTextBoxSpr.setPosition(320.f, 360.f);
+	mTextBoxSpr.setScale(0.5f, 0.15f);
 }
 
 void EnterNameMenu::SetupText()
@@ -97,14 +98,13 @@ void EnterNameMenu::SetupText()
 void EnterNameMenu::Update()
 {
 	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
-
 	HoverOnButton();
 }
 
 void EnterNameMenu::Draw()
 {
 	mWindow.draw(mBackgroundSpr);
-	mWindow.draw(mTextboxSpr);
+	mWindow.draw(mTextBoxSpr);
 	
 	for (auto b : mButtons)
 		mWindow.draw(b);
@@ -124,16 +124,15 @@ States EnterNameMenu::DetectButtonPress()
 			mName = mNameString;
 			return States::Matchmaking;
 		}
-		else
-			return States::Enter_Name;
+
 	}
 	else if (mButtons.at(1).getGlobalBounds().contains(mMousePos))
 	{
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
 	}
-	else
-		return States::Enter_Name;
+		
+	return States::Enter_Name;
 }
 
 void EnterNameMenu::HoverOnButton()
@@ -149,7 +148,7 @@ void EnterNameMenu::HoverOnButton()
 
 void EnterNameMenu::KeyboardInput(sf::Event ev)
 {
-	if (ev.text.unicode == BACKSPACE_KEY)
+	if (ev.text.unicode == BACKSPACE_KEY)		//Remove from the string
 	{
 		if (mNameString.getSize() > 0)
 		{
@@ -158,7 +157,7 @@ void EnterNameMenu::KeyboardInput(sf::Event ev)
 		}
 	}
 	
-	else if (mNameString.getSize() < mNameSize && ev.text.unicode != SPACE_KEY)
+	else if (mNameString.getSize() < mNameSize && ev.text.unicode != SPACE_KEY)		//Prevents spaces in player names
 	{
 		mNameString += ev.text.unicode;
 		mText.at(3).setString(mNameString);

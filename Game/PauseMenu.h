@@ -16,12 +16,12 @@ public:
 private:
 	sf::RenderWindow& mWindow;
 
+	//Pause Menu, overlayed on PlayState
 	sf::Texture mPauseTex;
 	sf::Sprite mPauseSpr;
 
 	void SetupTextures() override;
 	void SetupSprites() override;
 	void SetupText() override;
-
 	void HoverOnButton() override;
 };

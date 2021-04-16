@@ -18,5 +18,4 @@ private:
 	void SetupSprites() override;
 	void SetupText() override;
 	void HoverOnButton() override;
-
 };
