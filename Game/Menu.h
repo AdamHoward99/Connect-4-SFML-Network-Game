@@ -5,6 +5,10 @@
 #include "States.h"
 #include <cassert>
 
+#define BACKSPACE_KEY 8
+#define ENTER_KEY 13
+#define SPACE_KEY 32
+
 class Menu
 {
 public:

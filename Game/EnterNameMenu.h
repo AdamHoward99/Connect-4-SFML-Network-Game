@@ -1,8 +1,5 @@
 #pragma once
 
-#define BACKSPACE_KEY 8
-#define SPACE_KEY 32
-
 #include "Menu.h"
 #include <cassert>
 

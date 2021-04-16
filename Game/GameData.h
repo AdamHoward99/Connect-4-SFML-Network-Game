@@ -3,6 +3,8 @@
 #include <string>
 #include "Turn.h"
 
+#define GAMEDATA_SIZE 60
+
 struct GameData			//Gets information for the game from the server in a single receive function
 {
 	//turn, board update, chat

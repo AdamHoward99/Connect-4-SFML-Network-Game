@@ -1,7 +1,6 @@
 //Prevents Winsock 1.1. from being included
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
-#define	GAMEDATA_SIZE 60
 #endif
 
 #include <Windows.h>

@@ -6,11 +6,8 @@
 #include "NetworkConnection.h"
 #include "GameData.h"
 #include "States.h"
+#include "Menu.h"
 #include <chrono>
-
-#define BACKSPACE_KEY 8
-#define ENTER_KEY 13
-#define SPACE_KEY 32
 
 class PlayState
 {
