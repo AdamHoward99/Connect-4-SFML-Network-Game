@@ -438,7 +438,7 @@ void PlayState::ButtonPress()
 		}
 	}
 	else
-		if(!mSprites.at(1).getGlobalBounds().contains(mousePos) && IsPlayersTurn())
+		if(!mSprites.at(1).getGlobalBounds().contains(mousePos) && IsPlayersTurn() && !turnEnd)
 			PlacePiece();
 }
 

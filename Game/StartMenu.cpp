@@ -125,7 +125,7 @@ void StartMenu::SetupAudio()
 	if (!mBackgroundMusic.openFromFile("bin/Music/BackgroundMusic.ogg"))
 		assert(!mBackgroundMusic.openFromFile("bin/Music/BackgroundMusic.ogg"));
 
-	mBackgroundMusic.setVolume(50.f);
+	mBackgroundMusic.setVolume(40.f);
 	mBackgroundMusic.play();
 	mBackgroundMusic.setLoop(true);
 }

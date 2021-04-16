@@ -241,14 +241,14 @@ bool Server::GetGameData(int id, GameData& value)
 	return true;
 }
 
-bool Server::SendGameData(int id, GameData value)
+bool Server::SendGameData(int id, GameData* value)
 {
 	if (!SendPacketType(id, PACKET::mData))
 		return false;
 
 	char data[GAMEDATA_SIZE];
 
-	SerializeStruct(&value, data);
+	SerializeStruct(value, data);
 
 	int returnCheck = send(mClientConnections[id], (char *) &data, GAMEDATA_SIZE, NULL);
 
@@ -441,7 +441,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		{
 			if (index == mMatchups[i].first)
 			{
-				if (!SendGameData(mMatchups[i].second, mData))
+				if (!SendGameData(mMatchups[i].second, &mData))
 					return false;
 
 				i = mMatchups.size();
@@ -449,7 +449,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 			else if (index == mMatchups[i].second)
 			{
-				if (!SendGameData(mMatchups[i].first, mData))
+				if (!SendGameData(mMatchups[i].first, &mData))
 					return false;
 			
 				i = mMatchups.size();
@@ -582,7 +582,7 @@ void Server::DeleteMatchup(int index)
 	{
 		if (index == mMatchups[i].first)
 		{
-			SendGameData(mMatchups[i].second, closingData);
+			SendGameData(mMatchups[i].second, &closingData);
 			mThreadActive.at(mMatchups[i].second) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
@@ -590,7 +590,7 @@ void Server::DeleteMatchup(int index)
 
 		else if (index == mMatchups[i].second)
 		{
-			SendGameData(mMatchups[i].first, closingData);
+			SendGameData(mMatchups[i].first, &closingData);
 			mThreadActive.at(mMatchups[i].first) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;

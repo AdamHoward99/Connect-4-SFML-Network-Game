@@ -47,7 +47,7 @@ public:
 	bool SendPlayerType(int id, int value);
 
 	//GameData Functions
-	bool SendGameData(int id, GameData value);
+	bool SendGameData(int id, GameData* value);
 	bool GetGameData(int id, GameData& value);
 
 	//Rematch Function

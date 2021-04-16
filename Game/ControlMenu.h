@@ -14,7 +14,6 @@ public:
 
 	States DetectButtonPress() override;
 
-
 private:
 	sf::RenderWindow& window;
 
