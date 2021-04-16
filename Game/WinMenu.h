@@ -1,7 +1,6 @@
 #pragma once
 #include "Menu.h"
 #include "NetworkConnection.h"
-#include <cassert>
 
 class WinMenu : public Menu
 {

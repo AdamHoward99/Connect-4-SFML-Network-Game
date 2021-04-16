@@ -1,10 +1,5 @@
 #pragma once
-
-#include "SFML/Graphics.hpp"
-#include "SFML/Audio.hpp"
-#include "States.h"
 #include "Menu.h"
-#include <cassert>
 
 class StartMenu : public Menu
 {

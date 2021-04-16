@@ -1,6 +1,5 @@
 #pragma once
 #include "Menu.h"
-#include <cassert>
 
 class ControlMenu : public Menu
 {

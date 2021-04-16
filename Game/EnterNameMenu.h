@@ -1,7 +1,5 @@
 #pragma once
-
 #include "Menu.h"
-#include <cassert>
 
 class EnterNameMenu : public Menu
 {
