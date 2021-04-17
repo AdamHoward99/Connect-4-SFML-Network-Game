@@ -176,57 +176,52 @@ void PlayState::UpdateMousePosition()
 	//Updating mouse position
 	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-	//Todo: could make this look better
+	//Lock piece position to specific positions
 	if (mousePos.x <= 100.f)
+	{
 		xColumnPosition = 50.f;
+		mPieceColumn = 1;
+	}
 	else if (mousePos.x <= 200.f)
+	{
 		xColumnPosition = 150.f;
+		mPieceColumn = 2;
+	}
 	else if (mousePos.x <= 300.f)
+	{
 		xColumnPosition = 250.f;
+		mPieceColumn = 3;
+	}
 	else if (mousePos.x <= 400.f)
+	{
 		xColumnPosition = 350.f;
+		mPieceColumn = 4;
+	}
 	else if (mousePos.x <= 500.f)
+	{
 		xColumnPosition = 450.f;
+		mPieceColumn = 5;
+	}
 	else if (mousePos.x <= 600.f)
+	{
 		xColumnPosition = 550.f;
-	else if (mousePos.x <= 700.f)
-		xColumnPosition = 650.f;
+		mPieceColumn = 6;
+	}
 	else
+	{
 		xColumnPosition = 650.f;
+		mPieceColumn = 7;
+	}
 
 	pieceToAdd.setPosition(xColumnPosition, 20.f);
 }
 
-void PlayState::PlacePiece()
+void PlayState::AddPiece()
 {
-	int col;
-	if (xColumnPosition == 50.f)
-		col = 1;
-	else if (xColumnPosition == 150.f)
-		col = 2;
-	else if (xColumnPosition == 250.f)
-		col = 3;
-	else if (xColumnPosition == 350.f)
-		col = 4;
-	else if (xColumnPosition == 450.f)
-		col = 5;
-	else if (xColumnPosition == 550.f)
-		col = 6;
-	else
-		col = 7;
-
-	for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
+	if (board.PlacePiece(mPieceColumn, pieceToAdd, lastMove))		//Returns true when successfully added a piece into the board
 	{
-		if (board.pieces[i][col].getFillColor() == sf::Color::White)		//Finds an empty piece
-		{
-			//Add stuff for when the column is full
-			pieceToAdd.setPosition(board.pieces[i][col].getPosition());
-			board.pieces[i][col] = pieceToAdd;
-			turnEnd = true;
-			lastMove = sf::Vector2i(i, col);
-			mPieceSfx.second.play();
-			break;
-		}
+		turnEnd = true;
+		mPieceSfx.second.play();		//Piece drop sfx
 	}
 }
 
@@ -325,7 +320,7 @@ void PlayState::ButtonPress()
 	}
 	else
 		if(!mSprites.at(1).getGlobalBounds().contains(mousePos) && IsPlayersTurn() && !turnEnd)
-			PlacePiece();
+			AddPiece();
 }
 
 void PlayState::ChatInput(sf::Event ev)

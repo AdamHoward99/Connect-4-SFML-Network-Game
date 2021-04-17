@@ -210,3 +210,20 @@ bool GameBoard::DiagonalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i
 
 	return false;
 }
+
+bool GameBoard::PlacePiece(const int mColumn, sf::CircleShape mPiece, sf::Vector2i& mLastMove)
+{
+	for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
+	{
+		if (pieces[i][mColumn].getFillColor() == sf::Color::White)		//Finds an empty piece
+		{
+			//Add stuff for when the column is full
+			mPiece.setPosition(pieces[i][mColumn].getPosition());
+			pieces[i][mColumn] = mPiece;
+			mLastMove = sf::Vector2i(i, mColumn);
+			return true;							//Did put a piece in the board
+		}
+	}
+
+	return false;		//Didn't manage to put a piece in the board
+}

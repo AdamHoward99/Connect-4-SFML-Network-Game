@@ -44,7 +44,7 @@ private:
 	sf::RenderWindow& window;
 	NetworkConnection& mServer;
 
-	void PlacePiece();
+	void AddPiece();
 	void UpdateMousePosition();
 
 	//Setup functions
@@ -100,6 +100,7 @@ private:
 	sf::String mName;
 
 	int player = 0;
+	int mPieceColumn = 0;
 
 	//Text Variables
 	std::vector<sf::Text> mText;
