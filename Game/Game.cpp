@@ -1,14 +1,15 @@
 #include "Game.h"
 
-Game::Game(sf::RenderWindow& w)
-	:window(w), mPlayState(w, mConnection)
+Game::Game(sf::RenderWindow& w, NetworkConnection& mConnect)
+	:window(w), mConnection(mConnect), mPlayState(w, mConnect)
 {
+	//Menus Initialization
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
 	mMenus["ControlMenu"] = std::make_unique<ControlMenu>(w);
 	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w);
 	mMenus["EnterNameMenu"] = std::make_unique<EnterNameMenu>(w);
 	mMenus["PauseMenu"] = std::make_unique<PauseMenu>(w);
-	mMenus["WinMenu"] = std::make_unique<WinMenu>(w, mConnection);
+	mMenus["WinMenu"] = std::make_unique<WinMenu>(w, mConnect);
 	mMenus["DisconnectMenu"] = std::make_unique<DisconnectMenu>(w);
 
 	//Setup elements of game
@@ -58,13 +59,9 @@ void Game::InitializeMatchmakingScreen()
 	//Background Sprite
 	mBackgroundSpr.setTexture(mBackgroundTex);
 
-	//Font
-	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
-		assert(!mFont.loadFromFile("bin/Fonts/Komica_display.ttf"));
-
 	//Loading Text
 	mLoadingText.setFillColor(sf::Color::White);
-	mLoadingText.setFont(mFont);
+	mLoadingText.setFont(mTextFont);
 	mLoadingText.setCharacterSize(25);
 	mLoadingText.setPosition(320.f, 300.f);
 	mLoadingText.setString("Finding an Opponent...");
@@ -183,19 +180,24 @@ void Game::Update()
 
 }
 
+void Game::StartPauseTimer()
+{
+	mPauseTimer.first = std::chrono::steady_clock::now();
+}
+
 void Game::UpdatePauseTimer()
 {
 	mPauseTimer.second = std::chrono::steady_clock::now();
 	auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mPauseTimer.second - mPauseTimer.first).count() / 1000000.f;
 
-	mPauseTimerTxt.setString(std::to_string(static_cast<int>(pauseTimerAllowance - elapsedTime)));		//Shows player how long they have left on the pause menu
+	mPauseTimerTxt.setString(std::to_string(static_cast<int>(mPauseTimerAllowance - elapsedTime)));		//Shows player how long they have left on the pause menu
 
-	if (elapsedTime > pauseTimerAllowance)
+	if (elapsedTime > mPauseTimerAllowance)
 	{
 		mStates = States::Play;
 		mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
-		if(pauseTimerAllowance > 10)	
-			pauseTimerAllowance *= 0.5f;
+		if(mPauseTimerAllowance > 10)
+			mPauseTimerAllowance *= 0.5f;
 	}
 }
 

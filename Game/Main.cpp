@@ -10,19 +10,13 @@
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), "Connect 4", sf::Style::Titlebar | sf::Style::Close);
-
-	//NetworkConnection connect;
-
-	//connect.CreateSocket();
-	//connect.ConnectToServer();
-	//connect.SendData();
-	//connect.CloseConnection();
-
+	NetworkConnection mConnection;		//Connection to the server
+	
 	//FPS
 	window.setFramerateLimit(60);
 
 	//Instantiate things here
-	Game mGame(window);
+	Game mGame(window, mConnection);
 
 	while (window.isOpen())
 	{
@@ -34,7 +28,7 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				mGame.mConnection.CloseConnection();
+				mConnection.CloseConnection();
 				window.close();
 			}
 			else if (event.type == sf::Event::MouseButtonReleased)
@@ -46,7 +40,6 @@ int main()
 
 		window.clear();
 
-		//Draw stuff to the screen here, after .clear
 		mGame.Draw();
 
 		window.display();
