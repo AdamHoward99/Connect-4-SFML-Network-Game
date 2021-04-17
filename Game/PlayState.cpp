@@ -284,22 +284,10 @@ void PlayState::UpdateTurnTimer()
 
 void PlayState::AutomaticPiecePlacement()
 {
-	for (int y = 1; y < BOARD_WIDTH; y++)
+	if (board.AutomaticPiecePlace(pieceToAdd, lastMove))		//Piece was able to be added to the board
 	{
-		for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
-		{
-			if (board.pieces[i][y].getFillColor() == sf::Color::White)		//Finds an empty piece
-			{
-				//Add stuff for when the column is full
-				pieceToAdd.setPosition(board.pieces[i][y].getPosition());
-				board.pieces[i][y] = pieceToAdd;
-				turnEnd = true;
-				lastMove = sf::Vector2i(i, y);
-				mPieceSfx.second.play();
-				y = BOARD_WIDTH;
-				break;
-			}
-		}
+		turnEnd = true;
+		mPieceSfx.second.play();		//Piece drop sfx
 	}
 }
 

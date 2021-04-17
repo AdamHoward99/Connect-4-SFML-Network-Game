@@ -23,6 +23,7 @@ public:
 	bool DiagonalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i mLastMove);			//Checks if 4 pieces are in a row diagonally
 
 	bool PlacePiece(const int mPieceColumn, sf::CircleShape mPieceToAdd, sf::Vector2i& mLastMove);	//Places piece in the board if there is a space available
+	bool AutomaticPiecePlace(sf::CircleShape mPieceToAdd, sf::Vector2i& mLastMove);					//Places piece in the board when turn timer ends
 
 	sf::CircleShape pieces[BOARD_HEIGHT][BOARD_WIDTH];		//make function to get this instead of it being public
 private:

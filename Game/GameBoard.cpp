@@ -227,3 +227,23 @@ bool GameBoard::PlacePiece(const int mColumn, sf::CircleShape mPiece, sf::Vector
 
 	return false;		//Didn't manage to put a piece in the board
 }
+
+bool GameBoard::AutomaticPiecePlace(sf::CircleShape mPiece, sf::Vector2i& mLastMove)
+{
+	for (int y = 1; y < BOARD_WIDTH; y++)
+	{
+		for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
+		{
+			if (pieces[i][y].getFillColor() == sf::Color::White)		//Finds an empty piece
+			{
+				//Add stuff for when the column is full
+				mPiece.setPosition(pieces[i][y].getPosition());
+				pieces[i][y] = mPiece;
+				mLastMove = sf::Vector2i(i, y);
+				return true;		//Did manage to add a piece to the board
+			}
+		}
+	}
+
+	return false;		//Didn't manage to add a piece to the board
+}
