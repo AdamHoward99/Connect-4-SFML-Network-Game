@@ -456,3 +456,8 @@ void PlayState::ChatUpdateServer()
 		}
 	}
 }
+
+bool PlayState::PlayerDisconnected()
+{
+	return GetData().mDisconnected == -1;
+}

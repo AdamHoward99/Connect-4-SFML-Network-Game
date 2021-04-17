@@ -40,6 +40,8 @@ public:
 
 	GameData& GetData() { return mServer.mGameData; }
 
+	bool PlayerDisconnected();		//Returns true if mDisconnected value == -1, representing opponent disconnect
+
 private:
 	sf::RenderWindow& window;
 	NetworkConnection& mServer;

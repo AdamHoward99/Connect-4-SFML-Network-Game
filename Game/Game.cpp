@@ -75,21 +75,20 @@ void Game::Update()
 	case States::Play:
 		mPlayState.Update();
 
-		if (mPlayState.GetData().mDisconnected == -1)		//If disconnection has happened
+		if (mPlayState.PlayerDisconnected())		//If disconnection has happened
 		{
 			mPlayState.Reset();
 			mStates = States::Disconnect_Menu;
 		}
 
-		if (mPlayState.GetData().gameEnded)
+		if (mPlayState.GetData().gameEnded)			//A player has won the game or the game board is full
 		{
-			mStates = States::Win_Menu;
 			mPlayState.Reset();
+			mStates = States::Win_Menu;
 		}
 		break;
 
 	case States::Matchmaking:
-	{
 		//Connect to the server
 		if (!mConnection.ConnectToServer())
 		{
@@ -104,26 +103,27 @@ void Game::Update()
 			mConnection.CloseConnection();
 			break;
 		}
-		
-		//Send info to server to check if matchmaking is possible (>1 clients on server)
-		if (!mConnection.Matchmake())		//Couldnt find an opponent
+	
+		//Send info to server to check if matchmaking is possible (> 1 available clients on server)
+		if (!mConnection.Matchmake())		//Couldn't find an opponent
 		{
 			mConnection.CloseConnection();
 			mStates = States::Start_Menu;
 		}
-		else				//Did find an opponent
+
+		else				//Found an opponent
 		{
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 			mStates = States::Play;
 
 			//Find from server which player this is (only returns either 1 or 2)
 			int player = 0;
-			
-			if (!mConnection.GetPlayer(player))	
+
+			if (!mConnection.GetPlayer(player))
 			{
 				mConnection.CloseConnection();
 				mStates = States::Start_Menu;
-				break;
+				return;
 			}
 			mPlayState.SetPlayer(player);
 
@@ -136,12 +136,11 @@ void Game::Update()
 
 		}
 
-	}
 		break;
 
 	case States::Enter_Name:
 		mMenus["EnterNameMenu"].get()->Update();
-			break;
+		break;
 
 	case States::Pause_Menu:
 		mMenus["PauseMenu"].get()->Update();
@@ -187,17 +186,17 @@ void Game::StartPauseTimer()
 
 void Game::UpdatePauseTimer()
 {
-	mPauseTimer.second = std::chrono::steady_clock::now();
-	auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mPauseTimer.second - mPauseTimer.first).count() / 1000000.f;
+	mPauseTimer.second = std::chrono::steady_clock::now();		//Get the current time
+	auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mPauseTimer.second - mPauseTimer.first).count() / 1000000.f;		//See if the allowance time has passed
 
 	mPauseTimerTxt.setString(std::to_string(static_cast<int>(mPauseTimerAllowance - elapsedTime)));		//Shows player how long they have left on the pause menu
 
-	if (elapsedTime > mPauseTimerAllowance)
+	if (elapsedTime > mPauseTimerAllowance)		//More than 30 seconds have passed
 	{
 		mStates = States::Play;
 		mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
 		if(mPauseTimerAllowance > 10)
-			mPauseTimerAllowance *= 0.5f;
+			mPauseTimerAllowance *= 0.5f;		//Shortens next timer for pause menu to prevent endless pausing
 	}
 }
 
@@ -281,7 +280,7 @@ void Game::MouseReleased(sf::Event ev)
 
 		case States::Enter_Name:
 			ChangeState(mMenus["EnterNameMenu"].get()->DetectButtonPress());
-			mPlayerName = mMenus["EnterNameMenu"].get()->GetName();
+			mPlayerName = mMenus["EnterNameMenu"].get()->GetName();		//Get the players entered name from the enter name menu
 			mPlayState.SetName(mPlayerName);
 			break;
 
@@ -343,4 +342,3 @@ void Game::ChangeState(States newState)
 {
 	mStates = newState;
 }
-
