@@ -46,7 +46,6 @@ private:
 
 	void PlacePiece();
 	void UpdateMousePosition();
-	bool HasConnected4();
 
 	//Setup functions
 	void SetupTextures();

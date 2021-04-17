@@ -90,3 +90,123 @@ bool GameBoard::CheckIfBoardIsFull()
 
 	return true;		//The board is full
 }
+
+bool GameBoard::Connected4(const int mPlayerType, const sf::Vector2i mLastMove)
+{
+	//Get Colour of piece looking to connect
+	sf::Color mPlayerColour;
+
+	if (mPlayerType == 1)
+		mPlayerColour = mPlayer1PieceColour;
+	else
+		mPlayerColour = mPlayer2PieceColour;
+
+
+	if (HorizontalConnectCheck(mPlayerColour, mLastMove))		//Checks horizontally for a connect 4
+		return true;
+	
+	if (VerticalConnectCheck(mPlayerColour, mLastMove))			//Checks vertically for a connect 4
+		return true;
+
+	if (DiagonalConnectCheck(mPlayerColour, mLastMove))			//Checks diagonally for a connect 4
+		return true;
+
+	return false;
+}
+
+bool GameBoard::HorizontalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i mLastMove)
+{
+	int mAmountConnected = 0;		//Amount of pieces of the same colour connected together
+
+	int y = mLastMove.y;
+	while (y >= 1 && pieces[mLastMove.x][y].getFillColor() == mPlayerColour)		//Horizontal Left searching
+	{
+		y--;
+		mAmountConnected++;
+		if (mAmountConnected >= 4)
+			return true;
+	}
+
+	mAmountConnected--;		//Remove as the next will read the most recent piece added
+
+	y = mLastMove.y;
+	while (y < BOARD_WIDTH && pieces[mLastMove.x][y].getFillColor() == mPlayerColour)	//Horizontal Right searching
+	{
+		y++;
+		mAmountConnected++;
+		if (mAmountConnected >= 4)
+			return true;
+	}
+
+	return false;
+}
+
+bool GameBoard::VerticalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i mLastMove)
+{
+	int mAmountConnected = 0;
+
+	int x = mLastMove.x;
+	while (x >= 1 && pieces[x][mLastMove.y].getFillColor() == mPlayerColour)			//Vertical searching
+	{
+		x++;
+		mAmountConnected++;
+		if (mAmountConnected >= 4)
+			return true;
+	}
+
+	return false;
+}
+
+bool GameBoard::DiagonalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i mLastMove)
+{
+	int mAmountConnected = 0;
+	int x = mLastMove.x;
+	int y = mLastMove.y;
+
+	while (x >= 1 && y < BOARD_WIDTH && pieces[x][y].getFillColor() == mPlayerColour)		//North-east movement
+	{
+		x--;
+		y++;
+		mAmountConnected++;
+		if (mAmountConnected >= 4)
+			return true;
+	}
+
+	mAmountConnected--;
+	x = mLastMove.x;
+	y = mLastMove.y;
+	while (x < BOARD_HEIGHT && y >= 1 && pieces[x][y].getFillColor() == mPlayerColour)	//South-west movement
+	{
+		x++;
+		y--;
+		mAmountConnected++;
+		if (mAmountConnected >= 4)
+			return true;
+	}
+
+	mAmountConnected = 0;
+	x = mLastMove.x;
+	y = mLastMove.y;
+	while (x < BOARD_HEIGHT && y < BOARD_WIDTH && pieces[x][y].getFillColor() == mPlayerColour)		//South-east movement
+	{
+		x++;
+		y++;
+		mAmountConnected++;
+		if (mAmountConnected >= 4)
+			return true;
+	}
+
+	mAmountConnected--;
+	x = mLastMove.x;
+	y = mLastMove.y;
+	while (x >= 1 && y >= 1 && pieces[x][y].getFillColor() == mPlayerColour)		//North-west searching
+	{
+		x--;
+		y--;
+		mAmountConnected++;
+		if (mAmountConnected >= 4)
+			return true;
+	}
+
+	return false;
+}

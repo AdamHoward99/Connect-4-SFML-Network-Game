@@ -133,7 +133,7 @@ void PlayState::Update()
 	if (turnEnd)
 	{
 		//Function to check if 4 are connected
-		if (HasConnected4())
+		if (board.Connected4(player, lastMove))
 		{
 			//Pass information that this player has won to the server, returns win screen string
 			mServer.mGameData.gameEnded = true;
@@ -195,102 +195,6 @@ void PlayState::UpdateMousePosition()
 		xColumnPosition = 650.f;
 
 	pieceToAdd.setPosition(xColumnPosition, 20.f);
-}
-
-bool PlayState::HasConnected4()
-{
-	bool foundaWinner = false;
-	int connected = 0;		//Amount of pieces of the same colour connected together
-
-	sf::Color c;
-
-	if (mServer.mGameData.mTurn == Turn::Player_1_Turn)
-		c = sf::Color::Red;
-	else
-		c = sf::Color::Yellow;
-	
-	//Could separate into different functions
-	//Horizontal checks
-	int y = lastMove.y;
-	while (y >= 1 && board.pieces[lastMove.x][y].getFillColor() == c)		//Horizontal Left searching
-	{
-		y--;
-		connected++;
-		if (connected >= 4)
-			return true;
-	}
-
-	connected--;		//Remove as the next will readd the most recent piece added
-	y = lastMove.y;
-	while (y < BOARD_WIDTH && board.pieces[lastMove.x][y].getFillColor() == c)	//Horizontal Right searching
-	{
-		y++;
-		connected++;
-		if (connected >= 4)
-			return true;
-	}
-
-	//Vertical checks
-	connected = 0;
-	int x = lastMove.x;
-	while (x >= 1 && board.pieces[x][lastMove.y].getFillColor() == c)			//Vertical searching
-	{
-		x++;
-		connected++;
-		if (connected >= 4)
-			return true;
-	}
-
-	//Diagonal checks
-	connected = 0;
-	x = lastMove.x;
-	y = lastMove.y;
-	while (x >= 1 && y < BOARD_WIDTH && board.pieces[x][y].getFillColor() == c)		//North-east movement
-	{
-		x--;
-		y++;
-		connected++;
-		if (connected >= 4)
-			return true;
-	}
-
-	connected--;
-	x = lastMove.x;
-	y = lastMove.y;
-	while (x < BOARD_HEIGHT && y >= 1 && board.pieces[x][y].getFillColor() == c)	//South-west movement
-	{
-		x++;
-		y--;
-		connected++;
-		if (connected >= 4)
-			return true;
-	}
-
-	connected = 0;
-	x = lastMove.x;
-	y = lastMove.y;
-	while (x < BOARD_HEIGHT && y < BOARD_WIDTH && board.pieces[x][y].getFillColor() == c)		//South-east movement
-	{
-		x++;
-		y++;
-		connected++;
-		if (connected >= 4)
-			return true;
-	}
-
-	connected--;
-	x = lastMove.x;
-	y = lastMove.y;
-	while (x >= 1 && y >= 1 && board.pieces[x][y].getFillColor() == c)		//North-west searching
-	{
-		x--;
-		y--;
-		connected++;
-		if (connected >= 4)
-			return true;
-	}
-
-	return false;
 }
 
 void PlayState::PlacePiece()
