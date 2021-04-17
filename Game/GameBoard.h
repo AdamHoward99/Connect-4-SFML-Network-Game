@@ -1,5 +1,4 @@
 #pragma once
-
 #include "SFML/Graphics.hpp"
 #include <cassert>
 
@@ -10,32 +9,31 @@ class GameBoard
 {
 public:
 	GameBoard(sf::RenderWindow& window);		//Default Constructor
-	~GameBoard();		//Destructor
+	~GameBoard();								//Default Destructor
 	
 	void Initialize();
 	void Update();
 	void Draw();
-
 	void ResetBoard();
 
 	sf::CircleShape pieces[BOARD_HEIGHT][BOARD_WIDTH];		//make function to get this instead of it being public
 private:
-
 	sf::RenderWindow &window;
 
-	const sf::Color Player1_Piece_Colour = sf::Color::Red;
-	const sf::Color Player2_Piece_Colour = sf::Color::Yellow;
-	const sf::Color boardColour = sf::Color::Color(0, 102, 153);
-	const sf::Color background_Colour = sf::Color::Color(170, 196, 239);
+	//Piece Colours
+	const sf::Color mPlayer1PieceColour = sf::Color::Red;
+	const sf::Color mPlayer2PieceColour = sf::Color::Yellow;
 
-	sf::RectangleShape board_Background;
+	//Menu Colours
+	const sf::Color mBoardColour = sf::Color::Color(0, 102, 153);
+	const sf::Color mBackgroundColour = sf::Color::Color(170, 196, 239);
+
+	//Background Variables
+	sf::RectangleShape mBoardBackground;
 	
-	sf::Texture backgroundTex;
-	sf::Sprite backgroundSpr;
-
-	const float piece_Offset = 100.f;
-
-
-
-
+	sf::Texture mBackgroundTex;
+	sf::Sprite mBackgroundSpr;
+	
+	//Piece Position Variables
+	const float mPieceOffset = 100.f;
 };

@@ -2,9 +2,7 @@
 
 GameBoard::GameBoard(sf::RenderWindow& mApp)
 	:window(mApp)
-{
-	//Set up the colours
-}
+{}
 
 GameBoard::~GameBoard()
 {
@@ -13,35 +11,42 @@ GameBoard::~GameBoard()
 
 void GameBoard::Initialize()
 {
+	//Starting positions for the pieces, changes in for loop
 	float xPosition = 50.f;
 	float yPosition = 150.f;
-	for (int x = 1; x < BOARD_HEIGHT; x++)
+
+	//Default piece to fill the board up
+	sf::CircleShape mPiece = sf::CircleShape(30.f);
+	mPiece.setFillColor(sf::Color::White);
+	mPiece.setOutlineThickness(5);
+	mPiece.setOutlineColor(sf::Color::Color(70, 96, 239));
+
+	//Loops through adding empty pieces to set up the game board
+	for (int x = 1; x < BOARD_HEIGHT; x++)		
 	{
 		for (int y = 1; y < BOARD_WIDTH; y++)
 		{
-			sf::CircleShape pieceSlot = sf::CircleShape(30.f);
-			pieceSlot.setFillColor(sf::Color::White);
-			pieceSlot.setPosition(xPosition, yPosition);
-			pieceSlot.setOutlineThickness(5);
-			pieceSlot.setOutlineColor(sf::Color::Color(70, 96, 239));
-			xPosition += piece_Offset;
-			pieces[x][y] = pieceSlot;
+			mPiece.setPosition(xPosition, yPosition);
+			xPosition += mPieceOffset;
+			pieces[x][y] = mPiece;
 		}
 		xPosition = 50.f;
-		yPosition += piece_Offset;
+		yPosition += mPieceOffset;
 	}
 
-	board_Background.setSize(sf::Vector2f(700.f, 600.f));
-	board_Background.setPosition(30.f, 130.f);
-	board_Background.setFillColor(boardColour);
+	//Background of the game board
+	mBoardBackground.setSize(sf::Vector2f(700.f, 600.f));
+	mBoardBackground.setPosition(30.f, 130.f);
+	mBoardBackground.setFillColor(mBoardColour);
 
-	if (!backgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
-		assert(!backgroundTex.loadFromFile("bin/Textures/menuBackground.png"));
+	//Background
+	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
+		assert(!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"));
 
-	backgroundTex.setSmooth(true);
+	mBackgroundTex.setSmooth(true);
 
-	backgroundSpr.setTexture(backgroundTex);
-	backgroundSpr.setPosition(0.f, 0.f);
+	mBackgroundSpr.setTexture(mBackgroundTex);
+	mBackgroundSpr.setPosition(0.f, 0.f);
 }
 
 void GameBoard::Update()
@@ -51,9 +56,10 @@ void GameBoard::Update()
 
 void GameBoard::Draw()
 {
-	window.draw(backgroundSpr);
-	window.draw(board_Background);
+	window.draw(mBackgroundSpr);
+	window.draw(mBoardBackground);
 
+	//Displays all pieces in the game board
 	for (int x = 1; x < BOARD_HEIGHT; x++)
 		for (int y = 1; y < BOARD_WIDTH; y++)
 			window.draw(pieces[x][y]);
@@ -61,6 +67,7 @@ void GameBoard::Draw()
 
 void GameBoard::ResetBoard()
 {
+	//Changes all pieces back to default pieces for next game
 	for (int x = 1; x < BOARD_HEIGHT; x++)
 		for (int y = 1; y < BOARD_WIDTH; y++)
 		{
