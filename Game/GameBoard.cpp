@@ -76,3 +76,17 @@ void GameBoard::ResetBoard()
 			pieces[x][y].setOutlineThickness(5);
 		}
 }
+
+bool GameBoard::CheckIfBoardIsFull()
+{
+	//Checks if all top slots are filled
+	for (int y = 1; y < BOARD_WIDTH; y++)
+	{
+		if (pieces[1][y].getFillColor() == sf::Color::White)		//A piece is still available in the board	
+		{
+			return false;		//The board is not full
+		}
+	}
+
+	return true;		//The board is full
+}

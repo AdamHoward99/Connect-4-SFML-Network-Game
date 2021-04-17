@@ -15,6 +15,7 @@ public:
 	void Update();
 	void Draw();
 	void ResetBoard();
+	bool CheckIfBoardIsFull();		//Connects to PlayState class to see if the board is full after a player places a piece
 
 	sf::CircleShape pieces[BOARD_HEIGHT][BOARD_WIDTH];		//make function to get this instead of it being public
 private:

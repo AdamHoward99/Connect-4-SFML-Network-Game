@@ -143,7 +143,7 @@ void PlayState::Update()
 		}
 
 		//Function to see if there is a winner
-		if (IsBoardFull())
+		if (board.CheckIfBoardIsFull())
 		{
 			//Pass information that no player has won to the server,returns win screen string
 			mServer.mGameData.gameEnded = true;
@@ -195,24 +195,6 @@ void PlayState::UpdateMousePosition()
 		xColumnPosition = 650.f;
 
 	pieceToAdd.setPosition(xColumnPosition, 20.f);
-}
-
-bool PlayState::IsBoardFull()
-{
-	//See if all slots are filled, tie in this case
-	bool boardIsFull;
-	for (int y = 1; y < BOARD_WIDTH; y++)
-	{
-		if (board.pieces[1][y].getFillColor() == sf::Color::White)		//Checks if all top slots are filled
-		{
-			boardIsFull = false;
-			break;
-		}
-		else
-			boardIsFull = true;
-	}
-
-	return boardIsFull;
 }
 
 bool PlayState::HasConnected4()

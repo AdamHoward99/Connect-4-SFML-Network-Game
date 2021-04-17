@@ -46,7 +46,6 @@ private:
 
 	void PlacePiece();
 	void UpdateMousePosition();
-	bool IsBoardFull();
 	bool HasConnected4();
 
 	//Setup functions
