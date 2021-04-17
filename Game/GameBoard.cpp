@@ -1,7 +1,7 @@
 #include "GameBoard.h"
 
 GameBoard::GameBoard(sf::RenderWindow& mApp)
-	:window(mApp)
+	:mWindow(mApp)
 {}
 
 GameBoard::~GameBoard()
@@ -28,7 +28,7 @@ void GameBoard::Initialize()
 		{
 			mPiece.setPosition(xPosition, yPosition);
 			xPosition += mPieceOffset;
-			pieces[x][y] = mPiece;
+			mBoard[x][y] = mPiece;
 		}
 		xPosition = 50.f;
 		yPosition += mPieceOffset;
@@ -49,20 +49,34 @@ void GameBoard::Initialize()
 	mBackgroundSpr.setPosition(0.f, 0.f);
 }
 
-void GameBoard::Update()
+void GameBoard::Update(std::pair<int, int>& mLastMove, const int mPlayerType)
 {
+	//Update appearance of the game board to reflect other players turn
+	if (mLastMove != std::pair<int, int>{-1, -1})
+	{
+		sf::CircleShape piece = sf::CircleShape(30.f);
+		piece.setPosition(mBoard[mLastMove.first][mLastMove.second].getPosition());
+		
+		//Finds which player the opponent is to determine which colour the piece will be
+		if (mPlayerType == 1)
+			piece.setFillColor(mPlayer2PieceColour);
+		else
+			piece.setFillColor(mPlayer1PieceColour);
 
+		mBoard[mLastMove.first][mLastMove.second] = piece;
+		mLastMove = { -1, -1 };		//Made changes to board, reset data
+	}
 }
 
 void GameBoard::Draw()
 {
-	window.draw(mBackgroundSpr);
-	window.draw(mBoardBackground);
+	mWindow.draw(mBackgroundSpr);
+	mWindow.draw(mBoardBackground);
 
 	//Displays all pieces in the game board
 	for (int x = 1; x < BOARD_HEIGHT; x++)
 		for (int y = 1; y < BOARD_WIDTH; y++)
-			window.draw(pieces[x][y]);
+			mWindow.draw(mBoard[x][y]);
 }
 
 void GameBoard::ResetBoard()
@@ -71,9 +85,9 @@ void GameBoard::ResetBoard()
 	for (int x = 1; x < BOARD_HEIGHT; x++)
 		for (int y = 1; y < BOARD_WIDTH; y++)
 		{
-			pieces[x][y].setFillColor(sf::Color::White);
-			pieces[x][y].setOutlineColor(sf::Color::Color(70, 96, 239));
-			pieces[x][y].setOutlineThickness(5);
+			mBoard[x][y].setFillColor(sf::Color::White);
+			mBoard[x][y].setOutlineColor(sf::Color::Color(70, 96, 239));
+			mBoard[x][y].setOutlineThickness(5);
 		}
 }
 
@@ -82,7 +96,7 @@ bool GameBoard::CheckIfBoardIsFull()
 	//Checks if all top slots are filled
 	for (int y = 1; y < BOARD_WIDTH; y++)
 	{
-		if (pieces[1][y].getFillColor() == sf::Color::White)		//A piece is still available in the board	
+		if (mBoard[1][y].getFillColor() == sf::Color::White)		//A piece is still available in the board	
 		{
 			return false;		//The board is not full
 		}
@@ -119,7 +133,7 @@ bool GameBoard::HorizontalConnectCheck(sf::Color mPlayerColour, const sf::Vector
 	int mAmountConnected = 0;		//Amount of pieces of the same colour connected together
 
 	int y = mLastMove.y;
-	while (y >= 1 && pieces[mLastMove.x][y].getFillColor() == mPlayerColour)		//Horizontal Left searching
+	while (y >= 1 && mBoard[mLastMove.x][y].getFillColor() == mPlayerColour)		//Horizontal Left searching
 	{
 		y--;
 		mAmountConnected++;
@@ -130,7 +144,7 @@ bool GameBoard::HorizontalConnectCheck(sf::Color mPlayerColour, const sf::Vector
 	mAmountConnected--;		//Remove as the next will read the most recent piece added
 
 	y = mLastMove.y;
-	while (y < BOARD_WIDTH && pieces[mLastMove.x][y].getFillColor() == mPlayerColour)	//Horizontal Right searching
+	while (y < BOARD_WIDTH && mBoard[mLastMove.x][y].getFillColor() == mPlayerColour)	//Horizontal Right searching
 	{
 		y++;
 		mAmountConnected++;
@@ -146,7 +160,7 @@ bool GameBoard::VerticalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i
 	int mAmountConnected = 0;
 
 	int x = mLastMove.x;
-	while (x >= 1 && pieces[x][mLastMove.y].getFillColor() == mPlayerColour)			//Vertical searching
+	while (x >= 1 && mBoard[x][mLastMove.y].getFillColor() == mPlayerColour)			//Vertical searching
 	{
 		x++;
 		mAmountConnected++;
@@ -163,7 +177,7 @@ bool GameBoard::DiagonalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i
 	int x = mLastMove.x;
 	int y = mLastMove.y;
 
-	while (x >= 1 && y < BOARD_WIDTH && pieces[x][y].getFillColor() == mPlayerColour)		//North-east movement
+	while (x >= 1 && y < BOARD_WIDTH && mBoard[x][y].getFillColor() == mPlayerColour)		//North-east movement
 	{
 		x--;
 		y++;
@@ -175,7 +189,7 @@ bool GameBoard::DiagonalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i
 	mAmountConnected--;
 	x = mLastMove.x;
 	y = mLastMove.y;
-	while (x < BOARD_HEIGHT && y >= 1 && pieces[x][y].getFillColor() == mPlayerColour)	//South-west movement
+	while (x < BOARD_HEIGHT && y >= 1 && mBoard[x][y].getFillColor() == mPlayerColour)	//South-west movement
 	{
 		x++;
 		y--;
@@ -187,7 +201,7 @@ bool GameBoard::DiagonalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i
 	mAmountConnected = 0;
 	x = mLastMove.x;
 	y = mLastMove.y;
-	while (x < BOARD_HEIGHT && y < BOARD_WIDTH && pieces[x][y].getFillColor() == mPlayerColour)		//South-east movement
+	while (x < BOARD_HEIGHT && y < BOARD_WIDTH && mBoard[x][y].getFillColor() == mPlayerColour)		//South-east movement
 	{
 		x++;
 		y++;
@@ -199,7 +213,7 @@ bool GameBoard::DiagonalConnectCheck(sf::Color mPlayerColour, const sf::Vector2i
 	mAmountConnected--;
 	x = mLastMove.x;
 	y = mLastMove.y;
-	while (x >= 1 && y >= 1 && pieces[x][y].getFillColor() == mPlayerColour)		//North-west searching
+	while (x >= 1 && y >= 1 && mBoard[x][y].getFillColor() == mPlayerColour)		//North-west searching
 	{
 		x--;
 		y--;
@@ -215,11 +229,11 @@ bool GameBoard::PlacePiece(const int mColumn, sf::CircleShape mPiece, sf::Vector
 {
 	for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
 	{
-		if (pieces[i][mColumn].getFillColor() == sf::Color::White)		//Finds an empty piece
+		if (mBoard[i][mColumn].getFillColor() == sf::Color::White)		//Finds an empty piece
 		{
 			//Add stuff for when the column is full
-			mPiece.setPosition(pieces[i][mColumn].getPosition());
-			pieces[i][mColumn] = mPiece;
+			mPiece.setPosition(mBoard[i][mColumn].getPosition());
+			mBoard[i][mColumn] = mPiece;
 			mLastMove = sf::Vector2i(i, mColumn);
 			return true;							//Did put a piece in the board
 		}
@@ -234,11 +248,11 @@ bool GameBoard::AutomaticPiecePlace(sf::CircleShape mPiece, sf::Vector2i& mLastM
 	{
 		for (int i = BOARD_HEIGHT - 1; i >= 1; i--)
 		{
-			if (pieces[i][y].getFillColor() == sf::Color::White)		//Finds an empty piece
+			if (mBoard[i][y].getFillColor() == sf::Color::White)		//Finds an empty piece
 			{
 				//Add stuff for when the column is full
-				mPiece.setPosition(pieces[i][y].getPosition());
-				pieces[i][y] = mPiece;
+				mPiece.setPosition(mBoard[i][y].getPosition());
+				mBoard[i][y] = mPiece;
 				mLastMove = sf::Vector2i(i, y);
 				return true;		//Did manage to add a piece to the board
 			}

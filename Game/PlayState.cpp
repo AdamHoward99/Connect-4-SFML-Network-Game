@@ -117,7 +117,7 @@ void PlayState::Update()
 		return;
 	}
 
-	BoardUpdateServer();	//Updates board if other client placed a piece
+	board.Update(mServer.mGameData.mLastMove, player);		//Updates board if other client has placed a piece
 	ChatUpdateServer();		//Updates chat if any information has been received from the server
 
 	if (IsPlayersTurn())
@@ -418,24 +418,6 @@ void PlayState::SetPlayer(int p)
 bool PlayState::IsPlayersTurn()
 {
 	return mServer.mGameData.mTurn == player;
-}
-
-void PlayState::BoardUpdateServer()
-{
-	//Update appearance of the game board to reflect other players turn
-	if (mServer.mGameData.mLastMove != std::pair<int, int>{-1, -1})
-	{
-		sf::CircleShape piece = sf::CircleShape(30.f);
-		piece.setPosition(board.pieces[mServer.mGameData.mLastMove.first][mServer.mGameData.mLastMove.second].getPosition());
-
-		if (player == 1)
-			piece.setFillColor(sf::Color::Yellow);
-		else
-			piece.setFillColor(sf::Color::Red);
-
-		board.pieces[mServer.mGameData.mLastMove.first][mServer.mGameData.mLastMove.second] = piece;
-		mServer.mGameData.mLastMove = { -1, -1 };
-	}
 }
 
 void PlayState::ChatUpdateServer()

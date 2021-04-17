@@ -54,8 +54,7 @@ private:
 	void SetupText();
 	void SetupAudio();
 
-	//Server Data Functions
-	void BoardUpdateServer();
+	//Server Data Update Functions
 	void ChatUpdateServer();
 
 	//Chat Log Functions
