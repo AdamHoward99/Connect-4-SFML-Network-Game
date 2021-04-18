@@ -318,7 +318,7 @@ void Game::KeyPressed(sf::Event ev)
 	switch (mStates)
 	{
 	case States::Play:
-		if (ev.text.unicode == PAUSE_KEY && !mPlayState.GetIfChatIsOpen() && mPlayState.IsPlayersTurn())
+		if (ev.text.unicode == PAUSE_KEY && !mPlayState.ChatOpen() && mPlayState.IsPlayersTurn())
 		{
 			//Send information to server that this player has paused the game
 			mStates = States::Pause_Menu;

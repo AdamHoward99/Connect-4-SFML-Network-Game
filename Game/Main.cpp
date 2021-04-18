@@ -4,6 +4,7 @@
 
 #include <cassert>
 
+//Game Window Dimensions
 #define GAME_WIDTH 900
 #define GAME_HEIGHT 800
 
@@ -15,7 +16,7 @@ int main()
 	//FPS
 	window.setFramerateLimit(60);
 
-	//Instantiate things here
+	//Setup game class 
 	Game mGame(window, mConnection);
 
 	while (window.isOpen())
@@ -28,7 +29,7 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				mConnection.CloseConnection();
+				mConnection.CloseConnection();		//Disconnect from server before quitting to alert server of disconnect
 				window.close();
 			}
 			else if (event.type == sf::Event::MouseButtonReleased)

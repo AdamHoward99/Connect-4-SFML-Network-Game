@@ -1,53 +1,47 @@
 #pragma once
-
-#include "SFML/Graphics.hpp"
-#include "SFML/Audio.hpp"
 #include "GameBoard.h"
 #include "NetworkConnection.h"
 #include "GameData.h"
-#include "States.h"
 #include "Menu.h"
 #include <chrono>
 
 class PlayState
 {
 public:
-	PlayState(sf::RenderWindow& window, NetworkConnection& connection);		//Default Constructor
-	~PlayState();
+	PlayState(sf::RenderWindow& mWindow, NetworkConnection& connection);		//Default Constructor
+	~PlayState();																//Default Destructor
 
 	void Initialize();
 	void Update();
 	void Draw();
 	void Reset();
-	void ChatInput(sf::Event ev);
+	void ChatInput(sf::Event ev);	//Detects keys entered when chat is open
+	void ButtonPress();				//Detects if over the chat button, if not, place's piece
 
-	void ButtonPress();		//Detects if over the chat button, if not, place's piece
-
-	//Chat Functions
-	bool GetIfChatIsOpen() { return isChatOpen; }
-
-	//Turn Timer Variable
-	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mTurnTimer;
-
-	//Name Functions
-	void SetName(sf::String s) { mName = s; }
-
-	//Set which player in the game via server functions
-	int GetPlayer() { return player; }
-	void SetPlayer(int p);
-
-	bool IsPlayersTurn();		//Returns if the player can go
-
+	//Get Functions
+	bool ChatOpen() { return mChatOpen; }		//Used to allow 'P' to pause the game when chat is not open
 	GameData& GetData() { return mServer.mGameData; }
 
-	bool PlayerDisconnected();		//Returns true if mDisconnected value == -1, representing opponent disconnect
+	//Set Functions
+	void SetName(sf::String s) { mName = s; }		//Gets entered name of player from enter name menu
+	void SetPlayer(int p);							//Sets player type to either 1 or 2, data is received from the server
+
+	//Turn Timer Variable
+	std::pair<std::chrono::steady_clock::time_point, std::chrono::steady_clock::time_point> mTurnTimer;		//First is start time, second is current time
+
+	//Game Check Functions
+	bool IsPlayersTurn() { return mServer.mGameData.mTurn == mPlayer; }			//Returns if the player can go
+	bool PlayerDisconnected() { return GetData().mDisconnected == -1; }			//Returns true if mDisconnected value == -1, representing opponent disconnect
 
 private:
-	sf::RenderWindow& window;
+	sf::RenderWindow& mWindow;
 	NetworkConnection& mServer;
 
+	//Game Board Related Functions
 	void AddPiece();
-	void UpdateMousePosition();
+	void AutomaticPiecePlacement();
+	void TransitionTurn();		//Checks if game can be won, also sends data between players over server
+	void SwapPlayerTurn();		//Changes the player turn once the player has made a move
 
 	//Setup functions
 	void SetupTextures();
@@ -56,25 +50,36 @@ private:
 	void SetupText();
 	void SetupAudio();
 
-	//Server Data Update Functions
+	//Mouse Position Functions
+	void UpdateMousePosition();
+
+	//Chat Functions
+	void UpdateChatLog();
 	void ChatUpdateServer();
 
-	//Chat Log Functions
-	void UpdateChatLog();
+	//Timer Functions
+	void UpdateTurnTimer();
 
 	//Chat Log Variables
-	std::vector<sf::String> mChatLog;
-	std::vector<sf::Text> mChatLogText;
+	sf::String mChatInput;					//Stores message next to be sent
+	std::vector<sf::String> mChatLog;		//Stores all strings of previous chat messages
+	std::vector<sf::Text> mChatLogText;		//Used to display on screen all chat messages
+	const unsigned int mChatLogCharacterLimit = 20;		//Max characters that can be typed in a single message
+	sf::Texture mButtonTex;					//Texture for chat button
+
+	//Chat Log Panel Variables
+	sf::Texture mChatPanelTex;
+	bool mChatOpen = false;			//Is true when chat button is pressed
 
 	//Turn Variables
-	bool turnEnd = false;
+	bool mTurnEnd = false;
 
 	//Board & Piece Variables
-	GameBoard board;
-	sf::CircleShape pieceToAdd;
-	sf::Vector2f mousePos;
-	float xColumnPosition = 0.f;
-	sf::Vector2i lastMove;		//Stores position of last move on board to easier check for a win
+	GameBoard mGameBoard;			//Stores array of pieces
+	sf::CircleShape mPieceToAdd;	//Piece at top of board, will be added to board when player left clicks
+	float mColumnPositionX = 0.f;	//Locks added piece position on screen to align with board slots
+	sf::Vector2i mLastMove;			//Stores position of last move on board to easier check for a win
+	int mPieceColumn = 0;			//Column that next piece will be placed, aligns with column position
 
 	//Sound Variables
 	std::pair<sf::SoundBuffer, sf::Sound> mPieceSfx;
@@ -82,33 +87,18 @@ private:
 	//Font Variables
 	sf::Font mFont;
 
-	//Timer Variables
-	void UpdateTurnTimer();
-	void AutomaticPiecePlacement();
-
-	//Chat Button Variables
-	sf::Texture mButtonTex;
-
-	//Chat Input Variables
-	sf::String mChatInput;
-	const unsigned int ChatLogCharacterLimit = 20;
-
-	//Chat Log Panel Variables
-	sf::Texture mChatPanelTex;
-	bool isChatOpen = false;
-
-	//Player Name
-	sf::String mName;
-
-	int player = 0;
-	int mPieceColumn = 0;
-
-	//Text Variables
+	//On Screen Text Variables
 	std::vector<sf::Text> mText;
-	int TextAmount;
+	int mTextAmount;
 
 	//Sprite Variables
 	std::vector<sf::Sprite> mSprites;
-	int SpriteAmount;
+	int mSpriteAmount;
 
+	//Mouse Variables
+	sf::Vector2f mMousePos;
+
+	//Player Variables
+	sf::String mName;		//Player name, entered in enter name state
+	int mPlayer = 0;		//Player type, player 1 has red pieces, player 2 has yellow pieces
 };

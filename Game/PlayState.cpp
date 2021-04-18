@@ -1,29 +1,31 @@
 #include "PlayState.h"
 
 PlayState::PlayState(sf::RenderWindow& mApp, NetworkConnection& connect)
-	:window(mApp), board(mApp), mServer(connect)
-{
-
-}
+	:mWindow(mApp), mGameBoard(mApp), mServer(connect)
+{}
 
 PlayState::~PlayState()
 {
 	//Destructor
-	board.~GameBoard();
+	mGameBoard.~GameBoard();
 }
 
 void PlayState::Initialize()
 {
-	board.Initialize();
-	pieceToAdd = sf::CircleShape(30.f);
+	//Setup board and pieces
+	mGameBoard.Initialize();
+	mPieceToAdd = sf::CircleShape(30.f);
+
+	//Setup GameData to be sent to server
 	mServer.mGameData.mTurn = Turn::Player_1_Turn;
 	mServer.mGameData.mLastMove = { -1, -1 };
 
-	TextAmount = 3;
-	mText = std::vector<sf::Text>(TextAmount);
+	//Set amount of buttons and text on menu
+	mTextAmount = 3;
+	mText = std::vector<sf::Text>(mTextAmount);
 
-	SpriteAmount = 2;
-	mSprites = std::vector<sf::Sprite>(SpriteAmount);
+	mSpriteAmount = 2;
+	mSprites = std::vector<sf::Sprite>(mSpriteAmount);
 
 	//Setup Functions
 	SetupTextures();
@@ -41,22 +43,21 @@ void PlayState::SetupTextures()
 
 	mButtonTex.setSmooth(true);
 
-	//Chat Texture
+	//Chat Panel Texture
 	if (!mChatPanelTex.loadFromFile("bin/Textures/ChatPanel.png"))
 		assert(!mChatPanelTex.loadFromFile("bin/Textures/ChatPanel.png"));
 
 	mChatPanelTex.setSmooth(true);
-
 }
 
 void PlayState::SetupSprites()
 {
-	//Chat Button
+	//Chat Button Sprite
 	mSprites.at(0).setTexture(mButtonTex);
 	mSprites.at(0).setPosition(750.f, 670.f);
 	mSprites.at(0).setScale(0.4f, 0.75f);
 
-	//Chat Panel
+	//Chat Panel Sprite
 	mSprites.at(1).setTexture(mChatPanelTex);
 	mSprites.at(1).setPosition(900.f, 50.f);
 	mSprites.at(1).setScale(1.f, 1.f);
@@ -104,145 +105,102 @@ void PlayState::SetupAudio()
 
 void PlayState::Update()
 {
-	//Update variables of the game, turn, board update, chat
-	if (!mServer.GetDataUpdate())
+	if (!mServer.GetDataUpdate())		//Obtains data from server, helps client detect when opponent has had their turn
 	{
 		mServer.CloseConnection();
 		return;
 	}
 
-	if (mServer.mGameData.mDisconnected == -1)		//Disconnection on other clients end
+	if (mServer.mGameData.mDisconnected == -1)		//If the opponent has disconnected
 	{
 		mServer.CloseConnection();
 		return;
 	}
 
-	board.Update(mServer.mGameData.mLastMove, player);		//Updates board if other client has placed a piece
-	ChatUpdateServer();		//Updates chat if any information has been received from the server
+	mGameBoard.Update(mServer.mGameData.mLastMove, mPlayer);		//Updates board if other client has placed a piece
+	ChatUpdateServer();												//Updates chat if any information has been received from the server
 
-	if (IsPlayersTurn())
-	{
-		UpdateTurnTimer();
-	}
-	else
-		mTurnTimer.first = std::chrono::steady_clock::now();
-
+	UpdateTurnTimer();			//Updates how long the player has left to move if its their turn
 	UpdateMousePosition();
 
-	//Switch turns, put into its own function
-	if (turnEnd)
-	{
-		//Function to check if 4 are connected
-		if (board.Connected4(player, lastMove))
-		{
-			//Pass information that this player has won to the server, returns win screen string
-			mServer.mGameData.gameEnded = true;
-
-			//Set win message based on which player this is
-			mServer.mGameData.mWinMessage = mName + " Wins";
-		}
-
-		//Function to see if there is a winner
-		if (board.CheckIfBoardIsFull())
-		{
-			//Pass information that no player has won to the server,returns win screen string
-			mServer.mGameData.gameEnded = true;
-			mServer.mGameData.mWinMessage = "Its a Tie";
-		}
-
-		//Swaps turns, passes this to server to relay to other clients, put all this in its own function?
-		if (mServer.mGameData.mTurn == Turn::Player_1_Turn)
-			mServer.mGameData.mTurn = Turn::Player_2_Turn;
-		else
-			mServer.mGameData.mTurn = Turn::Player_1_Turn;
-
-		mServer.mGameData.mLastMove = {lastMove.x, lastMove.y};
-
-		//Send turn changes to server
-		if (!mServer.SendGameData(mServer.mGameData))
-		{
-			mServer.CloseConnection();
-			return;
-		}
-
-		mServer.mGameData.mLastMove = { -1, -1 };
-		turnEnd = false;
-	}
-
+	//Switch turns when the current players turn is over
+	if (mTurnEnd)
+		TransitionTurn();
 }
 
 void PlayState::UpdateMousePosition()
 {
 	//Updating mouse position
-	mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	mMousePos = mWindow.mapPixelToCoords(sf::Mouse::getPosition(mWindow));
 
 	//Lock piece position to specific positions
-	if (mousePos.x <= 100.f)
+	if (mMousePos.x <= 100.f)
 	{
-		xColumnPosition = 50.f;
+		mColumnPositionX = 50.f;
 		mPieceColumn = 1;
 	}
-	else if (mousePos.x <= 200.f)
+	else if (mMousePos.x <= 200.f)
 	{
-		xColumnPosition = 150.f;
+		mColumnPositionX = 150.f;
 		mPieceColumn = 2;
 	}
-	else if (mousePos.x <= 300.f)
+	else if (mMousePos.x <= 300.f)
 	{
-		xColumnPosition = 250.f;
+		mColumnPositionX = 250.f;
 		mPieceColumn = 3;
 	}
-	else if (mousePos.x <= 400.f)
+	else if (mMousePos.x <= 400.f)
 	{
-		xColumnPosition = 350.f;
+		mColumnPositionX = 350.f;
 		mPieceColumn = 4;
 	}
-	else if (mousePos.x <= 500.f)
+	else if (mMousePos.x <= 500.f)
 	{
-		xColumnPosition = 450.f;
+		mColumnPositionX = 450.f;
 		mPieceColumn = 5;
 	}
-	else if (mousePos.x <= 600.f)
+	else if (mMousePos.x <= 600.f)
 	{
-		xColumnPosition = 550.f;
+		mColumnPositionX = 550.f;
 		mPieceColumn = 6;
 	}
 	else
 	{
-		xColumnPosition = 650.f;
+		mColumnPositionX = 650.f;
 		mPieceColumn = 7;
 	}
 
-	pieceToAdd.setPosition(xColumnPosition, 20.f);
+	mPieceToAdd.setPosition(mColumnPositionX, 20.f);
 }
 
 void PlayState::AddPiece()
 {
-	if (board.PlacePiece(mPieceColumn, pieceToAdd, lastMove))		//Returns true when successfully added a piece into the board
+	if (mGameBoard.PlacePiece(mPieceColumn, mPieceToAdd, mLastMove))		//Returns true when successfully added a piece into the board
 	{
-		turnEnd = true;
+		mTurnEnd = true;
 		mPieceSfx.second.play();		//Piece drop sfx
 	}
 }
 
 void PlayState::Draw()
 {
-	board.Draw();
-	window.draw(mSprites.at(0));
-	window.draw(mText.at(1));
+	mGameBoard.Draw();
+	mWindow.draw(mSprites.at(0));	//Chat Button Sprite
+	mWindow.draw(mText.at(1));		//Chat Button Text
 
-	if (IsPlayersTurn())
+	if (IsPlayersTurn())			//Only show piece and turn timer when its the players turn
 	{
-		window.draw(pieceToAdd);
-		window.draw(mText.at(0));
+		mWindow.draw(mPieceToAdd);
+		mWindow.draw(mText.at(0));
 	}
 
-	if (isChatOpen)
+	if (mChatOpen)					//Displays chat log when chat window is open
 	{
-		window.draw(mSprites.at(1));
-		window.draw(mText.at(2));
+		mWindow.draw(mSprites.at(1));
+		mWindow.draw(mText.at(2));
+
 		for (auto t : mChatLogText)
-			window.draw(t);
+			mWindow.draw(t);
 	}
 
 }
@@ -250,10 +208,10 @@ void PlayState::Draw()
 void PlayState::Reset()
 {
 	//Reset board
-	board.ResetBoard();
+	mGameBoard.ResetBoard();
 
 	//Reset bools
-	isChatOpen = false;
+	mChatOpen = false;
 
 	//Reset Server Data
 	mServer.mGameData.mDisconnected = 1;
@@ -271,62 +229,67 @@ void PlayState::Reset()
 
 void PlayState::UpdateTurnTimer()
 {
-	mTurnTimer.second = std::chrono::steady_clock::now();
-	auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mTurnTimer.second - mTurnTimer.first).count() / 1000000.f;
-
-	mText.at(0).setString(std::to_string(static_cast<int>(30 - elapsedTime)));		//Shows player how long they have left on the pause menu
-
-	if (elapsedTime > 30.f)
+	if (IsPlayersTurn())		//Only count down turn timer when its the players turn
 	{
-		AutomaticPiecePlacement();	//Function to place a piece automatically
+		mTurnTimer.second = std::chrono::steady_clock::now();
+		auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(mTurnTimer.second - mTurnTimer.first).count() / 1000000.f;		//Gets difference in time
+
+		mText.at(0).setString(std::to_string(static_cast<int>(30 - elapsedTime)));		//Shows player how long they have left on the pause menu
+
+		if (elapsedTime > 30.f)
+		{
+			AutomaticPiecePlacement();	//Function to place a piece automatically
+		}
 	}
+	else
+		mTurnTimer.first = std::chrono::steady_clock::now();		//Keep refreshing the start time until its the players turn again
 }
 
 void PlayState::AutomaticPiecePlacement()
 {
-	if (board.AutomaticPiecePlace(pieceToAdd, lastMove))		//Piece was able to be added to the board
+	if (mGameBoard.AutomaticPiecePlace(mPieceToAdd, mLastMove))		//Piece was able to be added to the board
 	{
-		turnEnd = true;
+		mTurnEnd = true;
 		mPieceSfx.second.play();		//Piece drop sfx
 	}
 }
 
 void PlayState::ButtonPress()
 {
-	if (mSprites.at(0).getGlobalBounds().contains(mousePos))
+	if (mSprites.at(0).getGlobalBounds().contains(mMousePos))		//Click within chat button dimensions
 	{
-		if (!isChatOpen) 
+		if (!mChatOpen)
 		{
 			mSprites.at(1).setPosition(600.f, 50.f);		//Make chat panel visible
-			isChatOpen = true;
+			mChatOpen = true;
 		}
 		else
 		{
 			mSprites.at(1).setPosition(900.f, 50.f);		//Make chat panel not visible
-			isChatOpen = false;
+			mChatOpen = false;
 		}
 	}
 	else
-		if(!mSprites.at(1).getGlobalBounds().contains(mousePos) && IsPlayersTurn() && !turnEnd)
+		if(!mSprites.at(1).getGlobalBounds().contains(mMousePos) && IsPlayersTurn() && !mTurnEnd)	//Add piece to board
 			AddPiece();
 }
 
 void PlayState::ChatInput(sf::Event ev)
 {
-	if (ev.type == sf::Event::TextEntered && isChatOpen)
+	if (ev.type == sf::Event::TextEntered && mChatOpen)		//Only allow chat input when chat window is open
 	{
-		if (ev.text.unicode == ENTER_KEY)
+		if (ev.text.unicode == ENTER_KEY)		//Add entered string into chat log
 		{
-			if (mChatInput.getSize() > 0)
+			if (mChatInput.getSize() > 0)		//Make sure entered string has at least 1 character before adding
 				UpdateChatLog();
 		}
 
-		else if (ev.text.unicode == BACKSPACE_KEY)
+		else if (ev.text.unicode == BACKSPACE_KEY)		//Remove char from entered string
 		{
-			if (mChatInput.getSize() > 0)
+			if (mChatInput.getSize() > 0)				//Prevent string going out of range into negatives
 			{
 				mChatInput.erase(mChatInput.getSize() - 1);
-				mText.at(2).setString(mChatInput);
+				mText.at(2).setString(mChatInput);		//Display changes to string
 			}
 
 		}
@@ -334,9 +297,9 @@ void PlayState::ChatInput(sf::Event ev)
 		else if (ev.text.unicode == SPACE_KEY && mChatInput.getSize() < 1)		//Prevents empty messages from being added to chat log
 			return;
 
-		else
+		else				//Add entered key into the string
 		{
-			if (mChatInput.getSize() < ChatLogCharacterLimit)		//Prevents typing over 20 characters
+			if (mChatInput.getSize() < mChatLogCharacterLimit)		//Prevents typing over 20 characters
 			{
 				mChatInput += ev.text.unicode;
 				mText.at(2).setString(mChatInput);
@@ -352,11 +315,11 @@ void PlayState::UpdateChatLog()
 	{
 		mChatLog.push_back(mName + ": " + mChatInput);		//Add entered line into the string
 		sf::Text t;
-		mChatLogText.push_back(t);
+		mChatLogText.push_back(t);		//Add to log to be displayed on screen
 	}
 	else
 	{
-		mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log
+		mChatLog.erase(mChatLog.begin() + 0);		//Removes first chat log when it goes out of bounds of chat panel sprite
 		mChatLogText.erase(mChatLogText.begin() + 0);
 
 		mChatLog.push_back(mName + ": " + mChatInput);		//Add entered line into the string
@@ -364,7 +327,7 @@ void PlayState::UpdateChatLog()
 		mChatLogText.push_back(t);
 	}
 
-	mServer.mGameData.mMessage = mName + ": " + mChatInput;
+	mServer.mGameData.mMessage = mName + ": " + mChatInput;		//Collect message sent to relay to other client via server
 
 	//Send Chat message to server
 	if (!mServer.SendGameData(mServer.mGameData))
@@ -373,11 +336,11 @@ void PlayState::UpdateChatLog()
 		return;
 	}
 
-	mServer.mGameData.mMessage = "";
+	mServer.mGameData.mMessage = "";		//Reset chat message to prevent message being sent again by the server
 
-	mChatInput.clear();
-	mText.at(2).setString(mChatInput);
-
+	mChatInput.clear();						//Clear entered string
+	mText.at(2).setString(mChatInput);		//Display empty string on screen
+	
 	//Outputs all chat log messages
 	float yOffset = 520.f;
 	for (int i = mChatLog.size() - 1; i >= 0; i--)
@@ -393,39 +356,31 @@ void PlayState::UpdateChatLog()
 
 void PlayState::SetPlayer(int p)
 {
-	player = p;
+	mPlayer = p;
 
-	switch (player)
+	switch (mPlayer)
 	{
 	case 1:
-		pieceToAdd.setFillColor(sf::Color::Red);
-		OutputDebugStringA("\nSets as player 1...");
+		mPieceToAdd.setFillColor(sf::Color::Red);
 		break;
 
 	case 2:
-		pieceToAdd.setFillColor(sf::Color::Yellow);
-		OutputDebugStringA("\nSets as player 2...");
+		mPieceToAdd.setFillColor(sf::Color::Yellow);
 		break;
 
 	default:
-		OutputDebugStringA("\nGets default, no value, closes the connection...");
-		mServer.CloseConnection();
+		mServer.CloseConnection();		//An incorrect value was obtained
 		break;
 	}
 
 }
 
-bool PlayState::IsPlayersTurn()
-{
-	return mServer.mGameData.mTurn == player;
-}
-
 void PlayState::ChatUpdateServer()
 {
 	//Update chat log if any message was received from the server
-	if (mServer.mGameData.mMessage != "")
+	if (mServer.mGameData.mMessage != "")		//String received from server contains characters
 	{
-		if (mChatLog.size() <= 23)
+		if (mChatLog.size() <= 23)				//Add string from server to chat log
 		{
 			mChatLog.push_back(mServer.mGameData.mMessage);		//Add entered line into the string
 			sf::Text t;
@@ -441,7 +396,7 @@ void PlayState::ChatUpdateServer()
 			mChatLogText.push_back(t);
 		}
 
-		mServer.mGameData.mMessage = "";
+		mServer.mGameData.mMessage = "";		//Reset message back to default empty
 
 		//Outputs all chat log messages
 		float yOffset = 520.f;
@@ -457,7 +412,46 @@ void PlayState::ChatUpdateServer()
 	}
 }
 
-bool PlayState::PlayerDisconnected()
+void PlayState::TransitionTurn()
 {
-	return GetData().mDisconnected == -1;
+	//Function to check if 4 are connected
+	if (mGameBoard.Connected4(mPlayer, mLastMove))
+	{
+		//Pass information that this player has won to the server
+		mServer.mGameData.gameEnded = true;
+
+		//Set win message based on which player this is
+		mServer.mGameData.mWinMessage = mName + " Wins";
+	}
+
+	if (mGameBoard.CheckIfBoardIsFull())		//Checks if there are no more available slots in the board, results in a tie
+	{
+		//Pass information that no player has won to the server
+		mServer.mGameData.gameEnded = true;
+		mServer.mGameData.mWinMessage = "Its a Tie";
+	}
+
+	SwapPlayerTurn();
+
+	mServer.mGameData.mLastMove = { mLastMove.x, mLastMove.y };		//Get last move of this player to send to server to update the board for the other client
+
+	//Send turn changes and board update to the server
+	if (!mServer.SendGameData(mServer.mGameData))
+	{
+		mServer.CloseConnection();
+		return;
+	}
+
+	//Reset Values
+	mServer.mGameData.mLastMove = { -1, -1 };		
+	mTurnEnd = false;
+}
+
+void PlayState::SwapPlayerTurn()
+{
+	//Swap turns based on which player type this player is
+	if (mServer.mGameData.mTurn == Turn::Player_1_Turn)
+		mServer.mGameData.mTurn = Turn::Player_2_Turn;
+	else
+		mServer.mGameData.mTurn = Turn::Player_1_Turn;
 }
