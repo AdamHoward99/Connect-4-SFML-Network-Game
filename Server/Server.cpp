@@ -2,11 +2,12 @@
 
 Server::Server(int port)
 {
+	//Setup Network Variables
 	WSADATA wsa_data;
-	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	assert(result == 0);		//DLL not found
+	mConnectionResult = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+	assert(mConnectionResult == 0);		//DLL not found
 
-	hints =
+	mAddressHints =
 	{
 		AI_PASSIVE,
 		AF_INET,
@@ -15,10 +16,10 @@ Server::Server(int port)
 	};
 
 	//Resolve the local address and port to be used by the server
-	result = getaddrinfo(nullptr, "8888", &hints, &info);
-	if (result != 0)
+	mConnectionResult = getaddrinfo(nullptr, "8888", &mAddressHints, &mAddressInfo);
+	if (mConnectionResult != 0)
 	{
-		printf("getaddrinfo() failed: %d\n", result);
+		printf("getaddrinfo() failed: %d\n", mConnectionResult);
 		WSACleanup();
 		exit(0);
 	}
@@ -26,11 +27,11 @@ Server::Server(int port)
 	printf("\nSuccessfully opened the port...");
 
 	//Create server socket
-	listen_socket = socket(info->ai_family, info->ai_socktype, info->ai_protocol);
-	if (listen_socket == INVALID_SOCKET)
+	mListenSocket = socket(mAddressInfo->ai_family, mAddressInfo->ai_socktype, mAddressInfo->ai_protocol);
+	if (mListenSocket == INVALID_SOCKET)
 	{
 		printf("Unable to create server socket: %d\n", WSAGetLastError());
-		freeaddrinfo(info);
+		freeaddrinfo(mAddressInfo);
 		WSACleanup();
 		exit(0);
 	}
@@ -38,48 +39,48 @@ Server::Server(int port)
 	printf("\nThe server socket was succesfully created...");
 
 	//Setup the TCP listening socket
-	result = bind(listen_socket, info->ai_addr, (int)info->ai_addrlen);
-	if (result == SOCKET_ERROR)
+	mConnectionResult = bind(mListenSocket, mAddressInfo->ai_addr, (int)mAddressInfo->ai_addrlen);
+	if (mConnectionResult == SOCKET_ERROR)
 	{
 		printf("bind() failed with error: %d\n", WSAGetLastError());
-		freeaddrinfo(info);
-		closesocket(listen_socket);
+		freeaddrinfo(mAddressInfo);
+		closesocket(mListenSocket);
 		WSACleanup();
 		exit(0);
 	}
 	else
-		freeaddrinfo(info);
+		freeaddrinfo(mAddressInfo);
 
 	printf("\nThe listening socket was successfully setup...");
 
 	//Listen for a single connection
-	result = listen(listen_socket, 1);
-	if (result == SOCKET_ERROR)
+	mConnectionResult = listen(mListenSocket, 1);
+	if (mConnectionResult == SOCKET_ERROR)
 	{
 		printf("listen() failed with error: %d\n", WSAGetLastError());
-		closesocket(listen_socket);
+		closesocket(mListenSocket);
 		WSACleanup();
 		exit(0);
 	}
 
-	serverPtr = this;
+	mServerPtr = this;
 }
 
 Server::~Server()
 {
-	//Delete things here
-	serverPtr = nullptr;
-	delete serverPtr;
+	//Release Server Pointer
+	mServerPtr = nullptr;
+	delete mServerPtr;
 } 
 
 void Server::ListenForNewConnections()
 {
 	//Accept a client socket
-	SOCKET client_socket = accept(listen_socket, nullptr, nullptr);
+	SOCKET client_socket = accept(mListenSocket, nullptr, nullptr);
 	if (client_socket == INVALID_SOCKET)
 	{
 		printf("accept() failed with error: %d\n", WSAGetLastError());
-		closesocket(listen_socket);
+		closesocket(mListenSocket);
 		WSACleanup();
 		exit(0);
 	}
@@ -88,7 +89,6 @@ void Server::ListenForNewConnections()
 		printf("\nA client has been connected...");
 		mClientConnections.push_back(client_socket);
 		mThreadActive.push_back(true);
-		//Tell new client if there are 2 (or more) clients on the server, allowing matchmaking
 		GetUsername(mConnections);
 
 		mConnectionThreads.push_back(std::thread(ClientHandler, mConnections));
@@ -102,24 +102,25 @@ void Server::ClientHandler(int index)
 	//Packet
 	PACKET mPacketType;
 
-	while (true)
+	while (true)		//Loops until the client or server lose connection
 	{
 		//Receive Messages
-		if (!serverPtr->GetPacketType(index, mPacketType))
+		if (!mServerPtr->GetPacketType(index, mPacketType))
 			break;
 
-		if (!serverPtr->ProcessPacket(index, mPacketType))
+		//Send Messages
+		if (!mServerPtr->ProcessPacket(index, mPacketType))
 			break;
 
 	}
 
+	//Client Disconnect
 	printf("\nLost Connection with User: %d", index);
-	serverPtr->CloseConnection(index);
-	serverPtr->mConnectionThreads[index].detach();
-	serverPtr->mThreadActive[index] = false;
+	mServerPtr->CloseConnection(index);
+	mServerPtr->mConnectionThreads[index].detach();
+	mServerPtr->mThreadActive[index] = false;
 
-	//Debug out messages
-	printf("\nLifetime Connections on server: %d ", serverPtr->mConnections);
+	printf("\nLifetime Connections on server: %d ", mServerPtr->mConnections);
 }
 
 void Server::CloseConnection(int index)
@@ -164,6 +165,7 @@ bool Server::SendString(int id, const std::string& message)
 
 bool Server::GetString(int id, std::string& message)
 {
+	//Get Length of string being sent
 	int bufferLength = 0;
 	if (!GetInt(id, bufferLength))
 		return false;
@@ -171,7 +173,7 @@ bool Server::GetString(int id, std::string& message)
 	char* buffer = new char[bufferLength + 1];
 
 	int returnCheck = recv(mClientConnections[id], buffer, bufferLength, NULL);
-	buffer[bufferLength] = '\0';
+	buffer[bufferLength] = '\0';		//Detect end of string character
 	message = buffer;
 	delete[] buffer;
 
@@ -381,6 +383,7 @@ bool Server::GetPacketType(int id, PACKET& mType)
 
 bool Server::ProcessPacket(int index, PACKET mType)
 {
+	//Local Variables to receive data from client
 	bool matchmakingPossible = false;
 	int playerType;
 	GameData mData;
@@ -392,20 +395,21 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetMatch(index, matchmakingPossible))
 			return false;
 
-		for (size_t i = 0; i < mClientConnections.size(); i++)
+		for (size_t i = 0; i < mClientConnections.size(); i++)		//Look through every client connected to the server
 		{
-			if (mThreadActive[i] == true)			//Only way to 'disable' removed threads since deleting gives errors
+			if (mThreadActive[i] == true)			//Check if client is still active
 			{
 				if (i == index)
 					continue;
 
 				if (!MatchupExists(i))			//Other client is not currently in another match
 				{
+					//Create match and rematch in case that is done
 					matchmakingPossible = true;
 					mMatchups.push_back({ index, i });
 					mRematchAccepted.push_back({ 0,0 });
 
-					if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))
+					if (!SendMatch(i, matchmakingPossible) || !SendMatch(index, matchmakingPossible))		//Send matchmaking result to both clients
 					{
 						printf("\nFailed to send match message");
 						return false;
@@ -424,7 +428,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		break;
 
 	case PACKET::mData:
-	{
 		if (!GetGameData(index, mData))
 			return false;
 
@@ -437,7 +440,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (mData.gameEnded)		//Detect that the game is over
 			printf("\nThe game has ended, client %d has won...", index);
 
-		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn information to other client in the match
+		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn and board information to other client in the match
 		{
 			if (index == mMatchups[i].first)
 			{
@@ -455,7 +458,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				i = mMatchups.size();
 			}
 		}
-	}
 
 		break;
 
@@ -464,13 +466,13 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetInt(index, playerType))
 			return false;
 
-		if (playerType == 1 || playerType == 2)		//Already have a valid playertype value
+		if (playerType == 1 || playerType == 2)		//Already have a valid player type value
 		{
 			SendPlayerType(index, playerType);	
 			return true;
 		}
 
-		for (size_t i = 0; i < mMatchups.size(); i++)
+		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends player type based on which position they are in the matchup pair
 		{
 			if (index == mMatchups[i].first)
 			{
@@ -499,14 +501,14 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetInt(index, rematchPossible))
 			return false;
 
-		for (size_t i = 0; i < mMatchups.size(); i++)
+		for (size_t i = 0; i < mMatchups.size(); i++)		//Checks if both clients in the matchup pair have requested a rematch
 		{
 			if (index == mMatchups[i].first)
 			{
 				mRematchAccepted[i].first = rematchPossible;
 				if (mRematchAccepted[i].second == 1)
 				{
-					if (!SendRematch(mMatchups[i].second, rematchPossible) || !SendRematch(index, rematchPossible))
+					if (!SendRematch(mMatchups[i].second, rematchPossible) || !SendRematch(index, rematchPossible))		//Sends rematch result to both clients
 						return false;
 
 					mRematchAccepted[i] = { 0,0 };		//Reset for future rematches if any
@@ -541,25 +543,22 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 void Server::GetUsername(int index)
 {
-	serverPtr->usernames.push_back("");
+	mServerPtr->mUsernames.push_back("");
 
 	PACKET mPacket;
 
-	//Get Username from client
-	bool usernameSaved = true;
-
-	if (!serverPtr->GetPacketType(index, mPacket))
+	if (!mServerPtr->GetPacketType(index, mPacket))
 		printf("\nUnable to obtain client username...");
 
 	std::string username;
-	serverPtr->GetString(index, username);
+	mServerPtr->GetString(index, username);
 
-	serverPtr->usernames[index] = username;
+	mServerPtr->mUsernames[index] = username;		//Store username of client
 
-	std::cout << "\nUsername of client is: " << username.c_str() << "\n";
+	printf("\nUsername of client is: %s", username.c_str());
 }
 
-bool Server::MatchupExists(int index)
+bool Server::MatchupExists(int index)		//Checks if client is currently in a match
 {
 	for (size_t i = 0; i < mMatchups.size(); i++)
 	{
@@ -582,7 +581,7 @@ void Server::DeleteMatchup(int index)
 	{
 		if (index == mMatchups[i].first)
 		{
-			SendGameData(mMatchups[i].second, &closingData);
+			SendGameData(mMatchups[i].second, &closingData);		//Other user disconnected, send disconnection to this client
 			mThreadActive.at(mMatchups[i].second) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
@@ -590,7 +589,7 @@ void Server::DeleteMatchup(int index)
 
 		else if (index == mMatchups[i].second)
 		{
-			SendGameData(mMatchups[i].first, &closingData);
+			SendGameData(mMatchups[i].first, &closingData);			//Other user disconnected, send disconnection to this client
 			mThreadActive.at(mMatchups[i].first) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;

@@ -12,9 +12,6 @@
 #include <vector>
 #include <thread>
 #include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
 
 class Server
 {
@@ -22,27 +19,30 @@ public:
 	Server(int port);			//Default Constructor
 	~Server();					//Default Destructor
 
-	void ListenForNewConnections();
-	void CloseConnection(int index);
+	void ListenForNewConnections();		//Adds a new client when they are attempting to connect to the server
+	void CloseConnection(int index);	//Disconnects client from server
 
-	static void ClientHandler(int index);
+	static void ClientHandler(int index);		//Loops to obtain and send data from the clients thread, stops looping when a disconnect happens
 
-	bool ProcessPacket(int id, PACKET packetType);
+	bool ProcessPacket(int id, PACKET packetType);		//Deciphering type of data received from client
 
+	//Packet Functions
 	bool GetPacketType(int id, PACKET& packetType);
 	bool SendPacketType(int id, const PACKET& mPacket);
 
+	//Integer Value Functions
 	bool SendInt(int id, int value);
 	bool GetInt(int id, int& value);
 
+	//String Value Functions
 	bool SendString(int id, const std::string& message);
 	bool GetString(int id, std::string& message);
 
-	//Matchmaking Functions
+	//Matchmaking Functions, is true when 2 clients are both searching for an opponent
 	bool SendMatch(int id, bool value);
 	bool GetMatch(int id, bool& value);
 
-	//Player Type Function
+	//Player Type Function, doesn't need to get as client doesn't decide player type
 	bool SendPlayerType(int id, int value);
 
 	//GameData Functions
@@ -52,32 +52,30 @@ public:
 	//Rematch Function
 	bool SendRematch(int id, int value);
 
-	//Serialize and Deserialize Functions
+	//Serialize and Deserialize Functions, used for sending GameData struct values all at once
 	void SerializeStruct(GameData* mData, char *data);
 	void DeserializeStruct(GameData* mData, char *data);
 
 	//Opponent Disconnect Functions
-	bool MatchupExists(int id);
-	void DeleteMatchup(int id);
+	bool MatchupExists(int id);		//Checks that match hasnt been removed due to disconnect
+	void DeleteMatchup(int id);		//Deletes matchup from vector when one client disconnects
 
 	void GetUsername(int id);
-
-	std::vector<std::string> usernames = {};		//Stores all usernames of clients connecting to the server
-
 private:
-	std::vector<SOCKET> mClientConnections;
-	std::vector<std::thread> mConnectionThreads;
-	int mConnections = 0;
+	std::vector<SOCKET> mClientConnections;				//Stores all sockets clients are connected on
+	std::vector<std::thread> mConnectionThreads;		//Gives each client a thread to send/receive data simultaneously
+	std::vector<std::string> mUsernames = {};			//Stores all usernames of clients connecting to the server
+	std::vector<std::pair<int, int>> mMatchups;			//Stores indexes of client threads for client matches, deletes when one of the clients disconnects
 
-	std::vector<std::pair<int, int>> mMatchups;		//Stores indexes for client matches, deletes when one of the clients disconnects
-	std::vector<bool> mThreadActive;				//Easier way to detect a disconnection without removing the thread, misaligning the vectors
+	std::vector<bool> mThreadActive;					//Easier way to detect a disconnection without removing the thread, misaligning the vectors, true if user is still connected to server
 
+	int mConnections = 0;								//Stores total amount of clients which have connected to server (including ones who have disconnected)
 	std::vector<std::pair<int, int>> mRematchAccepted;		//Stores values which change to 1 when that client is requesting a rematch, aligns with matchup vector
 
-	SOCKET listen_socket;
-	addrinfo* info;
-	addrinfo hints;
-	int result;
+	SOCKET mListenSocket;		//Socket that listens for client connections
+	addrinfo* mAddressInfo;
+	addrinfo mAddressHints;
+	int mConnectionResult;
 };
 
-static Server* serverPtr;
+static Server* mServerPtr;
