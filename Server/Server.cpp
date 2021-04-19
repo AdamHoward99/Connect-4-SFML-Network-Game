@@ -501,6 +501,9 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		if (!GetInt(index, rematchPossible))
 			return false;
 
+		if (!MatchupExists(index))
+			return false;
+
 		for (size_t i = 0; i < mMatchups.size(); i++)		//Checks if both clients in the matchup pair have requested a rematch
 		{
 			if (index == mMatchups[i].first)
@@ -581,15 +584,19 @@ void Server::DeleteMatchup(int index)
 	{
 		if (index == mMatchups[i].first)
 		{
+			mThreadActive[mMatchups[i].second] = false;				//Prevents other client on win menu from matchmaking with other clients
 			SendGameData(mMatchups[i].second, &closingData);		//Other user disconnected, send disconnection to this client
 			mMatchups.erase(mMatchups.begin() + i);
+			mRematchAccepted.erase(mRematchAccepted.begin() + i);
 			break;
 		}
 
 		else if (index == mMatchups[i].second)
 		{
+			mThreadActive[mMatchups[i].first] = false;				//Prevents other client on win menu from matchmaking with other clients
 			SendGameData(mMatchups[i].first, &closingData);			//Other user disconnected, send disconnection to this client
 			mMatchups.erase(mMatchups.begin() + i);
+			mRematchAccepted.erase(mRematchAccepted.begin() + i);
 			break;
 		}
 	}

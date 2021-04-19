@@ -72,7 +72,7 @@ private:
 
 	int mConnections = 0;								//Stores total amount of clients which have connected to server (including ones who have disconnected)
 
-	SOCKET mListenSocket;		//Socket that listens for client connections
+	SOCKET mListenSocket;			//Socket that listens for client connections
 	addrinfo* mAddressInfo;
 	addrinfo mAddressHints;
 	int mConnectionResult;
