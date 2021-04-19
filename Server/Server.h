@@ -66,11 +66,11 @@ private:
 	std::vector<std::thread> mConnectionThreads;		//Gives each client a thread to send/receive data simultaneously
 	std::vector<std::string> mUsernames = {};			//Stores all usernames of clients connecting to the server
 	std::vector<std::pair<int, int>> mMatchups;			//Stores indexes of client threads for client matches, deletes when one of the clients disconnects
+	std::vector<std::pair<int, int>> mRematchAccepted;	//Stores values which change to 1 when that client is requesting a rematch, aligns with matchup vector
 
-	std::vector<bool> mThreadActive;					//Easier way to detect a disconnection without removing the thread, misaligning the vectors, true if user is still connected to server
+	std::vector<bool> mThreadActive;					//Detect if client has disconnected, is true if user is still connected to server
 
 	int mConnections = 0;								//Stores total amount of clients which have connected to server (including ones who have disconnected)
-	std::vector<std::pair<int, int>> mRematchAccepted;		//Stores values which change to 1 when that client is requesting a rematch, aligns with matchup vector
 
 	SOCKET mListenSocket;		//Socket that listens for client connections
 	addrinfo* mAddressInfo;

@@ -582,7 +582,6 @@ void Server::DeleteMatchup(int index)
 		if (index == mMatchups[i].first)
 		{
 			SendGameData(mMatchups[i].second, &closingData);		//Other user disconnected, send disconnection to this client
-			mThreadActive.at(mMatchups[i].second) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
 		}
@@ -590,7 +589,6 @@ void Server::DeleteMatchup(int index)
 		else if (index == mMatchups[i].second)
 		{
 			SendGameData(mMatchups[i].first, &closingData);			//Other user disconnected, send disconnection to this client
-			mThreadActive.at(mMatchups[i].first) = true;
 			mMatchups.erase(mMatchups.begin() + i);
 			break;
 		}
