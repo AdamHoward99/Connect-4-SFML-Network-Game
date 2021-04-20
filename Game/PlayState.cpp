@@ -220,6 +220,9 @@ void PlayState::Reset()
 	mServer.mGameData.mTurn = Turn::Player_1_Turn;
 	mServer.mGameData.gameEnded = false;
 
+	//Reset Mouse position
+	mMousePos = { -1.f, -1.f };		//Prevent piece being added immediately after rematching
+
 	//Reset chat
 	mChatInput.clear();
 	mText.at(2).setString(mChatInput);
@@ -270,7 +273,7 @@ void PlayState::ButtonPress()
 		}
 	}
 	else
-		if(!mSprites.at(1).getGlobalBounds().contains(mMousePos) && IsPlayersTurn() && !mTurnEnd)	//Add piece to board
+		if(!mSprites.at(1).getGlobalBounds().contains(mMousePos) && IsPlayersTurn() && mMousePos.x > 0)	//Add piece to board
 			AddPiece();
 }
 
