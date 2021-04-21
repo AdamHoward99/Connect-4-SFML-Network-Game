@@ -441,7 +441,7 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 
 void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 {
-	int i = 4;		//Offset of 4 due to first values always being 4,0,0,0 maybe an issue with a previous packet?
+	int i = 0;
 
 	//Disconnection Variable
 	mPacket->mDisconnected = data[i];

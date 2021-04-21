@@ -245,9 +245,6 @@ bool Server::GetGameData(int id, GameData& value)
 
 bool Server::SendGameData(int id, GameData* value)
 {
-	if (!SendPacketType(id, PACKET::mData))
-		return false;
-
 	char data[GAMEDATA_SIZE];
 
 	SerializeStruct(value, data);
