@@ -30,33 +30,23 @@ void StartMenu::Initialize()
 void StartMenu::SetupTextures()
 {
 	//Background Texture
-	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
-		assert(!mBackgroundTex.loadFromFile("menuBackground.png"));
-
+	mBackgroundTex.loadFromFile("../bin/Textures/menuBackground.png");
 	mBackgroundTex.setSmooth(true);
 
 	//Button Texture
-	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
-		assert(!mButtonTex.loadFromFile("MenuButton.png"));
-
+	mButtonTex.loadFromFile("../bin/Textures/MenuButton.png");
 	mButtonTex.setSmooth(true);
 
 	//Play Sound Texture
-	if (!mMuteButtonPlay.loadFromFile("bin/Textures/MusicPlay.png"))
-		assert(!mMuteButtonPlay.loadFromFile("MusicPlay.png"));
-
+	mMuteButtonPlay.loadFromFile("../bin/Textures/MusicPlay.png");
 	mMuteButtonPlay.setSmooth(true);
 
 	//Mute Sound Texture
-	if (!mMuteButtonMuted.loadFromFile("bin/Textures/MusicMute.png"))
-		assert(!mMuteButtonMuted.loadFromFile("MusicMute.png"));
-
+	mMuteButtonMuted.loadFromFile("../bin/Textures/MusicMute.png");
 	mMuteButtonMuted.setSmooth(true);
 
 	//Logo Texture
-	if (!mLogoTex.loadFromFile("bin/Textures/logo.png"))
-		assert(!mLogoTex.loadFromFile("bin/Textures/logo.png"));
-
+	mLogoTex.loadFromFile("../bin/Textures/logo.png");
 	mLogoTex.setSmooth(true);
 }
 
@@ -111,16 +101,14 @@ void StartMenu::SetupAudio()
 {
 	//Setup Audio
 	//Buffer
-	if(!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"))
-		assert(!mButtonClickSfx.first.loadFromFile("bin/Music/ButtonClickSound.wav"));
+	mButtonClickSfx.first.loadFromFile("../bin/Music/ButtonClickSound.wav");
 
 	//Sound
 	mButtonClickSfx.second.setBuffer(mButtonClickSfx.first);
 	mButtonClickSfx.second.setVolume(30.f);
 
 	//Setup Music
-	if (!mBackgroundMusic.openFromFile("bin/Music/BackgroundMusic.ogg"))
-		assert(!mBackgroundMusic.openFromFile("bin/Music/BackgroundMusic.ogg"));
+	mBackgroundMusic.openFromFile("../bin/Music/BackgroundMusic.ogg");
 
 	mBackgroundMusic.setVolume(40.f);
 	mBackgroundMusic.play();

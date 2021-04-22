@@ -40,9 +40,7 @@ void GameBoard::Initialize()
 	mBoardBackground.setFillColor(mBoardColour);
 
 	//Background
-	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
-		assert(!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"));
-
+	mBackgroundTex.loadFromFile("../bin/Textures/menuBackground.png");
 	mBackgroundTex.setSmooth(true);
 
 	mBackgroundSpr.setTexture(mBackgroundTex);

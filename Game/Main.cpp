@@ -2,8 +2,6 @@
 #include "Game.h"
 #include "GameBoard.h"
 
-#include <cassert>
-
 //Game Window Dimensions
 #define GAME_WIDTH 900
 #define GAME_HEIGHT 800

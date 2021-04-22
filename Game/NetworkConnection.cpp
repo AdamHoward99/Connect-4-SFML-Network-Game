@@ -14,11 +14,11 @@ void NetworkConnection::CreateSocket()
 {
 	//Winsock connection to server
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-		assert(EXIT_FAILURE);
+		exit(0);
 
 	//Create a Socket
 	if ((connectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-		assert(EXIT_FAILURE);
+		exit(0);
 
 }
 

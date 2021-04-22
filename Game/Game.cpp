@@ -34,8 +34,8 @@ void Game::Initialize()
 	//Setup all elements of the game, not needed as constructors of each call initialize
 	mPlayState.Initialize();
 
-	if (!mTextFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
-		assert(!mTextFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
+	if (!mTextFont.loadFromFile("../bin/Fonts/Komika_display.ttf"))
+		exit(0);
 
 	//Pause Text
 	mPauseTimerTxt.setFillColor(sf::Color::White);
@@ -49,9 +49,7 @@ void Game::Initialize()
 void Game::InitializeMatchmakingScreen()
 {
 	//Background Texture
-	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
-		assert(!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"));
-
+	mBackgroundTex.loadFromFile("../bin/Textures/menuBackground.png");
 	mBackgroundTex.setSmooth(true);
 
 	//Background Sprite
@@ -167,7 +165,7 @@ void Game::Update()
 		break;
 
 	default:
-		assert(mStates);
+		exit(0);
 		break;
 	}
 
@@ -235,7 +233,7 @@ void Game::Draw()
 		break;
 
 	default:
-		assert(mStates);
+		exit(0);
 		break;
 	}
 }

@@ -38,15 +38,11 @@ void PlayState::Initialize()
 void PlayState::SetupTextures()
 {
 	//Button Texture
-	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
-		assert(!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"));
-
+	mButtonTex.loadFromFile("../bin/Textures/MenuButton.png");
 	mButtonTex.setSmooth(true);
 
 	//Chat Panel Texture
-	if (!mChatPanelTex.loadFromFile("bin/Textures/ChatPanel.png"))
-		assert(!mChatPanelTex.loadFromFile("bin/Textures/ChatPanel.png"));
-
+	mChatPanelTex.loadFromFile("../bin/Textures/ChatPanel.png");
 	mChatPanelTex.setSmooth(true);
 }
 
@@ -66,8 +62,8 @@ void PlayState::SetupSprites()
 void PlayState::SetupFonts()
 {
 	//Font
-	if (!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"))
-		assert(!mFont.loadFromFile("bin/Fonts/Komika_display.ttf"));
+	if (!mFont.loadFromFile("../bin/Fonts/Komika_display.ttf"))
+		exit(0);
 }
 
 void PlayState::SetupText()
@@ -96,9 +92,7 @@ void PlayState::SetupText()
 void PlayState::SetupAudio()
 {
 	//Audio
-	if (!mPieceSfx.first.loadFromFile("bin/Music/PieceSfx.wav"))
-		assert(!mPieceSfx.first.loadFromFile("bin/Music/PieceSfx.wav"));
-
+	mPieceSfx.first.loadFromFile("../bin/Music/PieceSfx.wav");
 	mPieceSfx.second.setBuffer(mPieceSfx.first);
 	mPieceSfx.second.setVolume(40.f);
 }

@@ -30,15 +30,11 @@ void PauseMenu::Initialize()
 void PauseMenu::SetupTextures()
 {
 	//Background Texture
-	if (!mPauseTex.loadFromFile("bin/Textures/PauseMenuUI.png"))
-		assert(!mPauseTex.loadFromFile("bin/Textures/PauseMenuUI.png"));
-	
+	mPauseTex.loadFromFile("../bin/Textures/PauseMenuUI.png");
 	mPauseTex.setSmooth(true);
 
 	//Button Texture
-	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
-		assert(!mButtonTex.loadFromFile("MenuButton.png"));
-
+	mButtonTex.loadFromFile("../bin/Textures/MenuButton.png");
 	mButtonTex.setSmooth(true);
 }
 

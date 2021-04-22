@@ -1,6 +1,5 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include <cassert>
 
 //Game Board Dimensions
 #define BOARD_HEIGHT 7

@@ -8,7 +8,6 @@
 #pragma comment(lib, "ws2_32.lib")
 
 #include <SFML/Graphics.hpp>
-#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <chrono>

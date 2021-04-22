@@ -8,7 +8,6 @@
 #include "DisconnectMenu.h"
 #include "NetworkConnection.h"
 
-#include <cassert>
 #include <unordered_map>
 
 #define PAUSE_KEY 112

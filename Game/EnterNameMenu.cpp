@@ -30,21 +30,15 @@ void EnterNameMenu::Initialize()
 void EnterNameMenu::SetupTextures()
 {
 	//Background Texture
-	if (!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"))
-		assert(!mBackgroundTex.loadFromFile("bin/Textures/menuBackground.png"));
-
+	mBackgroundTex.loadFromFile("../bin/Textures/menuBackground.png");
 	mBackgroundTex.setSmooth(true);
 
 	//Button Texture
-	if (!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"))
-		assert(!mButtonTex.loadFromFile("bin/Textures/MenuButton.png"));
-
+	mButtonTex.loadFromFile("../bin/Textures/MenuButton.png");
 	mButtonTex.setSmooth(true);
 
 	//Textbox Texture
-	if (!mTextBoxTex.loadFromFile("bin/Textures/EnterBox.png"))
-		assert(!mTextBoxTex.loadFromFile("bin/Textures/EnterBox.png"));
-
+	mTextBoxTex.loadFromFile("../bin/Textures/EnterBox.png");
 	mTextBoxTex.setSmooth(true);
 }
 
