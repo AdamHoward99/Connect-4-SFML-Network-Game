@@ -4,8 +4,15 @@ Server::Server(int port)
 {
 	//Setup Network Variables
 	WSADATA wsa_data;
+
 	mConnectionResult = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	assert(mConnectionResult == 0);		//DLL not found
+
+	if (mConnectionResult != 0)		//When it fails to obtain the Winsock DLL
+	{
+		printf("Obtaining Winsock DLL failed with %d...", mConnectionResult);
+		WSACleanup();
+		exit(0);
+	}
 
 	mAddressHints =
 	{
@@ -17,18 +24,20 @@ Server::Server(int port)
 
 	//Resolve the local address and port to be used by the server
 	mConnectionResult = getaddrinfo(nullptr, "8888", &mAddressHints, &mAddressInfo);
-	if (mConnectionResult != 0)
+
+	if (mConnectionResult != 0)		//When it fails to obtain the port info
 	{
 		printf("getaddrinfo() failed: %d\n", mConnectionResult);
 		WSACleanup();
 		exit(0);
 	}
 
-	printf("\nSuccessfully opened the port...");
+	printf("Successfully opened the port...");
 
 	//Create server socket
 	mListenSocket = socket(mAddressInfo->ai_family, mAddressInfo->ai_socktype, mAddressInfo->ai_protocol);
-	if (mListenSocket == INVALID_SOCKET)
+
+	if (mListenSocket == INVALID_SOCKET)		//When it fails to create the socket
 	{
 		printf("Unable to create server socket: %d\n", WSAGetLastError());
 		freeaddrinfo(mAddressInfo);
@@ -40,7 +49,8 @@ Server::Server(int port)
 
 	//Setup the TCP listening socket
 	mConnectionResult = bind(mListenSocket, mAddressInfo->ai_addr, (int)mAddressInfo->ai_addrlen);
-	if (mConnectionResult == SOCKET_ERROR)
+
+	if (mConnectionResult == SOCKET_ERROR)		//When it fails to setup the socket
 	{
 		printf("bind() failed with error: %d\n", WSAGetLastError());
 		freeaddrinfo(mAddressInfo);
@@ -55,6 +65,7 @@ Server::Server(int port)
 
 	//Listen for a single connection
 	mConnectionResult = listen(mListenSocket, 1);
+
 	if (mConnectionResult == SOCKET_ERROR)
 	{
 		printf("listen() failed with error: %d\n", WSAGetLastError());

@@ -9,9 +9,10 @@
 #include "PACKET.h"
 #include "../Game/GameData.h"
 
+#pragma comment(lib, "ws2_32.lib")
+
 #include <vector>
 #include <thread>
-#include <cassert>
 
 class Server
 {
