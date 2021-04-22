@@ -6,7 +6,6 @@ Game::Game(sf::RenderWindow& w, NetworkConnection& mConnect)
 	//Menus Initialization
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
 	mMenus["ControlMenu"] = std::make_unique<ControlMenu>(w);
-	mMenus["LeaderboardMenu"] = std::make_unique<LeaderboardMenu>(w);
 	mMenus["EnterNameMenu"] = std::make_unique<EnterNameMenu>(w);
 	mMenus["PauseMenu"] = std::make_unique<PauseMenu>(w);
 	mMenus["WinMenu"] = std::make_unique<WinMenu>(w, mConnect);
@@ -23,7 +22,6 @@ Game::~Game()
 	//Remove all pointers
 	mMenus["StartMenu"].reset();
 	mMenus["ControlMenu"].reset();
-	mMenus["LeaderboardMenu"].reset();
 	mMenus["EnterNameMenu"].reset();
 	mMenus["PauseMenu"].reset();
 	mMenus["WinMenu"].reset();
@@ -156,10 +154,6 @@ void Game::Update()
 		mMenus["StartMenu"].get()->Update();
 		break;
 
-	case States::Leaderboard:
-		mMenus["LeaderboardMenu"].get()->Update();
-		break;
-
 	case States::Win_Menu:
 		mMenus["WinMenu"].get()->Update();
 		break;
@@ -231,10 +225,6 @@ void Game::Draw()
 		mMenus["StartMenu"].get()->Draw();
 		break;
 
-	case States::Leaderboard:
-		mMenus["LeaderboardMenu"].get()->Draw();
-		break;
-
 	case States::Win_Menu:
 		mMenus["WinMenu"].get()->Draw();
 		break;
@@ -291,10 +281,6 @@ void Game::MouseReleased(sf::Event ev)
 		case States::Start_Menu:
 			ChangeState(mMenus["StartMenu"].get()->DetectButtonPress());
 			mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
-			break;
-
-		case States::Leaderboard:
-			ChangeState(mMenus["LeaderboardMenu"].get()->DetectButtonPress());
 			break;
 
 		case States::Win_Menu:

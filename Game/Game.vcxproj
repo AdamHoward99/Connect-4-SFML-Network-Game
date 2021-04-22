@@ -136,7 +136,6 @@
     <ClCompile Include="EnterNameMenu.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameBoard.cpp" />
-    <ClCompile Include="LeaderboardMenu.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="NetworkConnection.cpp" />
@@ -152,7 +151,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameData.h" />
-    <ClInclude Include="LeaderboardMenu.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="NetworkConnection.h" />
     <ClInclude Include="PauseMenu.h" />

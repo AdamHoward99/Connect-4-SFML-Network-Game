@@ -4,8 +4,8 @@ WinMenu::WinMenu(sf::RenderWindow& w, NetworkConnection& mConnect)
 	:mWindow(w), mServer(mConnect)
 {
 	//Set amount of buttons and text on menu
-	mButtonAmount = 3;
-	mTextAmount = 4;
+	mButtonAmount = 2;
+	mTextAmount = 3;
 
 	mButtons = std::vector<sf::Sprite>(mButtonAmount);
 	mText = std::vector<sf::Text>(mTextAmount);
@@ -39,7 +39,7 @@ void WinMenu::SetupSprites()
 		mButtons.at(i).setTexture(mButtonTex);
 		mButtons.at(i).setScale(0.75f, 0.75f);
 		mButtons.at(i).setPosition(xOffset, 600.f);
-		xOffset += 300.f;
+		xOffset += 600.f;
 	}
 }
 
@@ -52,7 +52,7 @@ void WinMenu::SetupText()
 		mText.at(i).setFont(mFont);
 		mText.at(i).setCharacterSize(mBodyFontSize);
 		mText.at(i).setPosition(xOffset, 610.f);
-		xOffset += 295.f;
+		xOffset += 590.f;
 	}
 
 	//Win message, obtained from server, says name of player who won
@@ -62,9 +62,7 @@ void WinMenu::SetupText()
 	mText.at(0).setFont(mFont);
 
 	mText.at(1).setString("Rematch");
-	mText.at(2).setString("Leaderboard");
-	mText.at(2).setPosition(370.f, 610.f);
-	mText.at(3).setString("Main Menu");
+	mText.at(2).setString("Main Menu");
 }
 
 void WinMenu::Update()
@@ -99,13 +97,7 @@ States WinMenu::DetectButtonPress()
 			return States::Win_Menu;
 	}
 
-	if (mButtons.at(1).getGlobalBounds().contains(mMousePos))	//Leaderboard button
-	{
-		mButtonClickSfx.second.play();
-		return States::Leaderboard;
-	}
-
-	if (mButtons.at(2).getGlobalBounds().contains(mMousePos))	//Back to main menu button
+	if (mButtons.at(1).getGlobalBounds().contains(mMousePos))	//Back to main menu button
 	{
 		mButtonClickSfx.second.play();
 		mServer.CloseConnection();

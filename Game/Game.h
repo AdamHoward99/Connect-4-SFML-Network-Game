@@ -3,7 +3,6 @@
 #include "StartMenu.h"
 #include "ControlMenu.h"
 #include "WinMenu.h"
-#include "LeaderboardMenu.h"
 #include "PauseMenu.h"
 #include "EnterNameMenu.h"
 #include "DisconnectMenu.h"

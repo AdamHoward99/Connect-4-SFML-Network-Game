@@ -8,7 +8,6 @@ enum States
 	Matchmaking,
 	Enter_Name,
 	Play,
-	Leaderboard,
 	Control_Menu,
 	Disconnect_Menu,
 	Quit

@@ -36,9 +36,6 @@
     <ClCompile Include="ControlMenu.cpp">
       <Filter>Source Files\Menus</Filter>
     </ClCompile>
-    <ClCompile Include="LeaderboardMenu.cpp">
-      <Filter>Source Files\Menus</Filter>
-    </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Menus</Filter>
     </ClCompile>
@@ -75,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ControlMenu.h">
-      <Filter>Header Files\Menus</Filter>
-    </ClInclude>
-    <ClInclude Include="LeaderboardMenu.h">
       <Filter>Header Files\Menus</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
