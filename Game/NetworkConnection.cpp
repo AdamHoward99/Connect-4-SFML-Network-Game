@@ -109,7 +109,7 @@ bool NetworkConnection::CheckForRematch()
 {
 	int value = 0;
 
-	if (!SendRematch(1))
+	if (!SendRematch(2))
 	{
 		CloseConnection();
 		return false;
@@ -129,7 +129,7 @@ bool NetworkConnection::CheckForRematch()
 			return false;
 		}
 
-		if (value == 1)
+		if (value == 2)
 			return true;
 
 	} while (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f < 8);		//Time out
