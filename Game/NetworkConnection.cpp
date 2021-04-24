@@ -205,7 +205,7 @@ void NetworkConnection::VerifyData(GameData& ServerData)
 		mGameData.mLastMove = ServerData.mLastMove;
 	}
 
-	if (ServerData.mMessage.size() > 3 && ServerData.mMessage[0] > NULL)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
+	if (ServerData.mMessage.size() > 3 && ServerData.mMessage.find(':') != std::string::npos/*&& ServerData.mMessage[0] > NULL*/)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
 	{
 		OutputDebugStringA("\nA valid message has been received from the other client...");
 		mGameData.mMessage = ServerData.mMessage;
@@ -282,6 +282,7 @@ bool NetworkConnection::GetGameData(GameData& value)
 			return false;
 
 		OutputDebugStringA("\nGamedata has returned null...");
+		value.mMessage = "";
 	}
 	else
 		DeserializeStruct(&value, data);
@@ -469,7 +470,7 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 	//Chat Variable
 	std::string newMessage;
 	int j = 0;
-	while (data[i] != NULL && j < 30)
+	while (data[i] > NULL && j < 30)
 	{
 		newMessage.push_back(data[i]);
 		i++;
