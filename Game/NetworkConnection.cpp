@@ -1,14 +1,10 @@
 #include "NetworkConnection.h"
 
 NetworkConnection::NetworkConnection()
-{
-
-}
+{}
 
 NetworkConnection::~NetworkConnection()
-{
-	//Delete things here
-}
+{}
 
 void NetworkConnection::CreateSocket()
 {
@@ -193,8 +189,8 @@ void NetworkConnection::VerifyData(GameData& ServerData)
 	if (ServerData.mDisconnected == -1)
 		mGameData.mDisconnected = ServerData.mDisconnected;
 
-	if (ServerData.gameEnded)
-		mGameData.gameEnded = ServerData.gameEnded;
+	if (ServerData.mGameEnded)
+		mGameData.mGameEnded = ServerData.mGameEnded;
 
 	if (ServerData.mTurn > Turn::None && ServerData.mTurn < 3)
 		mGameData.mTurn = ServerData.mTurn;
@@ -402,7 +398,7 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 	i++;
 
 	//Game Ended value
-	data[i] = mPacket->gameEnded;
+	data[i] = mPacket->mGameEnded;
 	i++;
 	
 	//Turn value
@@ -450,9 +446,9 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 
 	//Game End Variable
 	if (data[i] != 1)
-		mPacket->gameEnded = false;
+		mPacket->mGameEnded = false;
 	else
-		mPacket->gameEnded = true;
+		mPacket->mGameEnded = true;
 
 	i++;
 

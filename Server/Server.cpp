@@ -279,7 +279,7 @@ void Server::SerializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Game Ended Variable
-	data[i] = mData->gameEnded;
+	data[i] = mData->mGameEnded;
 	i++;
 
 	//Turn Variable
@@ -327,7 +327,7 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Game Ended Variable
-	mData->gameEnded = data[i];
+	mData->mGameEnded = data[i];
 	i++;
 
 	//Turn Variable
@@ -445,7 +445,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			return false;
 		}
 
-		if (mData.gameEnded)		//Detect that the game is over
+		if (mData.mGameEnded)		//Detect that the game is over
 			printf("\nThe game has ended, client %d has won...", index);
 
 		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn and board information to other client in the match

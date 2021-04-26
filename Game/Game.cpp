@@ -77,7 +77,7 @@ void Game::Update()
 			mStates = States::Disconnect_Menu;
 		}
 
-		if (mPlayState.GetData().gameEnded)			//A player has won the game or the game board is full
+		if (mPlayState.GetData().mGameEnded)			//A player has won the game or the game board is full
 		{
 			mPlayState.Reset();
 			mStates = States::Win_Menu;

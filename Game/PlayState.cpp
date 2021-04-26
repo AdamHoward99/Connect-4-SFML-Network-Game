@@ -210,7 +210,7 @@ void PlayState::Reset()
 	mServer.mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
 	mServer.mGameData.mMessage = "";
 	mServer.mGameData.mTurn = Turn::Player_1_Turn;
-	mServer.mGameData.gameEnded = false;
+	mServer.mGameData.mGameEnded = false;
 
 	//Reset Mouse position
 	mMousePos = { -1.f, -1.f };		//Prevent piece being added immediately after rematching
@@ -413,7 +413,7 @@ void PlayState::TransitionTurn()
 	if (mGameBoard.Connected4(mPlayer, mLastMove))
 	{
 		//Pass information that this player has won to the server
-		mServer.mGameData.gameEnded = true;
+		mServer.mGameData.mGameEnded = true;
 
 		//Set win message based on which player this is
 		mServer.mGameData.mWinMessage = mName + " Wins";
@@ -422,7 +422,7 @@ void PlayState::TransitionTurn()
 	if (mGameBoard.CheckIfBoardIsFull())		//Checks if there are no more available slots in the board, results in a tie
 	{
 		//Pass information that no player has won to the server
-		mServer.mGameData.gameEnded = true;
+		mServer.mGameData.mGameEnded = true;
 		mServer.mGameData.mWinMessage = "Its a Tie";
 	}
 
