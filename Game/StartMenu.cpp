@@ -14,7 +14,9 @@ StartMenu::StartMenu(sf::RenderWindow& w)
 }
 
 StartMenu::~StartMenu()
-{}
+{
+	//Delete stuff here
+}
 
 void StartMenu::Initialize()
 {

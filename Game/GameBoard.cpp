@@ -5,7 +5,9 @@ GameBoard::GameBoard(sf::RenderWindow& mApp)
 {}
 
 GameBoard::~GameBoard()
-{}
+{
+
+}
 
 void GameBoard::Initialize()
 {
@@ -20,7 +22,7 @@ void GameBoard::Initialize()
 	mPiece.setOutlineColor(sf::Color::Color(70, 96, 239));
 
 	//Loops through adding empty pieces to set up the game board
-	for (int x = 1; x < BOARD_HEIGHT; x++)		
+	for (int x = 1; x < BOARD_HEIGHT; x++)
 	{
 		for (int y = 1; y < BOARD_WIDTH; y++)
 		{
@@ -52,7 +54,7 @@ void GameBoard::Update(std::pair<int, int>& mLastMove, const int mPlayerType)
 	{
 		sf::CircleShape piece = sf::CircleShape(30.f);
 		piece.setPosition(mBoard[mLastMove.first][mLastMove.second].getPosition());
-		
+
 		//Finds which player the opponent is to determine which colour the piece will be
 		if (mPlayerType == 1)
 			piece.setFillColor(mPlayer2PieceColour);
@@ -114,7 +116,7 @@ bool GameBoard::Connected4(const int mPlayerType, const sf::Vector2i mLastMove)
 
 	if (HorizontalConnectCheck(mPlayerColour, mLastMove))		//Checks horizontally for a connect 4
 		return true;
-	
+
 	if (VerticalConnectCheck(mPlayerColour, mLastMove))			//Checks vertically for a connect 4
 		return true;
 

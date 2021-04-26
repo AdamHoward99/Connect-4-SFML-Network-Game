@@ -1,16 +1,24 @@
 #include "Menu.h"
 
 Menu::~Menu()
-{}
+{
+	//Delete anything here
+}
 
 void Menu::Initialize()
-{}
+{
+
+}
 
 void Menu::Update()
-{}
+{
+
+}
 
 void Menu::Draw()
-{}
+{
+
+}
 
 void Menu::SetupTextures()
 {
@@ -52,7 +60,9 @@ States Menu::DetectButtonPress()
 }
 
 void Menu::KeyboardInput(sf::Event ev)
-{}
+{
+
+}
 
 sf::String Menu::GetName()
 {

@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w, NetworkConnection& mConnect)
-	:mWindow(w), mConnection(mConnect), mPlayState(w, mConnect)
+	:window(w), mConnection(mConnect), mPlayState(w, mConnect)
 {
 	//Menus Initialization
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
@@ -77,7 +77,7 @@ void Game::Update()
 			mStates = States::Disconnect_Menu;
 		}
 
-		if (mPlayState.GetData().mGameEnded)			//A player has won the game or the game board is full
+		if (mPlayState.GetData().gameEnded)			//A player has won the game or the game board is full
 		{
 			mPlayState.Reset();
 			mStates = States::Win_Menu;
@@ -93,13 +93,13 @@ void Game::Update()
 		}
 
 		//Send the name of the player to the server
-		if(!mConnection.SendPlayerName(mPlayerName))
+		if (!mConnection.SendPlayerName(mPlayerName))
 		{
 			mStates = States::Start_Menu;
 			mConnection.CloseConnection();
 			break;
 		}
-	
+
 		//Send info to server to check if matchmaking is possible (> 1 available clients on server)
 		if (!mConnection.Matchmake())		//Couldn't find an opponent
 		{
@@ -161,7 +161,7 @@ void Game::Update()
 		break;
 
 	case States::Quit:
-		mWindow.close();
+		window.close();
 		break;
 
 	default:
@@ -187,7 +187,7 @@ void Game::UpdatePauseTimer()
 	{
 		mStates = States::Play;
 		mPlayState.mTurnTimer.first = std::chrono::steady_clock::now();
-		if(mPauseTimerAllowance > 10)
+		if (mPauseTimerAllowance > 10)
 			mPauseTimerAllowance *= 0.5f;		//Shortens next timer for pause menu to prevent endless pausing
 	}
 }
@@ -212,7 +212,7 @@ void Game::Draw()
 	case States::Pause_Menu:
 		mPlayState.Draw();
 		mMenus["PauseMenu"].get()->Draw();
-		mWindow.draw(mPauseTimerTxt);
+		window.draw(mPauseTimerTxt);
 		break;
 
 	case States::Control_Menu:
@@ -240,8 +240,8 @@ void Game::Draw()
 
 void Game::DrawMatchmakingScreen()
 {
-	mWindow.draw(mBackgroundSpr);
-	mWindow.draw(mLoadingText);
+	window.draw(mBackgroundSpr);
+	window.draw(mLoadingText);
 }
 
 void Game::MouseReleased(sf::Event ev)
@@ -293,7 +293,7 @@ void Game::MouseReleased(sf::Event ev)
 		default:
 			break;
 		}
-		
+
 	}
 }
 
@@ -315,7 +315,7 @@ void Game::KeyPressed(sf::Event ev)
 
 	case States::Enter_Name:
 		mMenus["EnterNameMenu"].get()->KeyboardInput(ev);
-			break;
+		break;
 
 	default:
 		break;

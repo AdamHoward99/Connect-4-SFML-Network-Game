@@ -82,7 +82,7 @@ Server::~Server()
 	//Release Server Pointer
 	mServerPtr = nullptr;
 	delete mServerPtr;
-} 
+}
 
 void Server::ListenForNewConnections()
 {
@@ -244,7 +244,7 @@ bool Server::GetGameData(int id, GameData& value)
 	char data[GAMEDATA_SIZE];
 	int returnCheck = recv(mClientConnections[id], data, GAMEDATA_SIZE, NULL);
 
-	printf("\nObtained %d bytes", returnCheck);
+	printf("\nObtained %d bytes from game", returnCheck);
 
 	if (returnCheck == SOCKET_ERROR)
 		return false;
@@ -260,9 +260,9 @@ bool Server::SendGameData(int id, GameData* value)
 
 	SerializeStruct(value, data);
 
-	int returnCheck = send(mClientConnections[id], (char *) &data, GAMEDATA_SIZE, NULL);
+	int returnCheck = send(mClientConnections[id], (char *)&data, GAMEDATA_SIZE, NULL);
 
-	printf("\nSending %d bytes", returnCheck);
+	printf("\nSending %d bytes to game", returnCheck);
 
 	if (returnCheck == SOCKET_ERROR)
 		return false;
@@ -279,7 +279,7 @@ void Server::SerializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Game Ended Variable
-	data[i] = mData->mGameEnded;
+	data[i] = mData->gameEnded;
 	i++;
 
 	//Turn Variable
@@ -327,7 +327,7 @@ void Server::DeserializeStruct(GameData* mData, char *data)
 	i++;
 
 	//Game Ended Variable
-	mData->mGameEnded = data[i];
+	mData->gameEnded = data[i];
 	i++;
 
 	//Turn Variable
@@ -423,7 +423,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 						return false;
 					}
 
-					printf("\nA match between %d and %d is starting...", i, index);
+					printf("\nMessages were sent to %d and %d", i, index);
 					break;
 				}
 			}
@@ -445,7 +445,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			return false;
 		}
 
-		if (mData.mGameEnded)		//Detect that the game is over
+		if (mData.gameEnded)		//Detect that the game is over
 			printf("\nThe game has ended, client %d has won...", index);
 
 		for (size_t i = 0; i < mMatchups.size(); i++)		//Sends turn and board information to other client in the match
@@ -462,7 +462,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			{
 				if (!SendGameData(mMatchups[i].first, &mData))
 					return false;
-			
+
 				i = mMatchups.size();
 			}
 		}
@@ -476,7 +476,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 
 		if (playerType == 1 || playerType == 2)		//Already have a valid player type value
 		{
-			SendPlayerType(index, playerType);	
+			SendPlayerType(index, playerType);
 			return true;
 		}
 
@@ -490,7 +490,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				i = mMatchups.size();
 			}
 
-			else if(index == mMatchups[i].second)
+			else if (index == mMatchups[i].second)
 			{
 				if (!SendPlayerType(index, 2))
 					return false;
@@ -503,7 +503,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 		break;
 
 	case PACKET::mRematch:
-		
+
 		if (!GetInt(index, rematchPossible))
 			return false;
 
@@ -515,13 +515,12 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			if (index == mMatchups[i].first)
 			{
 				mRematchAccepted[i].first = rematchPossible;
-				if (mRematchAccepted[i].second == 1)
+				if (mRematchAccepted[i].second == 2 && mThreadActive[mMatchups[i].second])
 				{
 					if (!SendRematch(mMatchups[i].second, rematchPossible) || !SendRematch(index, rematchPossible))		//Sends rematch result to both clients
 						return false;
 
 					mRematchAccepted[i] = { 0,0 };		//Reset for future rematches if any
-					printf("\nRematch between clients %d and %d has been accepted...", index, mMatchups[i].second);
 				}
 
 				i = mMatchups.size();
@@ -530,13 +529,12 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			else if (index == mMatchups[i].second)
 			{
 				mRematchAccepted[i].second = rematchPossible;
-				if (mRematchAccepted[i].first == 1)
+				if (mRematchAccepted[i].first == 2 && mThreadActive[mMatchups[i].first])
 				{
 					if (!SendRematch(mMatchups[i].first, rematchPossible) || !SendRematch(index, rematchPossible))
 						return false;
 
 					mRematchAccepted[i] = { 0,0 };	//Reset for future rematches if any
-					printf("\nRematch between clients %d and %d has been accepted...", index, mMatchups[i].first);
 				}
 
 				i = mMatchups.size();		//break out of loop
@@ -610,4 +608,3 @@ void Server::DeleteMatchup(int index)
 	}
 
 }
-

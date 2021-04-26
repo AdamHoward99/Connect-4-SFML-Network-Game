@@ -1,10 +1,14 @@
 #include "NetworkConnection.h"
 
 NetworkConnection::NetworkConnection()
-{}
+{
+
+}
 
 NetworkConnection::~NetworkConnection()
-{}
+{
+	//Delete things here
+}
 
 void NetworkConnection::CreateSocket()
 {
@@ -51,6 +55,8 @@ bool NetworkConnection::ConnectToServer()
 		return false;
 	}
 
+	OutputDebugStringA("\nConnection was made to the server...");
+
 	return true;
 }
 
@@ -58,6 +64,8 @@ bool NetworkConnection::SendPlayerName(std::string name)
 {
 	if (!SendString(name))
 		return false;
+
+	OutputDebugStringA("\nPlayer name was sent to the server...");
 
 	return true;
 }
@@ -80,6 +88,7 @@ bool NetworkConnection::Matchmake()
 
 		if (opponentFound)		//If found an opponent
 		{
+			OutputDebugStringA("\nFound an opponent, returning true...");
 			return true;
 		}
 
@@ -87,6 +96,7 @@ bool NetworkConnection::Matchmake()
 
 		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 8)			//If application times out or takes too long
 		{
+			OutputDebugStringA("\nTimed out...");
 			return false;
 		}
 
@@ -99,7 +109,7 @@ bool NetworkConnection::CheckForRematch()
 {
 	int value = 0;
 
-	if (!SendRematch(1))
+	if (!SendRematch(2))
 	{
 		CloseConnection();
 		return false;
@@ -119,7 +129,7 @@ bool NetworkConnection::CheckForRematch()
 			return false;
 		}
 
-		if (value == 1)
+		if (value == 2)
 			return true;
 
 	} while (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f < 8);		//Time out
@@ -156,6 +166,7 @@ bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 		current = std::chrono::steady_clock::now();		//Gets the current time
 		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 4)		//Connection time out
 		{
+			OutputDebugStringA("\nConnection Timed Out...");
 			CloseConnection();
 			return false;
 		}
@@ -182,8 +193,8 @@ void NetworkConnection::VerifyData(GameData& ServerData)
 	if (ServerData.mDisconnected == -1)
 		mGameData.mDisconnected = ServerData.mDisconnected;
 
-	if (ServerData.mGameEnded)
-		mGameData.mGameEnded = ServerData.mGameEnded;
+	if (ServerData.gameEnded)
+		mGameData.gameEnded = ServerData.gameEnded;
 
 	if (ServerData.mTurn > Turn::None && ServerData.mTurn < 3)
 		mGameData.mTurn = ServerData.mTurn;
@@ -196,11 +207,13 @@ void NetworkConnection::VerifyData(GameData& ServerData)
 
 	if (ServerData.mMessage.size() > 3 && ServerData.mMessage.find(':') != std::string::npos/*&& ServerData.mMessage[0] > NULL*/)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
 	{
+		OutputDebugStringA("\nA valid message has been received from the other client...");
 		mGameData.mMessage = ServerData.mMessage;
 	}
 
 	if (ServerData.mWinMessage.size() > 1 && ServerData.mWinMessage[0] > NULL)		//Prevents null messages from being shown
 	{
+		OutputDebugStringA("\nA valid string has been received for the win message...");
 		mGameData.mWinMessage = ServerData.mWinMessage;
 	}
 
@@ -265,9 +278,10 @@ bool NetworkConnection::GetGameData(GameData& value)
 
 	if (returnCheck == SOCKET_ERROR)
 	{
-		if(WSAGetLastError() != WSAEWOULDBLOCK)
+		if (WSAGetLastError() != WSAEWOULDBLOCK)
 			return false;
 
+		OutputDebugStringA("\nGamedata has returned null...");
 		value.mMessage = "";
 	}
 	else
@@ -285,7 +299,7 @@ bool NetworkConnection::SendGameData(GameData& value)
 
 	SerializeStruct(&value, data);
 
-	int returnCheck = send(connectSocket, (char *) &data, GAMEDATA_SIZE, NULL);
+	int returnCheck = send(connectSocket, (char *)&data, GAMEDATA_SIZE, NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
@@ -302,6 +316,9 @@ bool NetworkConnection::GetPlayerType(int& value)
 		if (WSAGetLastError() != WSAEWOULDBLOCK)
 			return false;
 
+		if (value > 3)
+			OutputDebugStringA("\nAn incorrect value for the player has been obtained...");			//Only happens when doesnt get correct value from server the first time
+
 		value = 0;
 	}
 
@@ -316,6 +333,8 @@ bool NetworkConnection::SendPlayerType(const int& value)
 	int returnCheck = send(connectSocket, (char *)&value, sizeof(int), NULL);
 	if (returnCheck == SOCKET_ERROR)
 		return false;
+
+	OutputDebugStringA("\nPlayer type was sent to the server...");
 
 	return true;
 }
@@ -383,9 +402,9 @@ void NetworkConnection::SerializeStruct(GameData* mPacket, char *data)
 	i++;
 
 	//Game Ended value
-	data[i] = mPacket->mGameEnded;
+	data[i] = mPacket->gameEnded;
 	i++;
-	
+
 	//Turn value
 	data[i] = mPacket->mTurn;
 	i++;
@@ -431,9 +450,9 @@ void NetworkConnection::DeserializeStruct(GameData* mPacket, char* data)
 
 	//Game End Variable
 	if (data[i] != 1)
-		mPacket->mGameEnded = false;
+		mPacket->gameEnded = false;
 	else
-		mPacket->mGameEnded = true;
+		mPacket->gameEnded = true;
 
 	i++;
 

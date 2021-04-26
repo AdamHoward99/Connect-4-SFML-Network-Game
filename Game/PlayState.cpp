@@ -6,6 +6,7 @@ PlayState::PlayState(sf::RenderWindow& mApp, NetworkConnection& connect)
 
 PlayState::~PlayState()
 {
+	//Destructor
 	mGameBoard.~GameBoard();
 }
 
@@ -210,7 +211,7 @@ void PlayState::Reset()
 	mServer.mGameData.mLastMove = std::pair<int, int>{ -1, -1 };
 	mServer.mGameData.mMessage = "";
 	mServer.mGameData.mTurn = Turn::Player_1_Turn;
-	mServer.mGameData.mGameEnded = false;
+	mServer.mGameData.gameEnded = false;
 
 	//Reset Mouse position
 	mMousePos = { -1.f, -1.f };		//Prevent piece being added immediately after rematching
@@ -265,7 +266,7 @@ void PlayState::ButtonPress()
 		}
 	}
 	else
-		if(!mSprites.at(1).getGlobalBounds().contains(mMousePos) && IsPlayersTurn() && mMousePos.x > 0)	//Add piece to board
+		if (!mSprites.at(1).getGlobalBounds().contains(mMousePos) && IsPlayersTurn() && mMousePos.x > 0)	//Add piece to board
 			AddPiece();
 }
 
@@ -335,7 +336,7 @@ void PlayState::UpdateChatLog()
 
 	mChatInput.clear();						//Clear entered string
 	mText.at(2).setString(mChatInput);		//Display empty string on screen
-	
+
 	//Outputs all chat log messages
 	float yOffset = 520.f;
 	for (int i = mChatLog.size() - 1; i >= 0; i--)
@@ -413,7 +414,7 @@ void PlayState::TransitionTurn()
 	if (mGameBoard.Connected4(mPlayer, mLastMove))
 	{
 		//Pass information that this player has won to the server
-		mServer.mGameData.mGameEnded = true;
+		mServer.mGameData.gameEnded = true;
 
 		//Set win message based on which player this is
 		mServer.mGameData.mWinMessage = mName + " Wins";
@@ -422,7 +423,7 @@ void PlayState::TransitionTurn()
 	if (mGameBoard.CheckIfBoardIsFull())		//Checks if there are no more available slots in the board, results in a tie
 	{
 		//Pass information that no player has won to the server
-		mServer.mGameData.mGameEnded = true;
+		mServer.mGameData.gameEnded = true;
 		mServer.mGameData.mWinMessage = "Its a Tie";
 	}
 
@@ -438,7 +439,7 @@ void PlayState::TransitionTurn()
 	}
 
 	//Reset Values
-	mServer.mGameData.mLastMove = { -1, -1 };		
+	mServer.mGameData.mLastMove = { -1, -1 };
 	mTurnEnd = false;
 }
 

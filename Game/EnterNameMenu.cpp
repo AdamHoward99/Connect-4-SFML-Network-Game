@@ -14,7 +14,9 @@ EnterNameMenu::EnterNameMenu(sf::RenderWindow& mApp)
 }
 
 EnterNameMenu::~EnterNameMenu()
-{}
+{
+	//Delete things here
+}
 
 void EnterNameMenu::Initialize()
 {
@@ -97,7 +99,7 @@ void EnterNameMenu::Draw()
 {
 	mWindow.draw(mBackgroundSpr);
 	mWindow.draw(mTextBoxSpr);
-	
+
 	for (auto b : mButtons)
 		mWindow.draw(b);
 
@@ -123,7 +125,7 @@ States EnterNameMenu::DetectButtonPress()
 		mButtonClickSfx.second.play();
 		return States::Start_Menu;
 	}
-		
+
 	return States::Enter_Name;
 }
 
@@ -148,7 +150,7 @@ void EnterNameMenu::KeyboardInput(sf::Event ev)
 			mText.at(3).setString(mNameString);
 		}
 	}
-	
+
 	else if (mNameString.getSize() < mNameSize && ev.text.unicode != SPACE_KEY)		//Prevents spaces in player names
 	{
 		mNameString += ev.text.unicode;

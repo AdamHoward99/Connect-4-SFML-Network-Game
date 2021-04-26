@@ -26,7 +26,7 @@ public:
 	void KeyPressed(sf::Event ev);
 
 private:
-	sf::RenderWindow& mWindow;
+	sf::RenderWindow& window;
 	NetworkConnection& mConnection;
 
 	void ChangeState(States newState);		//Allows other menus to change state of the game

@@ -14,7 +14,9 @@ DisconnectMenu::DisconnectMenu(sf::RenderWindow& mApp)
 }
 
 DisconnectMenu::~DisconnectMenu()
-{}
+{
+	//Delete things here
+}
 
 void DisconnectMenu::Initialize()
 {

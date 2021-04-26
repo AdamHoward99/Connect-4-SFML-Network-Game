@@ -14,7 +14,9 @@ PauseMenu::PauseMenu(sf::RenderWindow& w)
 }
 
 PauseMenu::~PauseMenu()
-{}
+{
+	//Delete things here
+}
 
 void PauseMenu::Initialize()
 {
@@ -80,7 +82,7 @@ void PauseMenu::Update()
 	HoverOnButton();
 }
 
-void PauseMenu::Draw() 
+void PauseMenu::Draw()
 {
 	mWindow.draw(mPauseSpr);
 
@@ -113,7 +115,7 @@ void PauseMenu::HoverOnButton()
 	for (int i = 0; i < mButtonAmount; i++)
 		if (mButtons.at(i).getGlobalBounds().contains(mMousePos))
 			mText.at(i).setFillColor(sf::Color::Black);
-		else 
+		else
 			mText.at(i).setFillColor(sf::Color::White);
 
 }
