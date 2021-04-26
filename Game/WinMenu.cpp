@@ -14,9 +14,7 @@ WinMenu::WinMenu(sf::RenderWindow& w, NetworkConnection& mConnect)
 }
 
 WinMenu::~WinMenu()
-{
-	//Delete stuff here
-}
+{}
 
 void WinMenu::Initialize()
 {

@@ -14,9 +14,7 @@ EnterNameMenu::EnterNameMenu(sf::RenderWindow& mApp)
 }
 
 EnterNameMenu::~EnterNameMenu()
-{
-	//Delete things here
-}
+{}
 
 void EnterNameMenu::Initialize()
 {

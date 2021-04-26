@@ -5,9 +5,7 @@ GameBoard::GameBoard(sf::RenderWindow& mApp)
 {}
 
 GameBoard::~GameBoard()
-{
-
-}
+{}
 
 void GameBoard::Initialize()
 {

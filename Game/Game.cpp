@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(sf::RenderWindow& w, NetworkConnection& mConnect)
-	:window(w), mConnection(mConnect), mPlayState(w, mConnect)
+	:mWindow(w), mConnection(mConnect), mPlayState(w, mConnect)
 {
 	//Menus Initialization
 	mMenus["StartMenu"] = std::make_unique<StartMenu>(w);
@@ -161,7 +161,7 @@ void Game::Update()
 		break;
 
 	case States::Quit:
-		window.close();
+		mWindow.close();
 		break;
 
 	default:
@@ -212,7 +212,7 @@ void Game::Draw()
 	case States::Pause_Menu:
 		mPlayState.Draw();
 		mMenus["PauseMenu"].get()->Draw();
-		window.draw(mPauseTimerTxt);
+		mWindow.draw(mPauseTimerTxt);
 		break;
 
 	case States::Control_Menu:
@@ -240,8 +240,8 @@ void Game::Draw()
 
 void Game::DrawMatchmakingScreen()
 {
-	window.draw(mBackgroundSpr);
-	window.draw(mLoadingText);
+	mWindow.draw(mBackgroundSpr);
+	mWindow.draw(mLoadingText);
 }
 
 void Game::MouseReleased(sf::Event ev)

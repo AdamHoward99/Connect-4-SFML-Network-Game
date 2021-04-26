@@ -244,7 +244,7 @@ bool Server::GetGameData(int id, GameData& value)
 	char data[GAMEDATA_SIZE];
 	int returnCheck = recv(mClientConnections[id], data, GAMEDATA_SIZE, NULL);
 
-	printf("\nObtained %d bytes from game", returnCheck);
+	printf("\nObtained %d bytes", returnCheck);
 
 	if (returnCheck == SOCKET_ERROR)
 		return false;
@@ -262,7 +262,7 @@ bool Server::SendGameData(int id, GameData* value)
 
 	int returnCheck = send(mClientConnections[id], (char *) &data, GAMEDATA_SIZE, NULL);
 
-	printf("\nSending %d bytes to game", returnCheck);
+	printf("\nSending %d bytes", returnCheck);
 
 	if (returnCheck == SOCKET_ERROR)
 		return false;
@@ -423,7 +423,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 						return false;
 					}
 
-					printf("\nMessages were sent to %d and %d", i, index);
+					printf("\nA match between %d and %d is starting...", i, index);
 					break;
 				}
 			}
@@ -487,7 +487,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				if (!SendPlayerType(index, 1))
 					return false;
 
-				printf("\nThe client at %d is getting set as player 2", index);
 				i = mMatchups.size();
 			}
 
@@ -496,7 +495,6 @@ bool Server::ProcessPacket(int index, PACKET mType)
 				if (!SendPlayerType(index, 2))
 					return false;
 
-				printf("\nThe client at %d is getting set as player 1", index);
 				i = mMatchups.size();		//break out of loop
 			}
 
@@ -523,6 +521,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 						return false;
 
 					mRematchAccepted[i] = { 0,0 };		//Reset for future rematches if any
+					printf("\nRematch between clients %d and %d has been accepted...", index, mMatchups[i].second);
 				}
 
 				i = mMatchups.size();
@@ -537,6 +536,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 						return false;
 
 					mRematchAccepted[i] = { 0,0 };	//Reset for future rematches if any
+					printf("\nRematch between clients %d and %d has been accepted...", index, mMatchups[i].first);
 				}
 
 				i = mMatchups.size();		//break out of loop

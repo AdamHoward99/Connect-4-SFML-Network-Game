@@ -14,9 +14,7 @@ ControlMenu::ControlMenu(sf::RenderWindow& mApp)
 }
 
 ControlMenu::~ControlMenu()
-{
-	//Delete things here
-}
+{}
 
 void ControlMenu::Initialize()
 {

@@ -6,7 +6,6 @@ PlayState::PlayState(sf::RenderWindow& mApp, NetworkConnection& connect)
 
 PlayState::~PlayState()
 {
-	//Destructor
 	mGameBoard.~GameBoard();
 }
 
