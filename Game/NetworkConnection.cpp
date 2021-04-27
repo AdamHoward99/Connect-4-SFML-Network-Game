@@ -281,7 +281,7 @@ bool NetworkConnection::GetGameData(GameData& value)
 		if (WSAGetLastError() != WSAEWOULDBLOCK)
 			return false;
 
-		OutputDebugStringA("\nGamedata has returned null...");
+		Sleep(1);
 		value.mMessage = "";
 	}
 	else
@@ -316,9 +316,7 @@ bool NetworkConnection::GetPlayerType(int& value)
 		if (WSAGetLastError() != WSAEWOULDBLOCK)
 			return false;
 
-		if (value > 3)
-			OutputDebugStringA("\nAn incorrect value for the player has been obtained...");			//Only happens when doesnt get correct value from server the first time
-
+		Sleep(1);
 		value = 0;
 	}
 
@@ -334,7 +332,7 @@ bool NetworkConnection::SendPlayerType(const int& value)
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
-	OutputDebugStringA("\nPlayer type was sent to the server...");
+	Sleep(1);
 
 	return true;
 }
