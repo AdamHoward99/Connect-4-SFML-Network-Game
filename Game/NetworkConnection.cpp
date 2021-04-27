@@ -63,7 +63,7 @@ bool NetworkConnection::SendPlayerName(std::string name)
 	if (!SendString(name))
 		return false;
 
-	OutputDebugStringA("\nPlayer name was sent to the server...");
+	Sleep(1);
 
 	return true;
 }
@@ -86,7 +86,7 @@ bool NetworkConnection::Matchmake()
 
 		if (opponentFound)		//If found an opponent
 		{
-			OutputDebugStringA("\nFound an opponent, returning true...");
+			Sleep(1);
 			return true;
 		}
 
@@ -94,7 +94,7 @@ bool NetworkConnection::Matchmake()
 
 		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 8)			//If application times out or takes too long
 		{
-			OutputDebugStringA("\nTimed out...");
+			Sleep(1);
 			return false;
 		}
 
