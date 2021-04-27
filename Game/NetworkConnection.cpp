@@ -303,7 +303,7 @@ bool NetworkConnection::SendGameData(GameData& value)
 	if (returnCheck == SOCKET_ERROR)
 		return false;
 
-	OutputDebugStringA("\nThe turn has been sent to the server");
+	Sleep(1);		//Delays game to allow time for data to be passed
 
 	return true;
 }
