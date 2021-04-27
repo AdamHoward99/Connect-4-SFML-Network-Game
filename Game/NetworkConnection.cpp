@@ -55,8 +55,6 @@ bool NetworkConnection::ConnectToServer()
 		return false;
 	}
 
-	OutputDebugStringA("\nConnection was made to the server...");
-
 	return true;
 }
 
@@ -166,7 +164,7 @@ bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
 		current = std::chrono::steady_clock::now();		//Gets the current time
 		if (std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.f > 4)		//Connection time out
 		{
-			OutputDebugStringA("\nConnection Timed Out...");
+			Sleep(1);
 			CloseConnection();
 			return false;
 		}
@@ -207,13 +205,13 @@ void NetworkConnection::VerifyData(GameData& ServerData)
 
 	if (ServerData.mMessage.size() > 3 && ServerData.mMessage.find(':') != std::string::npos/*&& ServerData.mMessage[0] > NULL*/)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
 	{
-		OutputDebugStringA("\nA valid message has been received from the other client...");
+		Sleep(1);
 		mGameData.mMessage = ServerData.mMessage;
 	}
 
 	if (ServerData.mWinMessage.size() > 1 && ServerData.mWinMessage[0] > NULL)		//Prevents null messages from being shown
 	{
-		OutputDebugStringA("\nA valid string has been received for the win message...");
+		Sleep(1);
 		mGameData.mWinMessage = ServerData.mWinMessage;
 	}
 
