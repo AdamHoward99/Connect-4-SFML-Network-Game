@@ -515,7 +515,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			if (index == mMatchups[i].first)
 			{
 				mRematchAccepted[i].first = rematchPossible;
-				if (mRematchAccepted[i].second == 2 && mThreadActive[mMatchups[i].second])
+				if (mRematchAccepted[i].first == -1 && mRematchAccepted[i].second == -1 && mThreadActive[mMatchups[i].second])
 				{
 					if (!SendRematch(mMatchups[i].second, rematchPossible) || !SendRematch(index, rematchPossible))		//Sends rematch result to both clients
 						return false;
@@ -529,7 +529,7 @@ bool Server::ProcessPacket(int index, PACKET mType)
 			else if (index == mMatchups[i].second)
 			{
 				mRematchAccepted[i].second = rematchPossible;
-				if (mRematchAccepted[i].first == 2 && mThreadActive[mMatchups[i].first])
+				if (mRematchAccepted[i].second == -1 && mRematchAccepted[i].first == -1 && mThreadActive[mMatchups[i].first])
 				{
 					if (!SendRematch(mMatchups[i].first, rematchPossible) || !SendRematch(index, rematchPossible))
 						return false;
