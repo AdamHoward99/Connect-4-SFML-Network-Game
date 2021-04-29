@@ -14,9 +14,7 @@ PauseMenu::PauseMenu(sf::RenderWindow& w)
 }
 
 PauseMenu::~PauseMenu()
-{
-	//Delete things here
-}
+{}
 
 void PauseMenu::Initialize()
 {

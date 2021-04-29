@@ -39,11 +39,11 @@ public:
 	bool SendString(int id, const std::string& message);
 	bool GetString(int id, std::string& message);
 
-	//Matchmaking Functions, is true when 2 clients are both searching for an opponent
+	//Matchmaking Functions, returns true when 2 clients are both searching for an opponent
 	bool SendMatch(int id, bool value);
 	bool GetMatch(int id, bool& value);
 
-	//Player Type Function, doesn't need to get as client doesn't decide player type
+	//Player Type Function
 	bool SendPlayerType(int id, int value);
 
 	//GameData Functions
@@ -67,7 +67,7 @@ private:
 	std::vector<std::thread> mConnectionThreads;		//Gives each client a thread to send/receive data simultaneously
 	std::vector<std::string> mUsernames = {};			//Stores all usernames of clients connecting to the server
 	std::vector<std::pair<int, int>> mMatchups;			//Stores indexes of client threads for client matches, deletes when one of the clients disconnects
-	std::vector<std::pair<int, int>> mRematchAccepted;	//Stores values which change to 1 when that client is requesting a rematch, aligns with matchup vector
+	std::vector<std::pair<int, int>> mRematchAccepted;	//Stores values which change to -1 when that client is requesting a rematch, aligns with matchup vector
 
 	std::vector<bool> mThreadActive;					//Detect if client has disconnected, is true if user is still connected to server
 

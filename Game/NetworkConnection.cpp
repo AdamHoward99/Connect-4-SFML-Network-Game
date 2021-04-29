@@ -1,14 +1,10 @@
 #include "NetworkConnection.h"
 
 NetworkConnection::NetworkConnection()
-{
-
-}
+{}
 
 NetworkConnection::~NetworkConnection()
-{
-	//Delete things here
-}
+{}
 
 void NetworkConnection::CreateSocket()
 {
@@ -24,8 +20,6 @@ void NetworkConnection::CreateSocket()
 
 bool NetworkConnection::ConnectToServer()
 {
-	//Returns true if everything was setup and connected, returns false if anything messed up
-
 	//Winsock connection to server
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		return false;
@@ -136,7 +130,7 @@ bool NetworkConnection::CheckForRematch()
 	return false;
 }
 
-bool NetworkConnection::GetPlayer(int& playerType)		//Error happens here
+bool NetworkConnection::GetPlayer(int& playerType)
 {
 	//Find which player is which (player 1 or 2)
 	int result = 0;
@@ -203,7 +197,7 @@ void NetworkConnection::VerifyData(GameData& ServerData)
 		mGameData.mLastMove = ServerData.mLastMove;
 	}
 
-	if (ServerData.mMessage.size() > 3 && ServerData.mMessage.find(':') != std::string::npos/*&& ServerData.mMessage[0] > NULL*/)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
+	if (ServerData.mMessage.size() > 3 && ServerData.mMessage.find(':') != std::string::npos)		//Prevents null messages and '.' messages from showing, obtained during non-blocking data
 	{
 		Sleep(1);
 		mGameData.mMessage = ServerData.mMessage;
