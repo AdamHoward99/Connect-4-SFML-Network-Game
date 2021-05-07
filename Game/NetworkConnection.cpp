@@ -138,13 +138,15 @@ bool NetworkConnection::GetPlayer(int& playerType)
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 	std::chrono::steady_clock::time_point current;
 
+	if (!SendPlayerType(playerType))		//Finds which player they are in the game (1 or 2)
+	{
+		CloseConnection();
+		return false;
+	}
+	Sleep(100);
+
 	do
 	{
-		if (!SendPlayerType(playerType))		//Finds which player they are in the game (1 or 2)
-		{
-			CloseConnection();
-			return false;
-		}
 
 		if (!GetPlayerType(playerType))		//Connection error with server, break out
 		{
@@ -324,7 +326,7 @@ bool NetworkConnection::SendPlayerType(const int& value)
 		return false;
 
 	Sleep(1);
-
+	
 	return true;
 }
 
