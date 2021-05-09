@@ -102,10 +102,6 @@ void PlayState::Update()
 	if (!mServer.GetDataUpdate())		//Obtains data from server, helps client detect when opponent has had their turn
 	{
 		mServer.mGameData.mDisconnected = -1;		//Send client back to main menu
-	}
-
-	if (mServer.mGameData.mDisconnected == -1)		//If the opponent has disconnected
-	{
 		mServer.CloseConnection();
 		return;
 	}

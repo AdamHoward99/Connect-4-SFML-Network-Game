@@ -143,7 +143,7 @@ bool NetworkConnection::GetPlayer(int& playerType)
 		CloseConnection();
 		return false;
 	}
-	Sleep(100);
+	Sleep(1000);
 
 	do
 	{
