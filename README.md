@@ -3,8 +3,8 @@
 
 ## Screenshots
 <p float = "left">
-  <img hspace = "30" alt ="Title Screen" src = "https://user-images.githubusercontent.com/74617187/123830371-2095a100-d8fb-11eb-831f-7eaaf9de5283.png" height = "400" width =  "450"/>
-  <img alt ="Game Screenshot" src = "https://user-images.githubusercontent.com/74617187/123830824-94d04480-d8fb-11eb-9d82-9b37ad3dfff2.png" height = "400" width = "450"/>
+  <img hspace = "30" alt ="Title Screen" src = "https://user-images.githubusercontent.com/74617187/123830371-2095a100-d8fb-11eb-831f-7eaaf9de5283.png" height = "400" width =  "400"/>
+  <img alt ="Game Screenshot" src = "https://user-images.githubusercontent.com/74617187/123830824-94d04480-d8fb-11eb-9d82-9b37ad3dfff2.png" height = "400" width = "400"/>
 </p>
   
 ## How To Use
